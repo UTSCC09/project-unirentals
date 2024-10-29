@@ -1,13 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/index.css" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <script src="main.js"></script>
+    <title>UniRentals</title>
   </head>
   <body>
+    <nav id="navbar">
+      <button class="navbar-link">Home</button>
+      <button class="navbar-link">Map</button>
+      <button class="navbar-link">Find Roommates</button>
+      <button id="sign-in-button" class="navbar-link">Sign In</button>
+    </nav>
+
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Sign In Form -->
+    <div class="hidden" id="sign-in-container">
+      <div id="sign-in-form">
+        <span id="close-button">&times;</span>
+        <h2 id="sign-in-form-title">Sign In</h2>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button id="login-button">Sign In</button>
+        <button id="google-login-button">Sign in with Google</button>
+        <div id="sign-in-text">
+          No account? <a>Sign up here</a>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
