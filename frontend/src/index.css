@@ -173,7 +173,7 @@ html, body {
 }
 
 #search-form input {
-  width: 95%;
+  width: 96%;
   height: 30px;
   padding: 0.5rem;
   margin-bottom: 1rem;
@@ -187,12 +187,41 @@ html, body {
   color: #888;
 }
 
+.filter-group {
+  display: flex;
+  gap: 1rem;
+}
+
+#filters-toggle-button {
+  font-size: 1.2rem;
+  margin: auto;
+  cursor: pointer;
+}
+
+#filters-toggle-button:hover {
+  text-decoration: underline;
+  color: #506C84;
+}
+
+#filters input {
+  height: 20px;
+  margin-top: 0.5rem;
+  margin-right: -0.7rem;
+}
+
+.filters-label {
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  color:#333232
+}
+
 #search-form button {
   justify-content: center;
   display: block;
   width: 100%;
   height: 45px;
   padding: 0.5rem;
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   background-color: #506C84;
   color: white;
