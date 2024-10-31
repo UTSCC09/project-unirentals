@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import React, { useState } from "react";
 
+/* Navbar component */
 const Navbar: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
   return (
     <nav id="navbar">
@@ -20,6 +21,7 @@ const Navbar: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
   );
 };
 
+/* Sign in form component */
 const SignInForm: React.FC<{
   onClose: () => void;
   onSignUpClick: () => void;
@@ -48,6 +50,7 @@ const SignInForm: React.FC<{
   );
 };
 
+/* Sign up form component */
 const SignUpForm: React.FC<{ onClose: () => void; onSignUpBackClick: () => void }> = ({
   onClose,
   onSignUpBackClick,
@@ -62,24 +65,57 @@ const SignUpForm: React.FC<{ onClose: () => void; onSignUpBackClick: () => void 
           &#8249;
           </span>
         <h2 id="sign-in-form-title">Sign Up</h2>
-        <input type="text" id="username" placeholder="Username" />
-        <input type="email" id="email" placeholder="Email" />
-        <input type="password" id="password" placeholder="Password" />
+        <input type="text" id="sign-up-username" placeholder="Username" />
+        <input type="password" id="sign-up-password" placeholder="Password" />
         <input
           type="password"
           id="confirm-password"
           placeholder="Confirm Password"
         />
         <button id="sign-up-button">Sign Up</button>
+        <button id="sign-up-button">Sign Up with Google</button>
       </div>
     </div>
   );
 };
 
+// Map
+const Map: React.FC = () => {
+  return (
+    <div id="map-container">
+      <iframe
+        width= "100%"
+        height="1190"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=-79.21473026275636%2C43.77053600288821%2C-79.15808200836183%2C43.79730524799403&amp;layer=mapnik&amp;marker=43.783922123809695%2C-79.18640613555908"
+      ></iframe>
+      <br />
+    </div>
+  );
+};
+
+// Search form
+const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  return (
+    <div id="search-container" className="slide-up">
+      <div id="search-form">
+        <span id="close-search-button" onClick={onClose}>
+          &times;
+        </span>
+        <h2 id="search-form-title">Search</h2>
+        <input type="text" id="search-query" placeholder="Search..." />
+        <button id="search-button">Search</button>
+      </div>
+    </div>
+  );
+};
+
+// Actual app component
 const App: React.FC = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
+  /* Event Handlers */
   const handleSignInClick = () => {
     setShowSignIn(true);
     setShowSignUp(false);
@@ -100,9 +136,20 @@ const App: React.FC = () => {
     setShowSignUp(false);
   };
 
+  // Search form
+  const handleSearchClick = () => {
+    setShowSearch(true);
+  };
+
+  const handleCloseSearch = () => {
+    setShowSearch(false);
+  };
+
+  // actual components being rendered
   return (
     <div>
       <Navbar onSignInClick={handleSignInClick} />
+      <Map />
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -115,6 +162,10 @@ const App: React.FC = () => {
           onSignUpBackClick={handleSignUpBackClick}
         />
       )}
+            {showSearch && <SearchForm onClose={handleCloseSearch} />}
+      <button id="search-toggle-button" onClick={handleSearchClick}>
+        Search
+      </button>
     </div>
   );
 };
