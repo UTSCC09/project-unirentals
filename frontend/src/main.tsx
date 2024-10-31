@@ -5,10 +5,27 @@ import React, { useState } from "react";
 
 /* Navbar component */
 const Navbar: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setShowDropdown(!showDropdown);
+  };
+
   return (
     <nav id="navbar">
       <button className="navbar-link">Home</button>
-      <button className="navbar-link">Map</button>
+      <div className="dropdown">
+        <button className="navbar-link" onClick={handleDropdownToggle}>
+          Universities
+        </button>
+        {showDropdown && (
+          <div className="dropdown-content">
+            <button className="dropdown-item">UTSC</button>
+            <button className="dropdown-item">UTSG</button>
+            <button className="dropdown-item">UTM</button>
+          </div>
+        )}
+      </div>
       <button className="navbar-link">Find Roommates</button>
       <button
         id="sign-in-button"
@@ -51,10 +68,10 @@ const SignInForm: React.FC<{
 };
 
 /* Sign up form component */
-const SignUpForm: React.FC<{ onClose: () => void; onSignUpBackClick: () => void }> = ({
-  onClose,
-  onSignUpBackClick,
-}) => {
+const SignUpForm: React.FC<{
+  onClose: () => void;
+  onSignUpBackClick: () => void;
+}> = ({ onClose, onSignUpBackClick }) => {
   return (
     <div id="sign-in-container">
       <div id="sign-in-form">
@@ -63,7 +80,7 @@ const SignUpForm: React.FC<{ onClose: () => void; onSignUpBackClick: () => void 
         </span>
         <span id="back-button" onClick={onSignUpBackClick}>
           &#8249;
-          </span>
+        </span>
         <h2 id="sign-in-form-title">Sign Up</h2>
         <input type="text" id="sign-up-username" placeholder="Username" />
         <input type="password" id="sign-up-password" placeholder="Password" />
@@ -84,7 +101,7 @@ const Map: React.FC = () => {
   return (
     <div id="map-container">
       <iframe
-        width= "100%"
+        width="100%"
         height="1190"
         src="https://www.openstreetmap.org/export/embed.html?bbox=-79.21473026275636%2C43.77053600288821%2C-79.15808200836183%2C43.79730524799403&amp;layer=mapnik&amp;marker=43.783922123809695%2C-79.18640613555908"
       ></iframe>
@@ -102,7 +119,11 @@ const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           &times;
         </span>
         <h2 id="search-form-title">Search</h2>
-        <input type="text" id="search-query" placeholder="Search..." />
+        <input
+          type="text"
+          id="search-query"
+          placeholder="Search for an address"
+        />
         <button id="search-button">Search</button>
       </div>
     </div>
@@ -162,10 +183,12 @@ const App: React.FC = () => {
           onSignUpBackClick={handleSignUpBackClick}
         />
       )}
-            {showSearch && <SearchForm onClose={handleCloseSearch} />}
-      <button id="search-toggle-button" onClick={handleSearchClick}>
-        Search
-      </button>
+      {showSearch && <SearchForm onClose={handleCloseSearch} />}
+      {!showSearch && (
+        <button id="search-toggle-button" onClick={handleSearchClick}>
+          Search
+        </button>
+      )}
     </div>
   );
 };

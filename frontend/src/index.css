@@ -14,7 +14,7 @@ html, body {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgb(60, 180, 60);
+  background-color: #506C84;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -26,7 +26,7 @@ html, body {
   background: none;
   border: none;
   border-radius: 15px;
-  font-size: 2rem;
+  font-size: 2.7rem;
   font-family: Arial, sans-serif;
   color: white;
   padding: 0.5rem 1rem;
@@ -34,8 +34,7 @@ html, body {
 }
 
 .navbar-link:hover {
-  background-color: rgb(50, 150, 50);
-  border-radius: 15px;
+  transform: scale(1.2);
   cursor: pointer;
 }
 
@@ -82,7 +81,7 @@ html, body {
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  background-color: rgb(60, 180, 60);
+  background-color: #506C84;
   color: white;
   border: none;
   border-radius: 4px;
@@ -91,7 +90,7 @@ html, body {
 }
 
 #sign-in-form button:hover {
-  background-color: rgb(50, 150, 50);
+  background-color: #6A85A0
 }
 
 #sign-in-text {
@@ -101,7 +100,7 @@ html, body {
 }
 
 #sign-in-form a {
-  color: rgb(60, 180, 60);
+  color: #506C84;
   text-decoration: none;
   cursor: pointer;
 }
@@ -169,7 +168,7 @@ html, body {
 
 #search-form-title {
   font-size: 2rem;
-  margin-top: 20px;
+  margin-top: 0.5rem;
   font-family: Arial, sans-serif;
 }
 
@@ -180,24 +179,32 @@ html, body {
   margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 1.2rem;
+}
+
+#search-form input::placeholder {
+  font-size: 1.2rem;
+  color: #888;
 }
 
 #search-form button {
   justify-content: center;
   display: block;
   width: 100%;
+  height: 45px;
   padding: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: rgb(130, 155, 236);
+  margin-bottom: 0.5rem;
+  background-color: #506C84;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-family: Arial, sans-serif;
+  font-size: 1.5rem;
 }
 
 #search-form button:hover {
-  background-color: rgb(79, 115, 235);
+  background-color: #6A85A0;
 }
 
 #close-search-button {
@@ -224,12 +231,12 @@ html, body {
   bottom: 11px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgb(130, 155, 236);
+  background-color: #506C84;
   color: white;
   border-radius: 10px;
   width: 620px;
-  height: 100px;
-  font-size: 4rem;
+  height: 75px;
+  font-size: 3.5rem;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -238,7 +245,7 @@ html, body {
 }
 
 #search-toggle-button:hover {
-  background-color: rgb(79, 115, 235);
+  background-color: #6A85A0;
 }
 
 @keyframes slide-up {
@@ -248,4 +255,39 @@ html, body {
   to {
     transform: translateY(0);
   }
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-item {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  background: none;
+  border: none;
+  width: 273px;
+  text-align: left;
+  font-size: 1.3rem;
+}
+
+.dropdown-item:hover {
+  background-color: #6A85A0;
+  color: white;
 }
