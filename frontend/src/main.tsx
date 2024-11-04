@@ -11,6 +11,10 @@ const Navbar: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
     setShowDropdown(!showDropdown);
   };
 
+  const handleUniversityClick = (address: string) => {
+    console.log("University Address:", address);
+  };
+
   return (
     <nav id="navbar">
       <button className="navbar-link">Home</button>
@@ -20,9 +24,27 @@ const Navbar: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
         </button>
         {showDropdown && (
           <div className="dropdown-content">
-            <button className="dropdown-item">UTSC</button>
-            <button className="dropdown-item">UTSG</button>
-            <button className="dropdown-item">UTM</button>
+            <button
+              className="dropdown-item"
+              id="UTSC"
+              onClick={() => handleUniversityClick("1265 Military Trail, Scarborough, ON M1C 1A4")}
+            >
+              UTSC
+            </button>
+            <button
+              className="dropdown-item"
+              id="UTSG"
+              onClick={() => handleUniversityClick("21 Sussex Ave, Toronto, ON M5S 1J6")}
+            >
+              UTSG
+            </button>
+            <button
+              className="dropdown-item"
+              id="UTM"
+              onClick={() => handleUniversityClick("3359 Mississagauga Rd, Mississauga, ON L5L 1C6")}
+            >
+              UTM
+            </button>
           </div>
         )}
       </div>
@@ -72,6 +94,26 @@ const SignUpForm: React.FC<{
   onClose: () => void;
   onSignUpBackClick: () => void;
 }> = ({ onClose, onSignUpBackClick }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    /*try {
+    await SignUp(username, email, password);
+    console.log("User signed up successfully", username, email, password);
+  } catch (error) {
+    console.log("Error signing up user", error);
+  }
+*/
+  };
+
   return (
     <div id="sign-in-container">
       <div id="sign-in-form">
@@ -82,15 +124,35 @@ const SignUpForm: React.FC<{
           &#8249;
         </span>
         <h2 id="sign-in-form-title">Sign Up</h2>
-        <input type="text" id="sign-up-username" placeholder="Username" />
-        <input type="password" id="sign-up-password" placeholder="Password" />
+        <div id="signup-error-message">{errorMessage}</div>
+        <input
+          type="text"
+          id="sign-up-username"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          //required
+        />
+        <input
+          type="password"
+          id="sign-up-password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <input
           type="password"
           id="confirm-password"
           placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
         />
-        <button id="sign-up-button">Sign Up</button>
-        <button id="sign-up-button">Sign Up with Google</button>
+        <button id="sign-up-button" onClick={handleSignUp}>
+          Sign Up
+        </button>
+        <a id="sign-up-button">Sign up with Google</a>
       </div>
     </div>
   );

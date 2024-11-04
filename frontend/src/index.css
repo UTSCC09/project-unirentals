@@ -66,6 +66,13 @@ html, body {
   font-size: 2rem;
   margin-top: 20px;
   font-family: Arial, sans-serif;
+  margin-bottom: 5px;
+}
+
+#signup-error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
 }
 
 #sign-in-form input {
