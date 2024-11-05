@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import "./PropertyDetailsForm.css";
+import {
+  FaMapMarkerAlt,
+  FaDollarSign,
+  FaBuilding,
+  FaInfoCircle,
+  FaRuler,
+} from "react-icons/fa";
 
 interface PropertyDetailsFormProps {
   property: {
-    name: string;
+    owner: string;
     address: string;
     distance: string;
     price: string;
@@ -31,12 +38,28 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         <span id="back-button" onClick={onBack}>
           &#8249;
         </span>
-        <h2 id="property-name">{property.name}</h2>
-        <p id="property-address">{property.address}</p>
-        <p id="property-distance">Distance from campus: {property.distance}</p>
-        <p id="property-price">Price: {property.price}</p>
-        <p id="property-building-type">Building type: {property.buildingType}</p>
+        <h2 id="property-address">
+          <FaMapMarkerAlt />
+          {property.address}
+        </h2>
+        <p id="property-distance">
+          <FaRuler />
+          Distance from campus: {property.distance}
+        </p>
+        <p id="property-price">
+          <FaDollarSign />
+          Price: {property.price}
+        </p>
+        <p id="property-building-type">
+          <FaBuilding />
+          Building type: {property.buildingType}
+        </p>
+        <p id="property-owner">
+          <FaBuilding />
+          Owned by: {property.owner}
+        </p>
         <p id="property-description">
+          <FaInfoCircle />
           Description: {property.description}
           {showMoreInfo && <span> (More information about the property)</span>}
         </p>

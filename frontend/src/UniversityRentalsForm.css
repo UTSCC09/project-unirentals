@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 33%;
+    width: 27%;
     height: 100%;
     background-color: #f9f9f9;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
@@ -12,6 +12,7 @@
   
   #university-details-form {
     padding: 2rem;
+    margin-right: -1rem;
     position: relative;
   }
   
@@ -34,7 +35,7 @@
   }
   
   #university-name {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 0.5rem;
     font-family: Arial, sans-serif;
   }
@@ -56,20 +57,51 @@
     padding: 0;
     margin-bottom: 1rem;
     cursor: pointer;
+    width: 90%;
+    
   }
   
   .rental-item {
-    font-size: 1.4rem;
     margin-bottom: 0.5rem;
     font-family: Arial, sans-serif;
     justify-content: center;
     text-align: center;
+    padding: 0.2rem;
+    border-radius: 7px;
+    background-color: #688197;
+    color: white;
+    transition: background-color 0.3s ease;
   }
 
   .rental-item:hover {
-    color: #506C84;
-    transform: scale(1.2);
+    transform: scale(1.05);
   }
+
+  .rental-address {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+  
+  .rental-type,
+  .rental-price {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+  }
+
+  .rental-icons {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  .icon {
+    font-size: 1.3rem;
+    margin-left: 0.9rem;
+  }
+
   
   #navigation-buttons {
     display: flex;

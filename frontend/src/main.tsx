@@ -6,7 +6,10 @@ import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
 
 /* Navbar component */
-const Navbar: React.FC<{ onSignInClick: () => void; onUniversityClick: (university: string, address: string) => void }> = ({ onSignInClick, onUniversityClick }) => {
+const Navbar: React.FC<{
+  onSignInClick: () => void;
+  onUniversityClick: (university: string, address: string) => void;
+}> = ({ onSignInClick, onUniversityClick }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -29,28 +32,45 @@ const Navbar: React.FC<{ onSignInClick: () => void; onUniversityClick: (universi
             <button
               className="dropdown-item"
               id="UTSC"
-              onClick={() => onUniversityClick("University of Toronto Scarborough Campus", "1265 Military Trail, Scarborough, ON M1C 1A4")}
+              onClick={() =>
+                onUniversityClick(
+                  "University of Toronto Scarborough Campus",
+                  "1265 Military Trail, Scarborough, ON M1C 1A4"
+                )
+              }
             >
               UTSC
             </button>
             <button
               className="dropdown-item"
               id="UTSG"
-              onClick={() => onUniversityClick("University of Toronto St. George Campus", "21 Sussex Ave, Toronto, ON M5S 1J6")}
+              onClick={() =>
+                onUniversityClick(
+                  "University of Toronto St. George Campus",
+                  "21 Sussex Ave, Toronto, ON M5S 1J6"
+                )
+              }
             >
               UTSG
             </button>
             <button
               className="dropdown-item"
               id="UTM"
-              onClick={() => onUniversityClick("University of Toronto Mississaauga Campus", "3359 Mississauga Rd, Mississauga, ON L5L 1C6")}
+              onClick={() =>
+                onUniversityClick(
+                  "University of Toronto Mississaauga Campus",
+                  "3359 Mississauga Rd, Mississauga, ON L5L 1C6"
+                )
+              }
             >
               UTM
             </button>
           </div>
         )}
       </div>
-      <button className="navbar-link">Find Roommates</button>
+      <button className="navbar-link" id="profile-button">
+        Profile
+      </button>
       <button
         id="sign-in-button"
         className="navbar-link"
@@ -222,19 +242,22 @@ const App: React.FC = () => {
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-  const [rentals, setRentals] = useState<string[]>(["Property 1", "Property 2", "Property 3"]);
+  const [rentals, setRentals] = useState<string[]>([
+    "123 Main St, Scarborough Ontario",
+    "330 University Ave, Toronto Ontario",
+    "1234 Military Trail, Scarborough Ontario",
+  ]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState({
-    name: "",
+    owner: "",
     address: "",
     distance: "",
     price: "",
     buildingType: "",
     description: "",
   });
-
 
   /* Event Handlers */
   const handleSignInClick = () => {
@@ -277,18 +300,14 @@ const App: React.FC = () => {
     setShowUniversityDetails(false);
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = () => {};
 
-  };
-
-  const handleNext = () => {
-    
-  };
+  const handleNext = () => {};
 
   // Property Details Form
 
- const handleRentalClick = (property: {
-    name: string;
+  const handleRentalClick = (property: {
+    owner: string;
     address: string;
     distance: string;
     price: string;
@@ -311,7 +330,10 @@ const App: React.FC = () => {
   // actual components being rendered
   return (
     <div>
-      <Navbar onSignInClick={handleSignInClick} onUniversityClick={handleUniversityClick} />
+      <Navbar
+        onSignInClick={handleSignInClick}
+        onUniversityClick={handleUniversityClick}
+      />
       <Map />
       {showSignIn && (
         <SignInForm
@@ -337,18 +359,21 @@ const App: React.FC = () => {
           onRentalClick={handleRentalClick} // go to UniversityDetailsForm
         />
       )}
-        {showPropertyDetails && (
+      {showPropertyDetails && (
         <PropertyDetailsForm
           property={selectedProperty}
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
         />
       )}
-      {!showSearch && (
+      {
+        // search bar
+        /* {!showSearch && (
         <button id="search-toggle-button" onClick={handleSearchClick}>
           Search
         </button>
-      )}
+      )} */
+      }
     </div>
   );
 };
