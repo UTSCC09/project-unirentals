@@ -5,13 +5,15 @@ import React, { useState } from "react";
 import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
 import RoommateProfilesList from "./RoommateProfilesList";
+import ProfileForm from "./ProfileForm";
 
 /* Navbar component */
 const Navbar: React.FC<{
   onSignInClick: () => void;
   onUniversityClick: (university: string, address: string) => void;
   onHomeClick: () => void;
-}> = ({ onSignInClick, onUniversityClick, onHomeClick }) => {
+  onProfileClick: () => void;
+}> = ({ onSignInClick, onUniversityClick, onHomeClick, onProfileClick }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -70,7 +72,7 @@ const Navbar: React.FC<{
           </div>
         )}
       </div>
-      <button className="navbar-link" id="profile-button">
+      <button className="navbar-link" id="profile-button" onClick={onProfileClick}>
         Profile
       </button>
       <button
@@ -261,6 +263,7 @@ const App: React.FC = () => {
     description: "",
   });
 
+  const [showProfileForm, setShowProfileForm] = useState(false);
   const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
   const [roommateProfiles, setRoommateProfiles] = useState([
     {
@@ -308,6 +311,7 @@ const App: React.FC = () => {
     setShowUniversityDetails(false);
     setShowPropertyDetails(false);
     setShowRoommateProfiles(false);
+    setShowProfileForm(false);
   };
 
   // Search form
@@ -370,6 +374,11 @@ const App: React.FC = () => {
     setShowPropertyDetails(true);
   };
 
+  const handleProfileClick = () => {
+    setShowProfileForm(true);
+  };
+
+
   // actual components being rendered
   return (
     <div>
@@ -377,6 +386,7 @@ const App: React.FC = () => {
         onSignInClick={handleSignInClick}
         onUniversityClick={handleUniversityClick}
         onHomeClick={onHomeClick}
+        onProfileClick={handleProfileClick}
       />
       <Map />
       {showSignIn && (
@@ -417,6 +427,9 @@ const App: React.FC = () => {
           onClose={handleCloseRoommateProfiles}
           onBack={handleBackToPropertyDetails} 
         />
+      )}
+      {showProfileForm && (
+        <ProfileForm onClose={() => setShowProfileForm(false)} />
       )}
       {
         // search bar
