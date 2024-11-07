@@ -4,6 +4,7 @@ import "./index.css";
 import React, { useState } from "react";
 import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
+import RoommateProfilesList from "./RoommateProfilesList";
 
 /* Navbar component */
 const Navbar: React.FC<{
@@ -259,6 +260,24 @@ const App: React.FC = () => {
     description: "",
   });
 
+  const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
+  const [roommateProfiles, setRoommateProfiles] = useState([
+    {
+      profilePicture: "https://via.placeholder.com/150",
+      name: "Alice Johnson",
+      age: 25,
+      pronouns: "She/Her",
+      location: "Toronto, ON",
+    },
+    {
+      profilePicture: "https://via.placeholder.com/150",
+      name: "Bob Joe",
+      age: 28,
+      pronouns: "He/Him",
+      location: "Mississauga, ON",
+    },
+  ]);
+
   /* Event Handlers */
   const handleSignInClick = () => {
     setShowSignIn(true);
@@ -327,6 +346,19 @@ const App: React.FC = () => {
     setShowUniversityDetails(true);
   };
 
+    const handleFindRoommates = () => {
+    setShowRoommateProfiles(true);
+  };
+
+  const handleCloseRoommateProfiles = () => {
+    setShowRoommateProfiles(false);
+  };
+
+  const handleBackToPropertyDetails = () => {
+    setShowRoommateProfiles(false);
+    setShowPropertyDetails(true);
+  };
+
   // actual components being rendered
   return (
     <div>
@@ -356,7 +388,7 @@ const App: React.FC = () => {
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
           onNext={handleNext}
-          onRentalClick={handleRentalClick} // go to UniversityDetailsForm
+          onRentalClick={handleRentalClick}
         />
       )}
       {showPropertyDetails && (
@@ -364,6 +396,14 @@ const App: React.FC = () => {
           property={selectedProperty}
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
+          onFindRoommates={handleFindRoommates}
+        />
+      )}
+        {showRoommateProfiles && (
+        <RoommateProfilesList
+          profiles={roommateProfiles}
+          onClose={handleCloseRoommateProfiles}
+          onBack={handleBackToPropertyDetails} 
         />
       )}
       {

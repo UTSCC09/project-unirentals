@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 27%;
+    width: 30%;
     height: 100%;
     background-color: #f9f9f9;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
@@ -53,7 +53,7 @@
   
   #property-address {
     font-size: 3.5rem;
-    margin-bottom: 1rem;
+    margin: 1rem;
     font-family: Arial, sans-serif;
   }
   
