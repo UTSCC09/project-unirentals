@@ -1,39 +1,71 @@
-# Python (Django) Related
-venv/                   # Virtual environment
-__pycache__/            # Byte-compiled files
-*.py[cod]               # Python cache files
-*.sqlite3               # SQLite database (if used in development)
-*.log                   # Log files
+# --- Python (Django) Related --- #
 
-# Django Related
-*.env                   # Environment variables
-/staticfiles/           # Static files collected by Django
-/media/                 # User-uploaded media files (if managed by Django)
-db.sqlite3              # SQLite database file
-celerybeat-schedule     # Celery schedule database (if using Celery)
+# Virtual environment
+venv/
+# Byte-compiled files
+__pycache__/
+# Python cache files            
+*.py[cod]
+# SQLite database (if used in development)               
+*.sqlite3
+# Log files               
+*.log                   
 
-# Node (React) Related
-node_modules/           # Node.js dependencies
-npm-debug.log           # npm error log
-yarn-error.log          # yarn error log
-*.cache                 # Cache files
+# --- Django Related --- #
 
-# Build Artifacts
-dist/                   # Build folder (if using custom build commands)
-build/                  # Build folder (for React build output)
-*.js.map                # Source map files
+# Environment variables
+*.env                   
+# Static files collected by Django
+/staticfiles/           
+# User-uploaded media files (if managed by Django)
+/media/                 
+# SQLite database file
+db.sqlite3              
+# Celery schedule database (if using Celery)
+celerybeat-schedule     
 
-# OS Specific
-.DS_Store               # macOS specific
-Thumbs.db               # Windows specific
+# --- Node (React) Related --- #
 
-# IDEs and Editors
-.vscode/                # Visual Studio Code config
-.idea/                  # IntelliJ IDEA config
-*.sublime-project       # Sublime Text project files
-*.sublime-workspace     # Sublime Text workspace files
+# Node.js dependencies
+node_modules/        
+# npm error log   
+npm-debug.log           
+# yarn error log
+yarn-error.log          
+# Cache files
+*.cache                 
 
-# Miscellaneous
-*.bak                   # Backup files
-*.swp                   # Vim swap files
-*.swp                   # vim temporary files
+# --- Build Artifacts --- #
+
+# Build folder (if using custom build commands)
+dist/         
+# Build folder (for React build output)          
+build/                  
+# Source map files
+*.js.map                
+
+# --- OS Specific --- #
+
+# macOS specific
+.DS_Store               
+# Windows specific
+Thumbs.db               
+
+# --- IDEs and Editors --- #
+
+# Visual Studio Code config
+.vscode/                
+# IntelliJ IDEA config
+.idea/                  
+# Sublime Text project files
+*.sublime-project       
+# Sublime Text workspace files
+*.sublime-workspace
+
+# --- Miscellaneous --- #
+
+# Backup files
+*.bak                   
+# Vim swap/temporary files
+*.swp                   
+                   
