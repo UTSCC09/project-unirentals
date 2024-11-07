@@ -10,7 +10,8 @@ import RoommateProfilesList from "./RoommateProfilesList";
 const Navbar: React.FC<{
   onSignInClick: () => void;
   onUniversityClick: (university: string, address: string) => void;
-}> = ({ onSignInClick, onUniversityClick }) => {
+  onHomeClick: () => void;
+}> = ({ onSignInClick, onUniversityClick, onHomeClick }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -23,7 +24,7 @@ const Navbar: React.FC<{
 
   return (
     <nav id="navbar">
-      <button className="navbar-link">Home</button>
+      <button className="navbar-link" onClick={onHomeClick}>Home</button>
       <div className="dropdown">
         <button className="navbar-link" onClick={handleDropdownToggle}>
           Universities
@@ -299,6 +300,16 @@ const App: React.FC = () => {
     setShowSignUp(false);
   };
 
+  // back to home page
+  const onHomeClick = () => {
+    setShowSignIn(false);
+    setShowSignUp(false);
+    setShowSearch(false);
+    setShowUniversityDetails(false);
+    setShowPropertyDetails(false);
+    setShowRoommateProfiles(false);
+  };
+
   // Search form
   const handleSearchClick = () => {
     setShowSearch(true);
@@ -365,6 +376,7 @@ const App: React.FC = () => {
       <Navbar
         onSignInClick={handleSignInClick}
         onUniversityClick={handleUniversityClick}
+        onHomeClick={onHomeClick}
       />
       <Map />
       {showSignIn && (
