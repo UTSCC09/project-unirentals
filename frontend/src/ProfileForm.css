@@ -20,7 +20,7 @@
     max-width: 90%;
     position: relative;
   }
-  
+
   #close-profile-form-button {
     position: absolute;
     top: 10px;
@@ -43,6 +43,19 @@
     font-size: 2rem;
     margin-bottom: 1rem;
     font-family: Arial, sans-serif;
+  }
+
+  #profile-image {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #333;
+  }
+
+  #profile-image-container {
+    display: flex;
+    justify-content: center;
   }
   
   .form-group {
