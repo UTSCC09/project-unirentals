@@ -95,7 +95,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose }) => {
             <input type="number" id="budget" name="budget" value={profile.budget} onChange={handleInputChange} />
           </div>
           <div className="form-group">
-            <label htmlFor="moveDate">Ready to Move (Date)</label>
+            <label htmlFor="moveDate">Ready to Move By</label>
             <input type="date" id="moveDate" name="moveDate" value={profile.moveDate} onChange={handleInputChange} />
           </div>
           <div className="form-group">

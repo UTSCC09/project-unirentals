@@ -6,6 +6,7 @@ import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
 import RoommateProfilesList from "./RoommateProfilesList";
 import ProfileForm from "./ProfileForm";
+import { signUp, signIn } from "./api";
 
 /* Navbar component */
 const Navbar: React.FC<{
@@ -91,6 +92,24 @@ const SignInForm: React.FC<{
   onClose: () => void;
   onSignUpClick: () => void;
 }> = ({ onClose, onSignUpClick }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSignIn = async () => {
+    try {
+      const response = await signIn(username, password);
+      if (response.success) {
+        console.log("User signed in successfully", username);
+        onClose();
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during sign in");
+    }
+  };  
+
   return (
     <div id="sign-in-container">
       <div id="sign-in-form">
@@ -100,7 +119,7 @@ const SignInForm: React.FC<{
         <h2 id="sign-in-form-title">Sign In</h2>
         <input type="text" id="sign-in-username" placeholder="Username" />
         <input type="password" id="sign-in-password" placeholder="Password" />
-        <button id="login-button">Sign In</button>
+        <button id="login-button" onClick={handleSignIn}>Sign In</button>
         <a href="https://accounts.google.com/signin" id="google-login-button">
           Sign in with Google
         </a>
@@ -131,13 +150,18 @@ const SignUpForm: React.FC<{
       return;
     }
 
-    /*try {
-    await SignUp(username, email, password);
-    console.log("User signed up successfully", username, email, password);
-  } catch (error) {
-    console.log("Error signing up user", error);
-  }
-*/
+    // call sign up
+    try {
+      const response = await signUp(username, password);
+      if (response.success) {
+        console.log("User signed up successfully", username);
+        onClose();
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during sign up");
+    }
   };
 
   return (
