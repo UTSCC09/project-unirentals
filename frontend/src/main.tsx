@@ -7,11 +7,16 @@ import PropertyDetailsForm from "./PropertyDetailsForm";
 import RoommateProfilesList from "./RoommateProfilesList";
 import ProfileForm from "./ProfileForm";
 import { signUp, signIn } from "./api";
+import Map from "./Map";
 
 /* Navbar component */
 const Navbar: React.FC<{
   onSignInClick: () => void;
-  onUniversityClick: (university: string, address: string) => void;
+  onUniversityClick: (
+    university: string,
+    address: string,
+    coordinates: [number, number]
+  ) => void;
   onHomeClick: () => void;
   onProfileClick: () => void;
 }> = ({ onSignInClick, onUniversityClick, onHomeClick, onProfileClick }) => {
@@ -27,7 +32,9 @@ const Navbar: React.FC<{
 
   return (
     <nav id="navbar">
-      <button className="navbar-link" onClick={onHomeClick}>Home</button>
+      <button className="navbar-link" onClick={onHomeClick}>
+        Home
+      </button>
       <div className="dropdown">
         <button className="navbar-link" onClick={handleDropdownToggle}>
           Universities
@@ -40,7 +47,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto Scarborough Campus",
-                  "1265 Military Trail, Scarborough, ON M1C 1A4"
+                  "1265 Military Trail, Scarborough, ON M1C 1A4",
+                  [43.7845, -79.1864]
                 )
               }
             >
@@ -52,7 +60,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto St. George Campus",
-                  "21 Sussex Ave, Toronto, ON M5S 1J6"
+                  "21 Sussex Ave, Toronto, ON M5S 1J6",
+                  [43.6629, -79.3957]
                 )
               }
             >
@@ -64,7 +73,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto Mississaauga Campus",
-                  "3359 Mississauga Rd, Mississauga, ON L5L 1C6"
+                  "3359 Mississauga Rd, Mississauga, ON L5L 1C6",
+                  [43.5489, -79.6626]
                 )
               }
             >
@@ -73,7 +83,11 @@ const Navbar: React.FC<{
           </div>
         )}
       </div>
-      <button className="navbar-link" id="profile-button" onClick={onProfileClick}>
+      <button
+        className="navbar-link"
+        id="profile-button"
+        onClick={onProfileClick}
+      >
         Profile
       </button>
       <button
@@ -108,7 +122,7 @@ const SignInForm: React.FC<{
     } catch (error) {
       setErrorMessage("An error occurred during sign in");
     }
-  };  
+  };
 
   return (
     <div id="sign-in-container">
@@ -119,7 +133,9 @@ const SignInForm: React.FC<{
         <h2 id="sign-in-form-title">Sign In</h2>
         <input type="text" id="sign-in-username" placeholder="Username" />
         <input type="password" id="sign-in-password" placeholder="Password" />
-        <button id="login-button" onClick={handleSignIn}>Sign In</button>
+        <button id="login-button" onClick={handleSignIn}>
+          Sign In
+        </button>
         <a href="https://accounts.google.com/signin" id="google-login-button">
           Sign in with Google
         </a>
@@ -208,20 +224,6 @@ const SignUpForm: React.FC<{
   );
 };
 
-// Map
-const Map: React.FC = () => {
-  return (
-    <div id="map-container">
-      <iframe
-        width="100%"
-        height="1190"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-79.21473026275636%2C43.77053600288821%2C-79.15808200836183%2C43.79730524799403&amp;layer=mapnik&amp;marker=43.783922123809695%2C-79.18640613555908"
-      ></iframe>
-      <br />
-    </div>
-  );
-};
-
 // Search form
 const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [showFilters, setShowFilters] = useState(false);
@@ -265,6 +267,10 @@ const App: React.FC = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+
+  // Map
+  const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
+  const [zoom, setZoom] = useState(2); // zoom level
 
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
@@ -348,10 +354,16 @@ const App: React.FC = () => {
   };
 
   // University and Rentails Form
-  const handleUniversityClick = (university: string, address: string) => {
+  const handleUniversityClick = (
+    university: string,
+    address: string,
+    coordinates: [number, number]
+  ) => {
     setSelectedUniversity(university);
     setSelectedAddress(address);
     setShowUniversityDetails(true);
+    setCenter(coordinates);
+    setZoom(8);
   };
 
   const handleCloseUniversityDetails = () => {
@@ -385,7 +397,7 @@ const App: React.FC = () => {
     setShowUniversityDetails(true);
   };
 
-    const handleFindRoommates = () => {
+  const handleFindRoommates = () => {
     setShowRoommateProfiles(true);
   };
 
@@ -402,7 +414,6 @@ const App: React.FC = () => {
     setShowProfileForm(true);
   };
 
-
   // actual components being rendered
   return (
     <div>
@@ -412,7 +423,7 @@ const App: React.FC = () => {
         onHomeClick={onHomeClick}
         onProfileClick={handleProfileClick}
       />
-      <Map />
+      <Map center={center} zoom={zoom} />
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -445,11 +456,11 @@ const App: React.FC = () => {
           onFindRoommates={handleFindRoommates}
         />
       )}
-        {showRoommateProfiles && (
+      {showRoommateProfiles && (
         <RoommateProfilesList
           profiles={roommateProfiles}
           onClose={handleCloseRoommateProfiles}
-          onBack={handleBackToPropertyDetails} 
+          onBack={handleBackToPropertyDetails}
         />
       )}
       {showProfileForm && (

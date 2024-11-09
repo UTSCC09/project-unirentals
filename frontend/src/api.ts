@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://backend-api"; // replace with API URL
+const API_BASE_URL = "http://127.0.0.1:8000/"; // replace with API URL
 
 interface SignUpResponse {
   success: boolean;
@@ -10,7 +10,7 @@ interface SignInResponse {
     message: string;
     token?: string;
 }
-
+// sign up
 export const signUp = async (username: string, password: string): Promise<SignUpResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}/signup`, {
@@ -33,6 +33,7 @@ export const signUp = async (username: string, password: string): Promise<SignUp
   }
 };
 
+// sign in
 export const signIn = async (username: string, password: string): Promise<SignInResponse> => {
     try {
       const response = await fetch(`${API_BASE_URL}/signin`, {
@@ -54,3 +55,4 @@ export const signIn = async (username: string, password: string): Promise<SignIn
       return { success: false, message: "Failed to sign in" };
     }
   };
+
