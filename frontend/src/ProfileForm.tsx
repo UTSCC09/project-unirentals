@@ -114,7 +114,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose }) => {
                 Pet Owner
               </label>
               <label>
-                <input type="checkbox" name="drinks" checked={profile.preferences.petOwner} onChange={handleCheckboxChange} />
+                <input type="checkbox" name="drinks" checked={profile.preferences.drinks} onChange={handleCheckboxChange} />
                 Drinks
               </label>
               {/* Add more preferences as needed */}
