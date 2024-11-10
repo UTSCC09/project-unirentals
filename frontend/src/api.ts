@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:8000/"; // replace with API URL
+import axios from "axios";
+const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
 
 interface SignUpResponse {
   success: boolean;
@@ -6,53 +7,87 @@ interface SignUpResponse {
 }
 
 interface SignInResponse {
-    success: boolean;
-    message: string;
-    token?: string;
+  success: boolean;
+  message: string;
+  token?: string;
 }
-// sign up
-export const signUp = async (username: string, password: string): Promise<SignUpResponse> => {
+
+let csrfToken: string | null = null;
+
+// Fetch CSRF token on app startup
+export const fetchCSRFToken = async (): Promise<void> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",       
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/getcsrf/`);
+    csrfToken = response.data.csrfToken;
+    console.log("CSRF token:", csrfToken);
+  } catch (error) {
+    console.error("Error fetching CSRF token:", error);
+  }
+};
 
-    if (!response.ok) {
-      throw new Error("Failed to sign up");
-    }
+// sign up
+export const signUp = async (formData: FormData): Promise<SignUpResponse> => {
+  console.log("signUp: ", formData);
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/register/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-Csrftoken": csrfToken || "",
+        },
+      }
+    );
 
-    const data = await response.json();
-    return data;
+    return { success: response.status === 201, message: response.data.message };
   } catch (error) {
     console.log(error);
     return { success: false, message: "Failed to sign up" };
   }
 };
+// console.log("signUp: ", email, password1, password2);
+// try {
+//   const response = await axios.post(
+//     `${API_BASE_URL}/api/register/`,
+//     { email, password1, password2 },
+//     {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//         "X-CSRFToken": csrfToken || "",
+//       },
+//     }
+//   );
+
+//   return { success: response.status === 201, message: response.data.message };
+// } catch (error) {
+//   console.log(error);
+//   return { success: false, message: "Failed to sign up" };
+// }
 
 // sign in
-export const signIn = async (username: string, password: string): Promise<SignInResponse> => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/signin`, {
-        method: "POST",
+export const signIn = async (
+formData: FormData
+): Promise<SignInResponse> => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/login/`,
+      formData,
+      {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
+          "X-Csrftoken": csrfToken || "",
         },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to sign in");
       }
-  
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-      return { success: false, message: "Failed to sign in" };
-    }
-  };
+    );
 
+    return {
+      success: response.status === 200,
+      message: response.data.message,
+      token: response.data.token,
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Failed to sign in" };
+  }
+};

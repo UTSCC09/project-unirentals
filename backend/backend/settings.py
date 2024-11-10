@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-oep+@ls%qc&q+fv-vqkcfles3-1#epu^*v_i(%o&%#m+of^nnp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['35.224.56.180', '127.0.0.1']
-
+ALLOWED_HOSTS = ['35.224.56.180', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -40,6 +39,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173/',
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
