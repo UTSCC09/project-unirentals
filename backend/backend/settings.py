@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+    'profiles',
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
