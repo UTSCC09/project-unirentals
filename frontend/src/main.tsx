@@ -106,15 +106,15 @@ const SignInForm: React.FC<{
   onClose: () => void;
   onSignUpClick: () => void;
 }> = ({ onClose, onSignUpClick }) => {
-  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignIn = async () => {
     try {
-      const response = await signIn(username, password);
+      const response = await signIn(email, password);
       if (response.success) {
-        console.log("User signed in successfully", username);
+        console.log("User signed in successfully", email);
         onClose();
       } else {
         setErrorMessage(response.message);
@@ -131,8 +131,8 @@ const SignInForm: React.FC<{
           &times;
         </span>
         <h2 id="sign-in-form-title">Sign In</h2>
-        <input type="text" id="sign-in-username" placeholder="Username" />
-        <input type="password" id="sign-in-password" placeholder="Password" />
+        <input type="text" id="sign-in-email" name="email" placeholder="Email" />
+        <input type="password" id="sign-in-password" name="password"placeholder="Password" />
         <button id="login-button" onClick={handleSignIn}>
           Sign In
         </button>
@@ -155,7 +155,7 @@ const SignUpForm: React.FC<{
   onClose: () => void;
   onSignUpBackClick: () => void;
 }> = ({ onClose, onSignUpBackClick }) => {
-  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -168,9 +168,9 @@ const SignUpForm: React.FC<{
 
     // call sign up
     try {
-      const response = await signUp(username, password);
+      const response = await signUp(email, password);
       if (response.success) {
-        console.log("User signed up successfully", username);
+        console.log("User signed up successfully", email);
         onClose();
       } else {
         setErrorMessage(response.message);
@@ -193,15 +193,17 @@ const SignUpForm: React.FC<{
         <div id="signup-error-message">{errorMessage}</div>
         <input
           type="text"
-          id="sign-up-username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="sign-up-email"
+          name="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setemail(e.target.value)}
           //required
         />
         <input
           type="password"
           id="sign-up-password"
+          name="password1"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -210,6 +212,7 @@ const SignUpForm: React.FC<{
         <input
           type="password"
           id="confirm-password"
+          name="password2"
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
