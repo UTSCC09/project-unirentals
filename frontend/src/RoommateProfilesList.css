@@ -11,14 +11,14 @@
   }
   
   #roommate-profiles-list {
-    padding: 2rem;
+    padding: 4%;
     position: relative;
   }
   
   #close-roommate-profiles-button {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 2%;
+    right: 5%;
     font-size: 1.7rem;
     cursor: pointer;
     color: #333;
@@ -35,21 +35,21 @@
   
   #roommate-profiles-title {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2%;
     font-family: Arial, sans-serif;
   }
   
   #profiles-list {
     list-style-type: none;
-    padding: 0;
-    margin-bottom: 1rem;
+    padding: 1%;
+    margin-bottom: 2%;
   }
   
   .profile-item {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    margin-bottom: 3%;
+    padding: 1%;
     border: 1px solid #ccc;
     border-radius: 4px;
     transition: background-color 0.3s ease;
@@ -62,11 +62,11 @@
   }
   
   .profile-picture {
-    width: 150px;
+    width: 25%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    margin-right: 1rem;
+    margin-right: 3%;
   }
   
   .profile-details {
@@ -77,13 +77,13 @@
   .profile-name {
     font-size: 1.7rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1%;
   }
   
   .profile-age-pronouns,
   .profile-location {
     font-size: 1.2rem;
-    margin-bottom: 1px;
+    margin-bottom: 1%;
   }
   
   @keyframes slide-in {
