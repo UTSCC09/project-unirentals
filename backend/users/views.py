@@ -37,7 +37,19 @@ def registerUser(request):
 def loginUser(request):
   
   if request.method == 'POST':
-     email = request.POST.get('email')
-     password = request.POST.get('password')
+      email = request.POST['email']
+      password = request.POST['password']
 
-     user = authenticate(request, email=email, password=password)
+      user = authenticate(request, email=email, password=password)
+     
+      if user is not None:
+          login(request, user)
+          return JsonResponse({"error": "The user was logged in successfully"}, status=200)
+      else:
+          # Default response if no error matched
+          return JsonResponse({"error": "The user was unable to be authenticated"}, status=400)
+      
+  return JsonResponse(
+                {"errors": "Method not allowed."},
+                status=405
+            )
