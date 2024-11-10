@@ -1,13 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.forms import inlineformset_factory
+from django.http import JsonResponse
 from . import forms
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
-@csrf_exempt
+@ensure_csrf_cookie
+def get_csrf(request):
+    return JsonResponse({"csrfToken": request.META.get("CSRF_COOKIE")})
+
 def registerUser(request):
   form = forms.CustomUserCreationForm()
 
@@ -33,7 +34,6 @@ def registerUser(request):
                 status=405
             )
 
-@csrf_exempt
 def loginUser(request):
   
   if request.method == 'POST':
@@ -44,11 +44,26 @@ def loginUser(request):
      
       if user is not None:
           login(request, user)
-          return JsonResponse({"error": "The user was logged in successfully"}, status=200)
+          return JsonResponse({"message": "User signed in successfully."}, status=200)
       else:
           # Default response if no error matched
           return JsonResponse({"error": "The user was unable to be authenticated"}, status=400)
       
+  return JsonResponse(
+                {"errors": "Method not allowed."},
+                status=405
+            )
+
+def logoutUser(request):
+  
+  if request.method == 'GET':
+      logout(request)
+      return JsonResponse(
+                {"message": "User signed out successfully."},
+                status=200
+            )
+
+  print("Method is" + request.METHOD)    
   return JsonResponse(
                 {"errors": "Method not allowed."},
                 status=405
