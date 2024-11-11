@@ -1,0 +1,96 @@
+#roommate-profiles-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    background-color: #f9f9f9;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    animation: slide-in 0.5s forwards;
+    z-index: 1000;
+  }
+  
+  #roommate-profiles-list {
+    padding: 4%;
+    position: relative;
+  }
+  
+  #close-roommate-profiles-button {
+    position: absolute;
+    top: 2%;
+    right: 5%;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: #333;
+    background: none;
+    border: none;
+    outline: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  #close-roommate-profiles-button:hover {
+    color: #ff0000;
+    transform: scale(1.4);
+  }
+  
+  #roommate-profiles-title {
+    font-size: 2rem;
+    margin-bottom: 2%;
+    font-family: Arial, sans-serif;
+  }
+  
+  #profiles-list {
+    list-style-type: none;
+    padding: 1%;
+    margin-bottom: 2%;
+  }
+  
+  .profile-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3%;
+    padding: 1%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-item:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+  
+  .profile-picture {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 3%;
+  }
+  
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-name {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 1%;
+  }
+  
+  .profile-age-pronouns,
+  .profile-location {
+    font-size: 1.2rem;
+    margin-bottom: 1%;
+  }
+  
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
