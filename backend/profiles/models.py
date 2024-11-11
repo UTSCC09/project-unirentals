@@ -4,7 +4,7 @@ from users.models import CustomUser
 # Create your models here.
 class userProfile(models.Model):
   
-  user = models.OneToOneField(CustomUser, null=True, on_delete=models.CASCADE)
+  user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
   first_name = models.CharField(max_length=30, blank=True, null=True)
   last_name = models.CharField(max_length=30, blank=True, null=True)
@@ -18,3 +18,6 @@ class userProfile(models.Model):
   smokes = models.BooleanField(default=False)
   pets = models.BooleanField(default=False)
   drinks = models.BooleanField(default=False)
+
+  def __str__(self):
+    return self.user.email
