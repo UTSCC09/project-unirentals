@@ -6,12 +6,13 @@ import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
 import RoommateProfilesList from "./RoommateProfilesList";
 import ProfileForm from "./ProfileForm";
-import { signUp, signIn, fetchCSRFToken } from "./api";
+import { signUp, signIn, signOut, fetchCSRFToken } from "./api";
 import Map from "./Map";
 
 /* Navbar component */
 const Navbar: React.FC<{
   onSignInClick: () => void;
+  onSignOutClick: () => void;
   onUniversityClick: (
     university: string,
     address: string,
@@ -19,7 +20,15 @@ const Navbar: React.FC<{
   ) => void;
   onHomeClick: () => void;
   onProfileClick: () => void;
-}> = ({ onSignInClick, onUniversityClick, onHomeClick, onProfileClick }) => {
+  isSignedIn: boolean;
+}> = ({
+  onSignInClick,
+  onUniversityClick,
+  onHomeClick,
+  onProfileClick,
+  onSignOutClick,
+  isSignedIn,
+}) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -90,13 +99,23 @@ const Navbar: React.FC<{
       >
         Profile
       </button>
-      <button
-        id="sign-in-button"
-        className="navbar-link"
-        onClick={onSignInClick}
-      >
-        Sign In
-      </button>
+      {isSignedIn ? (
+        <button
+          id="sign-out-button"
+          className="navbar-link"
+          onClick={onSignOutClick}
+        >
+          Sign Out
+        </button>
+      ) : (
+        <button
+          id="sign-in-button"
+          className="navbar-link"
+          onClick={onSignInClick}
+        >
+          Sign In
+        </button>
+      )}
     </nav>
   );
 };
@@ -105,7 +124,8 @@ const Navbar: React.FC<{
 const SignInForm: React.FC<{
   onClose: () => void;
   onSignUpClick: () => void;
-}> = ({ onClose, onSignUpClick }) => {
+  onSignInSuccess: (email: string) => void;
+}> = ({ onClose, onSignUpClick, onSignInSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -119,7 +139,8 @@ const SignInForm: React.FC<{
       console.log("signIn: ", formData);
       const response = await signIn(formData);
       if (response.success) {
-        console.log("User signed in successfully", email);
+        console.log("User signed in successfully:", email);
+        onSignInSuccess(email);
         onClose();
       } else {
         setErrorMessage(response.message);
@@ -244,9 +265,9 @@ const SignUpForm: React.FC<{
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-        <button type="submit" id="sign-up-button" onClick={handleSignUp}>
-          Sign Up
-        </button>
+          <button type="submit" id="sign-up-button" onClick={handleSignUp}>
+            Sign Up
+          </button>
         </form>
         <a id="sign-up-button">Sign up with Google</a>
       </div>
@@ -294,15 +315,17 @@ const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 // Actual app component
 const App: React.FC = () => {
-    // Fetch CSRF token on app startup
+  // Fetch CSRF token on app startup
   useEffect(() => {
-      let csrfToken = fetchCSRFToken();
-      console.log("CSRF token fetched", csrfToken);
-    }, []);
-    
+    let csrfToken = fetchCSRFToken();
+    console.log("CSRF token fetched", csrfToken);
+  }, []);
+
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
@@ -352,6 +375,11 @@ const App: React.FC = () => {
   const handleSignInClick = () => {
     setShowSignIn(true);
     setShowSignUp(false);
+  };
+
+  const handleSignInSuccess = (email: string) => {
+    setUserEmail(email);
+    setIsSignedIn(true);
   };
 
   const handleSignUpClick = () => {
@@ -450,20 +478,38 @@ const App: React.FC = () => {
     setShowProfileForm(true);
   };
 
+  const handleSignOut = async () => {
+    try {
+      const response = await signOut();
+      if (response.success) {
+        console.log("User signed out successfully");
+        setIsSignedIn(false);
+        setUserEmail("");
+      } else {
+        console.error(response.message);
+      }
+    } catch (error) {
+      console.error("An error occurred during sign out", error);
+    }
+  };
+
   // actual components being rendered
   return (
     <div>
       <Navbar
         onSignInClick={handleSignInClick}
+        onSignOutClick={handleSignOut}
         onUniversityClick={handleUniversityClick}
         onHomeClick={onHomeClick}
         onProfileClick={handleProfileClick}
+        isSignedIn={isSignedIn}
       />
       <Map center={center} zoom={zoom} />
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
           onSignUpClick={handleSignUpClick}
+          onSignInSuccess={handleSignInSuccess}
         />
       )}
       {showSignUp && (
@@ -500,7 +546,10 @@ const App: React.FC = () => {
         />
       )}
       {showProfileForm && (
-        <ProfileForm onClose={() => setShowProfileForm(false)} />
+        <ProfileForm
+          onClose={() => setShowProfileForm(false)}
+          email={userEmail}
+        />
       )}
       {
         // search bar

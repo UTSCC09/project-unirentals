@@ -12,6 +12,11 @@ interface SignInResponse {
   token?: string;
 }
 
+interface SignOutResponse {
+  success: boolean;
+  message: string;
+}
+
 let csrfToken: string | null = null;
 
 // Fetch CSRF token on app startup
@@ -46,24 +51,6 @@ export const signUp = async (formData: FormData): Promise<SignUpResponse> => {
     return { success: false, message: "Failed to sign up" };
   }
 };
-// console.log("signUp: ", email, password1, password2);
-// try {
-//   const response = await axios.post(
-//     `${API_BASE_URL}/api/register/`,
-//     { email, password1, password2 },
-//     {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//         "X-CSRFToken": csrfToken || "",
-//       },
-//     }
-//   );
-
-//   return { success: response.status === 201, message: response.data.message };
-// } catch (error) {
-//   console.log(error);
-//   return { success: false, message: "Failed to sign up" };
-// }
 
 // sign in
 export const signIn = async (
@@ -89,5 +76,24 @@ formData: FormData
   } catch (error) {
     console.log(error);
     return { success: false, message: "Failed to sign in" };
+  }
+};
+
+// sign out
+export const signOut = async (): Promise<SignOutResponse> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/logout/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+    });
+
+    return {
+      success: response.status === 200,
+      message: response.data.message,
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Failed to sign out" };
   }
 };
