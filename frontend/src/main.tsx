@@ -4,12 +4,22 @@ import "./index.css";
 import React, { useState } from "react";
 import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
+import RoommateProfilesList from "./RoommateProfilesList";
+import ProfileForm from "./ProfileForm";
+import { signUp, signIn } from "./api";
+import Map from "./Map";
 
 /* Navbar component */
 const Navbar: React.FC<{
   onSignInClick: () => void;
-  onUniversityClick: (university: string, address: string) => void;
-}> = ({ onSignInClick, onUniversityClick }) => {
+  onUniversityClick: (
+    university: string,
+    address: string,
+    coordinates: [number, number]
+  ) => void;
+  onHomeClick: () => void;
+  onProfileClick: () => void;
+}> = ({ onSignInClick, onUniversityClick, onHomeClick, onProfileClick }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -22,7 +32,9 @@ const Navbar: React.FC<{
 
   return (
     <nav id="navbar">
-      <button className="navbar-link">Home</button>
+      <button className="navbar-link" onClick={onHomeClick}>
+        Home
+      </button>
       <div className="dropdown">
         <button className="navbar-link" onClick={handleDropdownToggle}>
           Universities
@@ -35,7 +47,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto Scarborough Campus",
-                  "1265 Military Trail, Scarborough, ON M1C 1A4"
+                  "1265 Military Trail, Scarborough, ON M1C 1A4",
+                  [43.7845, -79.1864]
                 )
               }
             >
@@ -47,7 +60,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto St. George Campus",
-                  "21 Sussex Ave, Toronto, ON M5S 1J6"
+                  "21 Sussex Ave, Toronto, ON M5S 1J6",
+                  [43.6629, -79.3957]
                 )
               }
             >
@@ -59,7 +73,8 @@ const Navbar: React.FC<{
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto Mississaauga Campus",
-                  "3359 Mississauga Rd, Mississauga, ON L5L 1C6"
+                  "3359 Mississauga Rd, Mississauga, ON L5L 1C6",
+                  [43.5489, -79.6626]
                 )
               }
             >
@@ -68,7 +83,11 @@ const Navbar: React.FC<{
           </div>
         )}
       </div>
-      <button className="navbar-link" id="profile-button">
+      <button
+        className="navbar-link"
+        id="profile-button"
+        onClick={onProfileClick}
+      >
         Profile
       </button>
       <button
@@ -87,6 +106,24 @@ const SignInForm: React.FC<{
   onClose: () => void;
   onSignUpClick: () => void;
 }> = ({ onClose, onSignUpClick }) => {
+  const [email, setemail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSignIn = async () => {
+    try {
+      const response = await signIn(email, password);
+      if (response.success) {
+        console.log("User signed in successfully", email);
+        onClose();
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during sign in");
+    }
+  };
+
   return (
     <div id="sign-in-container">
       <div id="sign-in-form">
@@ -94,9 +131,11 @@ const SignInForm: React.FC<{
           &times;
         </span>
         <h2 id="sign-in-form-title">Sign In</h2>
-        <input type="text" id="sign-in-username" placeholder="Username" />
-        <input type="password" id="sign-in-password" placeholder="Password" />
-        <button id="login-button">Sign In</button>
+        <input type="text" id="sign-in-email" name="email" placeholder="Email" />
+        <input type="password" id="sign-in-password" name="password"placeholder="Password" />
+        <button id="login-button" onClick={handleSignIn}>
+          Sign In
+        </button>
         <a href="https://accounts.google.com/signin" id="google-login-button">
           Sign in with Google
         </a>
@@ -116,7 +155,7 @@ const SignUpForm: React.FC<{
   onClose: () => void;
   onSignUpBackClick: () => void;
 }> = ({ onClose, onSignUpBackClick }) => {
-  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -127,13 +166,18 @@ const SignUpForm: React.FC<{
       return;
     }
 
-    /*try {
-    await SignUp(username, email, password);
-    console.log("User signed up successfully", username, email, password);
-  } catch (error) {
-    console.log("Error signing up user", error);
-  }
-*/
+    // call sign up
+    try {
+      const response = await signUp(email, password);
+      if (response.success) {
+        console.log("User signed up successfully", email);
+        onClose();
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during sign up");
+    }
   };
 
   return (
@@ -149,15 +193,17 @@ const SignUpForm: React.FC<{
         <div id="signup-error-message">{errorMessage}</div>
         <input
           type="text"
-          id="sign-up-username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="sign-up-email"
+          name="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setemail(e.target.value)}
           //required
         />
         <input
           type="password"
           id="sign-up-password"
+          name="password1"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -166,6 +212,7 @@ const SignUpForm: React.FC<{
         <input
           type="password"
           id="confirm-password"
+          name="password2"
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -176,20 +223,6 @@ const SignUpForm: React.FC<{
         </button>
         <a id="sign-up-button">Sign up with Google</a>
       </div>
-    </div>
-  );
-};
-
-// Map
-const Map: React.FC = () => {
-  return (
-    <div id="map-container">
-      <iframe
-        width="100%"
-        height="1190"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-79.21473026275636%2C43.77053600288821%2C-79.15808200836183%2C43.79730524799403&amp;layer=mapnik&amp;marker=43.783922123809695%2C-79.18640613555908"
-      ></iframe>
-      <br />
     </div>
   );
 };
@@ -238,6 +271,10 @@ const App: React.FC = () => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
+  // Map
+  const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
+  const [zoom, setZoom] = useState(2); // zoom level
+
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
@@ -258,6 +295,25 @@ const App: React.FC = () => {
     buildingType: "",
     description: "",
   });
+
+  const [showProfileForm, setShowProfileForm] = useState(false);
+  const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
+  const [roommateProfiles, setRoommateProfiles] = useState([
+    {
+      profilePicture: "https://via.placeholder.com/150",
+      name: "Alice Johnson",
+      age: 25,
+      pronouns: "She/Her",
+      location: "Toronto, ON",
+    },
+    {
+      profilePicture: "https://via.placeholder.com/150",
+      name: "Bob Joe",
+      age: 28,
+      pronouns: "He/Him",
+      location: "Mississauga, ON",
+    },
+  ]);
 
   /* Event Handlers */
   const handleSignInClick = () => {
@@ -280,6 +336,17 @@ const App: React.FC = () => {
     setShowSignUp(false);
   };
 
+  // back to home page
+  const onHomeClick = () => {
+    setShowSignIn(false);
+    setShowSignUp(false);
+    setShowSearch(false);
+    setShowUniversityDetails(false);
+    setShowPropertyDetails(false);
+    setShowRoommateProfiles(false);
+    setShowProfileForm(false);
+  };
+
   // Search form
   const handleSearchClick = () => {
     setShowSearch(true);
@@ -290,10 +357,16 @@ const App: React.FC = () => {
   };
 
   // University and Rentails Form
-  const handleUniversityClick = (university: string, address: string) => {
+  const handleUniversityClick = (
+    university: string,
+    address: string,
+    coordinates: [number, number]
+  ) => {
     setSelectedUniversity(university);
     setSelectedAddress(address);
     setShowUniversityDetails(true);
+    setCenter(coordinates);
+    setZoom(8);
   };
 
   const handleCloseUniversityDetails = () => {
@@ -327,14 +400,33 @@ const App: React.FC = () => {
     setShowUniversityDetails(true);
   };
 
+  const handleFindRoommates = () => {
+    setShowRoommateProfiles(true);
+  };
+
+  const handleCloseRoommateProfiles = () => {
+    setShowRoommateProfiles(false);
+  };
+
+  const handleBackToPropertyDetails = () => {
+    setShowRoommateProfiles(false);
+    setShowPropertyDetails(true);
+  };
+
+  const handleProfileClick = () => {
+    setShowProfileForm(true);
+  };
+
   // actual components being rendered
   return (
     <div>
       <Navbar
         onSignInClick={handleSignInClick}
         onUniversityClick={handleUniversityClick}
+        onHomeClick={onHomeClick}
+        onProfileClick={handleProfileClick}
       />
-      <Map />
+      <Map center={center} zoom={zoom} />
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -356,7 +448,7 @@ const App: React.FC = () => {
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
           onNext={handleNext}
-          onRentalClick={handleRentalClick} // go to UniversityDetailsForm
+          onRentalClick={handleRentalClick}
         />
       )}
       {showPropertyDetails && (
@@ -364,7 +456,18 @@ const App: React.FC = () => {
           property={selectedProperty}
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
+          onFindRoommates={handleFindRoommates}
         />
+      )}
+      {showRoommateProfiles && (
+        <RoommateProfilesList
+          profiles={roommateProfiles}
+          onClose={handleCloseRoommateProfiles}
+          onBack={handleBackToPropertyDetails}
+        />
+      )}
+      {showProfileForm && (
+        <ProfileForm onClose={() => setShowProfileForm(false)} />
       )}
       {
         // search bar

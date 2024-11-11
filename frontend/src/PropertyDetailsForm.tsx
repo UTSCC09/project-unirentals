@@ -6,6 +6,7 @@ import {
   FaBuilding,
   FaInfoCircle,
   FaRuler,
+  FaUser,
 } from "react-icons/fa";
 
 interface PropertyDetailsFormProps {
@@ -19,12 +20,14 @@ interface PropertyDetailsFormProps {
   };
   onClose: () => void;
   onBack: () => void;
+  onFindRoommates: () => void;
 }
 
 const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
   property,
   onClose,
   onBack,
+  onFindRoommates,
 }) => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
 
@@ -55,7 +58,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           Building type: {property.buildingType}
         </p>
         <p id="property-owner">
-          <FaBuilding />
+          <FaUser />
           Owned by: {property.owner}
         </p>
         <p id="property-description">
@@ -66,7 +69,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         <a id="toggle-more-info-button" onClick={handleToggleMoreInfo}>
           {showMoreInfo ? "Show less" : "Show more"}
         </a>
-        <button id="find-roommates-button">Find Roommates</button>
+        <button id="find-roommates-button" onClick={onFindRoommates}>Find Roommates</button>
       </div>
     </div>
   );
