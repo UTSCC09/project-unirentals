@@ -71,18 +71,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     formData.append("smoker", profile.preferences.smoker.toString());
     formData.append("petOwner", profile.preferences.petOwner.toString());
     formData.append("drinks", profile.preferences.drinks.toString());
-    // try {
-    //   // Replace with your API call
-    //   const response = await fetch("/api/updateProfile", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    //   const result = await response.json();
-    //   console.log("Profile submitted:", result);
-    //   onClose();
-    // } catch (error) {
-    //   console.error("An error occurred during profile submission", error);
-    // }
+
+    // Send the data to the server
+    // Ensuring on correct branch
     onClose();
   };
 
