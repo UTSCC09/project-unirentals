@@ -54,13 +54,39 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Form submission
     // Logging profile for now
     console.log("Profile submitted:", profile);
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("photo", profile.photo);
+    formData.append("firstname", profile.firstname);
+    formData.append("lastname", profile.lastname);
+    formData.append("age", profile.age);
+    formData.append("pronouns", profile.pronouns);
+    formData.append("jobSchool", profile.jobSchool);
+    formData.append("aboutMe", profile.aboutMe);
+    formData.append("smoker", profile.preferences.smoker.toString());
+    formData.append("petOwner", profile.preferences.petOwner.toString());
+    formData.append("drinks", profile.preferences.drinks.toString());
+    // try {
+    //   // Replace with your API call
+    //   const response = await fetch("/api/updateProfile", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+    //   const result = await response.json();
+    //   console.log("Profile submitted:", result);
+    //   onClose();
+    // } catch (error) {
+    //   console.error("An error occurred during profile submission", error);
+    // }
     onClose();
   };
+
+
 
   return (
     <div id="profile-form-container">
@@ -137,7 +163,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
               onChange={handleInputChange}
             />
           </div>
-          {/* Add more fields as needed 
+          {/* Can add these fields back as needed 
           <div className="form-group">
             <label htmlFor="location">Looking in (Location)</label>
             <input type="text" id="location" name="location" value={profile.location} onChange={handleInputChange} />
@@ -190,7 +216,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
                 />
                 Drinks
               </label>
-              {/* Add more preferences as needed */}
             </div>
           </div>
           <button type="submit" id="save-profile-button">
