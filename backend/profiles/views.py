@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from . import forms
 from users.models import CustomUser
 from .models import userProfile
+from .serializers import ProfileSerializer
 
 # Create your views here.
 @csrf_exempt
@@ -12,12 +13,13 @@ def userProfileInformation(request, email):
     profile = userProfile.objects.get(user=targetUser)
 
     if request.method == 'GET':
-      print(profile)
-      return JsonResponse({"message": "Profile found."}, status=200)
+      user_info = ProfileSerializer(profile)
+      return JsonResponse(user_info.data, status=200)
     
     if request.method == 'PATCH':
-      print(profile)
       return JsonResponse({"message": "Profile found."}, status=200)
+    
+    return JsonResponse({"errors": "Method not allowed."}, status=405)
     
   except CustomUser.DoesNotExist:
     return JsonResponse({"message": "Profile does not exist."}, status=404)
