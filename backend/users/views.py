@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
+# keep this here
 @ensure_csrf_cookie
 def get_csrf(request):
     return JsonResponse({"csrfToken": request.META.get("CSRF_COOKIE")})
