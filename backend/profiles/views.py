@@ -17,9 +17,20 @@ def userProfileInformation(request, email):
       return JsonResponse(user_info.data, status=200)
     
     if request.method == 'PATCH':
-      return JsonResponse({"message": "Profile found."}, status=200)
+      if request.user == targetUser:
+        form = forms.profileForm(request.PATCH)
+        
+        if form.is_valid():
+          form.save()
+          return JsonResponse({"message": "Profile found."}, status=200)
+        
+        else:
+          return JsonResponse({"errors": form.errors}, status=400)
+      
+      return JsonResponse({"error": "Cannot modify another users profile."}, status=403)
+      
     
-    return JsonResponse({"errors": "Method not allowed."}, status=405)
+    return JsonResponse({"error": "Method not allowed."}, status=405)
     
   except CustomUser.DoesNotExist:
     return JsonResponse({"message": "Profile does not exist."}, status=404)
