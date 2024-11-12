@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 def get_csrf(request):
     return JsonResponse({"csrfToken": request.META.get("CSRF_COOKIE")})
 
+@csrf_exempt
 def registerUser(request):
   form = forms.CustomUserCreationForm()
 
@@ -34,6 +35,7 @@ def registerUser(request):
                 status=405
             )
 
+@csrf_exempt
 def loginUser(request):
   
   if request.method == 'POST':
@@ -54,6 +56,7 @@ def loginUser(request):
                 status=405
             )
 
+@csrf_exempt
 def logoutUser(request):
   
   if request.method == 'GET':
