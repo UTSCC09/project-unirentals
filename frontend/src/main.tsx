@@ -135,8 +135,14 @@ const SignInForm: React.FC<{
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
+
+    // print out form data
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
     try {
-      console.log("signIn: ", formData);
       const response = await signIn(formData);
       if (response.success) {
         console.log("User signed in successfully:", email);
@@ -200,7 +206,8 @@ const SignUpForm: React.FC<{
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
     console.log("signUp: ", email, password, confirmPassword);
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
@@ -212,8 +219,12 @@ const SignUpForm: React.FC<{
     formData.append("email", email);
     formData.append("password1", password);
     formData.append("password2", confirmPassword);
+    
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
     try {
-      console.log("signUp: ", formData);
       const response = await signUp(formData);
       if (response.success) {
         console.log("User signed up successfully", email);
@@ -317,9 +328,10 @@ const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const App: React.FC = () => {
   // Fetch CSRF token on app startup
   useEffect(() => {
-    let csrfToken = fetchCSRFToken();
-    console.log("CSRF token fetched", csrfToken);
-  }, []);
+    fetchCSRFToken().then(() => {
+      console.log("CSRF token fetched", document.cookie);
+    });
+  }, [])
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);

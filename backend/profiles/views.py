@@ -17,6 +17,8 @@ def userProfileInformation(request, email):
       return JsonResponse(user_info.data, status=200)
     
     if request.method == 'POST':
+      print(request.user)
+      print(targetUser)
       if request.user == targetUser:
         form = forms.profileForm(request.POST, request.FILES, instance=profile)
         
