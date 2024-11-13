@@ -8,6 +8,8 @@ import RoommateProfilesList from "./RoommateProfilesList";
 import ProfileForm from "./ProfileForm";
 import { signUp, signIn, signOut, fetchCSRFToken } from "./api";
 import Map from "./Map";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Login from "./components/login";
 
 /* Navbar component */
 const Navbar: React.FC<{
@@ -176,9 +178,7 @@ const SignInForm: React.FC<{
             Sign In
           </button>
         </form>
-        <a href="https://accounts.google.com/signin" id="google-login-button">
-          Sign in with Google
-        </a>
+        
         <div id="sign-in-text">
           No account?{" "}
           <a href="#" onClick={onSignUpClick}>
@@ -269,7 +269,7 @@ const SignUpForm: React.FC<{
             Sign Up
           </button>
         </form>
-        <a id="sign-up-button">Sign up with Google</a>
+        <Login/>
       </div>
     </div>
   );
@@ -565,6 +565,8 @@ const App: React.FC = () => {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <GoogleOAuthProvider clientId="202435428933-3lre5ob5rajcfimt8q4r64c9n2a1t7cl.apps.googleusercontent.com">
+      <App />
+    </GoogleOAuthProvider>
   </StrictMode>
 );
