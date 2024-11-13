@@ -16,13 +16,13 @@ def userProfileInformation(request, email):
       user_info = ProfileSerializer(profile)
       return JsonResponse(user_info.data, status=200)
     
-    if request.method == 'PATCH':
+    if request.method == 'POST':
       if request.user == targetUser:
-        form = forms.profileForm(request.PATCH)
+        form = forms.profileForm(request.POST, request.FILES, instance=profile)
         
         if form.is_valid():
           form.save()
-          return JsonResponse({"message": "Profile found."}, status=200)
+          return JsonResponse({"message": "Profile updated."}, status=200)
         
         else:
           return JsonResponse({"errors": form.errors}, status=400)
