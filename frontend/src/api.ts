@@ -38,6 +38,10 @@ interface GetProfileResponse {
   user: number;
 }
 
+interface GetProfilePictureResponse {
+  url: string;
+}
+
 let csrfToken: string | null = null;
 
 // Fetch CSRF token on app startup
@@ -165,5 +169,22 @@ export const getProfile = async (
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch profile");
+  }
+};
+
+// get profile picture
+export const getProfilePicture = async (email: string): Promise<GetProfilePictureResponse> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/picture/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch profile picture");
   }
 };

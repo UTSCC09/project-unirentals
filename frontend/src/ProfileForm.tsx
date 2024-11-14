@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./ProfileForm.css";
-import { getProfile, updateProfile } from "./api"; 
+import { getProfile, updateProfile, getProfilePicture } from "./api";
+
+// Replace with actual API base URL later
+const API_BASE_URL = "http://localhost:8000";
 
 interface ProfileFormProps {
   onClose: () => void;
@@ -14,11 +17,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     lastname: "",
     age: "",
     pronouns: "",
-    jobSchool: "",
-    aboutMe: "",
+    school: "",
+    bio: "",
     preferences: {
-      smoker: false,
-      petOwner: false,
+      smokes: false,
+      pets: false,
       drinks: false,
     },
   });
@@ -33,14 +36,21 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
           lastname: profileData.last_name || "",
           age: profileData.age?.toString() || "",
           pronouns: profileData.pronouns || "",
-          jobSchool: profileData.school || "",
-          aboutMe: profileData.bio,
+          school: profileData.school || "",
+          bio: profileData.bio || "",
           preferences: {
-            smoker: profileData.smokes,
-            petOwner: profileData.pets,
+            smokes: profileData.smokes,
+            pets: profileData.pets,
             drinks: profileData.drinks,
           },
         });
+
+        // Fetch profile picture URL
+        const pictureData = await getProfilePicture(email);
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          photo: `${API_BASE_URL}/${pictureData.url}`,
+        }));
       } catch (error) {
         console.error("Failed to fetch profile", error);
       }
@@ -48,7 +58,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
 
     fetchProfile();
   }, [email]);
-
 
   // event handlers
   // call this whenever the input fields change
@@ -83,18 +92,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     // Form submission
 
     const formData = new FormData();
-    formData.append("email", email);
-    formData.append("photo", profile.photo);
+    //formData.append("email", email);
+    //formData.append("photo", profile.photo);
     formData.append("firstname", profile.firstname);
     formData.append("lastname", profile.lastname);
     formData.append("age", profile.age);
     formData.append("pronouns", profile.pronouns);
-    formData.append("jobSchool", profile.jobSchool);
-    formData.append("aboutMe", profile.aboutMe);
-    formData.append("smoker", profile.preferences.smoker.toString());
-    formData.append("petOwner", profile.preferences.petOwner.toString());
+    formData.append("school", profile.school);
+    formData.append("bio", profile.bio);
+    formData.append("smokes", profile.preferences.smokes.toString());
+    formData.append("pets", profile.preferences.pets.toString());
     formData.append("drinks", profile.preferences.drinks.toString());
-
 
     // Call the updateProfile function
     try {
@@ -103,10 +111,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
       onClose();
     } catch (error) {
       console.error("An error occurred during profile submission", error);
-    };
+    }
   };
-
-
 
   return (
     <div id="profile-form-container">
@@ -121,8 +127,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
           )}
         </div>
         <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <div id="email">{email}</div>
+          <div className="form-group">
+            <div id="email">{email}</div>
           </div>
           <div className="form-group">
             <label htmlFor="photo">Profile Photo</label>
@@ -175,12 +181,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="jobSchool">Job/School</label>
+            <label htmlFor="school">Job/School</label>
             <input
               type="text"
-              id="jobSchool"
-              name="jobSchool"
-              value={profile.jobSchool}
+              id="school"
+              name="school"
+              value={profile.school}
               onChange={handleInputChange}
             />
           </div>
@@ -199,11 +205,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
           </div>
           */}
           <div className="form-group">
-            <label htmlFor="aboutMe">About Me</label>
+            <label htmlFor="bio">About Me</label>
             <textarea
-              id="aboutMe"
-              name="aboutMe"
-              value={profile.aboutMe}
+              id="bio"
+              name="bio"
+              value={profile.bio}
               onChange={handleInputChange}
             ></textarea>
           </div>
@@ -213,17 +219,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
               <label>
                 <input
                   type="checkbox"
-                  name="smoker"
-                  checked={profile.preferences.smoker}
+                  name="smokes"
+                  checked={profile.preferences.smokes}
                   onChange={handleCheckboxChange}
                 />
-                Smoker
+                smokes
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="petOwner"
-                  checked={profile.preferences.petOwner}
+                  name="pets"
+                  checked={profile.preferences.pets}
                   onChange={handleCheckboxChange}
                 />
                 Pet Owner
