@@ -43,10 +43,12 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    '35.224.56.180'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
+    '35.224.56.180'
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
