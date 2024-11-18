@@ -9,7 +9,7 @@ __pycache__/
 # SQLite database (if used in development)               
 *.sqlite3
 # Log files               
-*.log                   
+*.log            
 
 # --- Django Related --- #
 
