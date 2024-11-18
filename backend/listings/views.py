@@ -15,6 +15,27 @@ def listingGenericView(request): #/api/listings/
 
     return JsonResponse(serializer.data, status=200)
   
+  if request.method == 'POST':
+    # Check that user is authenticated
+    if request.user.is_authenticated:
+      form = forms.listingForm(request.POST)
+      
+      # Check that information passed to form is valid
+      if form.is_valid():
+        # Set owner of listing to be user sending req
+        form.instance.owner = request.user 
+        form.save()
+        return JsonResponse({"message": "Listing created successfully"}, status=200)
+
+      else:
+        return JsonResponse({"errors": form.errors}, status=400)
+    
+    # User is not authenticated
+    else: 
+      return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
+
+    
+    
   return JsonResponse({"errors": "Method not allowed."}, status=405)
 
 
