@@ -314,6 +314,7 @@ const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 // Actual app component
+// short test
 const App: React.FC = () => {
   // Fetch CSRF token on app startup
   useEffect(() => {
