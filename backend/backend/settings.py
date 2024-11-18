@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+    'listings'
 ]
 
 CORS_ALLOWED_ORIGINS = [
