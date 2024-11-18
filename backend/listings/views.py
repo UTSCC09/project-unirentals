@@ -13,7 +13,7 @@ def listingGenericView(request): #/api/listings/
     listings = Listing.objects.all()
     serializer = ListingSerializer(listings, many=True)
 
-    return JsonResponse(serializer.data, status=200)
+    return JsonResponse({"listings": serializer.data}, status=200)
   
   if request.method == 'POST':
     # Check that user is authenticated
