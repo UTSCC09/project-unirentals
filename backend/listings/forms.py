@@ -6,4 +6,4 @@ class profileForm(ModelForm):
   class Meta:
     model = Listing
     fields = '__all__'
-    exclude = ['user']
+    exclude = ['owner']
