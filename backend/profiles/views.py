@@ -7,9 +7,9 @@ from .serializers import ProfileSerializer
 
 # Create your views here.
 @csrf_exempt
-def userProfileInformation(request, email):
+def userProfileInformation(request, id):
   try:
-    targetUser = CustomUser.objects.get(email=email)
+    targetUser = CustomUser.objects.get(id=id)
     profile = userProfile.objects.get(user=targetUser)
 
     if request.method == 'GET':
@@ -17,28 +17,31 @@ def userProfileInformation(request, email):
       return JsonResponse(user_info.data, status=200)
     
     if request.method == 'POST':
-      if request.user == targetUser:
-        form = forms.profileForm(request.POST, request.FILES, instance=profile)
+      if request.user.is_authenticated:
+
+        if request.user == targetUser:
+          form = forms.profileForm(request.POST, request.FILES, instance=profile)
+          
+          if form.is_valid():
+            form.save()
+            return JsonResponse({"message": "Profile updated."}, status=200)
+          
+          else:
+            return JsonResponse({"errors": form.errors}, status=400)
         
-        if form.is_valid():
-          form.save()
-          return JsonResponse({"message": "Profile updated."}, status=200)
-        
-        else:
-          return JsonResponse({"errors": form.errors}, status=400)
+        return JsonResponse({"errors": "Cannot modify another users profile."}, status=403)
       
-      return JsonResponse({"error": "Cannot modify another users profile."}, status=403)
-      
+      return JsonResponse({"errors": "User must be signed in to perform this action."}, status=401)
     
-    return JsonResponse({"error": "Method not allowed."}, status=405)
+    return JsonResponse({"errors": "Method not allowed."}, status=405)
     
   except CustomUser.DoesNotExist:
-    return JsonResponse({"message": "Profile does not exist."}, status=404)
+    return JsonResponse({"errors": "Profile does not exist."}, status=404)
   
 @csrf_exempt
-def userProfilePicture(request, email):
+def userProfilePicture(request, id):
   try:
-    targetUser = CustomUser.objects.get(email=email)
+    targetUser = CustomUser.objects.get(id=id)
     profile = userProfile.objects.get(user=targetUser)
 
     if request.method == 'GET':
@@ -48,7 +51,7 @@ def userProfilePicture(request, email):
     return JsonResponse({"errors": "Method not allowed."}, status=405)
     
   except CustomUser.DoesNotExist:
-    return JsonResponse({"message": "Profile does not exist."}, status=404)
+    return JsonResponse({"errors": "Profile does not exist."}, status=404)
   
   
   
