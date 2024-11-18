@@ -4,17 +4,15 @@ from users.models import CustomUser
 # Create your models here.
 class Listing(models.Model):
   owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+  #university = models.CharField(max_length=100, blank=True, null=True)
 
   price = models.PositiveIntegerField(null=True)
-  university = models.CharField(max_length=100, blank=True, null=True)
-  distance = models.FloatField(blank=True, null=True)
-  location = 
+  
+  address = models.CharField(max_length=300, null=True)
 
   bedrooms = models.PositiveIntegerField(null=True)
   bathrooms = models.PositiveIntegerField(null=True)
   kitchen = models.PositiveIntegerField(null=True)
-  
-  type = 
   
   description = models.TextField(blank=True, null=True)
 
