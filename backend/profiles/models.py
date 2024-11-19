@@ -4,7 +4,7 @@ from users.models import CustomUser
 # Create your models here.
 class userProfile(models.Model):
   
-  user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+  user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True)
 
   first_name = models.CharField(max_length=30, blank=True, null=True)
   last_name = models.CharField(max_length=30, blank=True, null=True)
