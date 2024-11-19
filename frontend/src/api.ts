@@ -46,11 +46,17 @@ export interface Listing {
   id: number;
   university: string;
   address: string;
-  owner: string;
+  owner: number;
   distance: string;
   price: string;
   buildingType: string;
   description: string;
+  bedrooms: number;
+  bathrooms: number;
+  kitchens: number;
+  pets: boolean;
+  smokes: boolean;
+  drinks: boolean;
 }
 
 let csrfToken: string | null = null;
