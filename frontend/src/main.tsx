@@ -135,14 +135,8 @@ const SignInForm: React.FC<{
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-
-    // print out form data
-
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
-
     try {
+      console.log("signIn: ", formData);
       const response = await signIn(formData);
       if (response.success) {
         console.log("User signed in successfully:", email);
@@ -206,8 +200,7 @@ const SignUpForm: React.FC<{
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSignUp = async () => {
     console.log("signUp: ", email, password, confirmPassword);
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
@@ -219,12 +212,8 @@ const SignUpForm: React.FC<{
     formData.append("email", email);
     formData.append("password1", password);
     formData.append("password2", confirmPassword);
-    
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
-
     try {
+      console.log("signUp: ", formData);
       const response = await signUp(formData);
       if (response.success) {
         console.log("User signed up successfully", email);
@@ -325,14 +314,12 @@ const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 // Actual app component
-// short test
 const App: React.FC = () => {
   // Fetch CSRF token on app startup
   useEffect(() => {
-    fetchCSRFToken().then(() => {
-      console.log("CSRF token fetched", document.cookie);
-    });
-  }, [])
+    let csrfToken = fetchCSRFToken();
+    console.log("CSRF token fetched", csrfToken);
+  }, []);
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -348,11 +335,6 @@ const App: React.FC = () => {
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-  const [rentals, setRentals] = useState<string[]>([
-    "123 Main St, Scarborough Ontario",
-    "330 University Ave, Toronto Ontario",
-    "1234 Military Trail, Scarborough Ontario",
-  ]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
@@ -536,7 +518,6 @@ const App: React.FC = () => {
         <UniversityDetailsForm
           university={selectedUniversity}
           address={selectedAddress}
-          rentals={rentals}
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
           onNext={handleNext}

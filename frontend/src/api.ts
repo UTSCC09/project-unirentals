@@ -42,6 +42,17 @@ interface GetProfilePictureResponse {
   url: string;
 }
 
+export interface Listing {
+  id: number;
+  university: string;
+  address: string;
+  owner: string;
+  distance: string;
+  price: string;
+  buildingType: string;
+  description: string;
+}
+
 let csrfToken: string | null = null;
 
 // Fetch CSRF token on app startup
@@ -186,5 +197,22 @@ export const getProfilePicture = async (email: string): Promise<GetProfilePictur
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch profile picture");
+  }
+};
+
+// get listings
+export const getListings = async (): Promise<Listing[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/listings/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+    console.log("Listings data:", response.data);
+    return response.data.listings; // Access the listings property
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch listings");
   }
 };
