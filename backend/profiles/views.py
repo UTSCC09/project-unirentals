@@ -1,4 +1,3 @@
-from profile import Profile
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import forms

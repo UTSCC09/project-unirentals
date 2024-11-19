@@ -39,18 +39,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
-    'listings'
+    'listings',
     'profiles',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    '35.224.56.180'
+    'http://35.224.56.180'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
-    '35.224.56.180'
+    'http://35.224.56.180'
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
