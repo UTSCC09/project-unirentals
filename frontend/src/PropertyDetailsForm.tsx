@@ -11,7 +11,7 @@ import {
 
 interface PropertyDetailsFormProps {
   property: {
-    owner: string;
+    owner: number;
     address: string;
     distance: string;
     price: string;

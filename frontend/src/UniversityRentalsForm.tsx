@@ -16,12 +16,18 @@ interface UniversityDetailsFormProps {
   onPrevious: () => void;
   onNext: () => void;
   onRentalClick: (property: {
-    owner: string;
+    owner: number;
     address: string;
     distance: string;
     price: string;
     buildingType: string;
     description: string;
+    smokes: boolean;
+    pets: boolean;
+    drinks: boolean;
+    bedrooms: number;
+    bathrooms: number;
+    kitchens: number;
   }) => void;
 }
 
@@ -70,6 +76,12 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
                   price: listing.price,
                   buildingType: listing.buildingType,
                   description: listing.description,
+                  smokes: listing.smokes,
+                  pets: listing.pets,
+                  drinks: listing.drinks,
+                  bedrooms: listing.bedrooms,
+                  bathrooms: listing.bathrooms,
+                  kitchens: listing.kitchens,
                 })
               }
             >
@@ -78,14 +90,14 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
                   <FaMapMarkerAlt /> {listing.address}
                 </h4>
                 <p className="rental-type">
-                  <FaBuilding /> {listing.description}
+                  <FaBuilding /> {listing.buildingType}
                 </p>
                 <p className="rental-price">
                   <FaDollarSign /> {listing.price} CAD
                 </p>
                 <div className="rental-icons">
-                  <FaBed className="icon" />
-                  <FaToilet className="icon" />
+                  <FaBed className="icon" /> {listing.bedrooms}
+                  <FaToilet className="icon" /> {listing.bathrooms}
                 </div>
               </div>
             </li>

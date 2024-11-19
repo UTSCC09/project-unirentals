@@ -436,7 +436,7 @@ const App: React.FC = () => {
   // Property Details Form
 
   const handleRentalClick = (property: {
-    owner: string;
+    owner: number;
     address: string;
     distance: string;
     price: string;
