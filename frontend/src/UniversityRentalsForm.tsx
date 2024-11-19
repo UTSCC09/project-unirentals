@@ -15,20 +15,7 @@ interface UniversityDetailsFormProps {
   onClose: () => void;
   onPrevious: () => void;
   onNext: () => void;
-  onRentalClick: (property: {
-    owner: number;
-    address: string;
-    distance: string;
-    price: string;
-    buildingType: string;
-    description: string;
-    smokes: boolean;
-    pets: boolean;
-    drinks: boolean;
-    bedrooms: number;
-    bathrooms: number;
-    kitchens: number;
-  }) => void;
+  onRentalClick: (property: Listing) => void;
 }
 
 const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
@@ -69,20 +56,7 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
               key={listing.id}
               className="rental-item"
               onClick={() =>
-                onRentalClick({
-                  owner: listing.owner,
-                  address: listing.address,
-                  distance: listing.distance,
-                  price: listing.price,
-                  buildingType: listing.buildingType,
-                  description: listing.description,
-                  smokes: listing.smokes,
-                  pets: listing.pets,
-                  drinks: listing.drinks,
-                  bedrooms: listing.bedrooms,
-                  bathrooms: listing.bathrooms,
-                  kitchens: listing.kitchens,
-                })
+                onRentalClick(listing)
               }
             >
               <div className="rental-details">
