@@ -9,6 +9,9 @@ import {
   FaUser,
   FaBed,
   FaToilet,
+  FaPaw,
+  FaSmoking,
+  FaWineGlass,
 } from "react-icons/fa";
 import { Listing } from "./api";
 
@@ -65,6 +68,12 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           <FaToilet />
           Bathrooms: {property.bathrooms}
         </p>
+        <div className="property-icons">
+          <p>This property allows:</p>
+          {property.pets && <FaPaw className="icon" title="Pets allowed" />}
+          {property.smokes && <FaSmoking className="icon" title="Smoking allowed" />}
+          {property.drinks && <FaWineGlass className="icon" title="Drinks allowed" />}
+        </div>
         <p id="property-description">
           <FaInfoCircle />
           Description: {property.description}

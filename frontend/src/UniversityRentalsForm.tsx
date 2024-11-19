@@ -6,6 +6,9 @@ import {
   FaBed,
   FaToilet,
   FaBuilding,
+  FaPaw,
+  FaSmoking,
+  FaWineGlass,
 } from "react-icons/fa";
 import { getListings, Listing } from "./api";
 
