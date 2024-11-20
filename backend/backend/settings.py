@@ -49,10 +49,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://35.224.56.180'
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://35.224.56.180'
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "users.CustomUser"
 
