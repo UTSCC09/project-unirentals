@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
 
 interface SignUpResponse {
@@ -40,6 +41,23 @@ interface GetProfileResponse {
 
 interface GetProfilePictureResponse {
   url: string;
+}
+
+export interface Listing {
+  id: number;
+  university: string;
+  address: string;
+  owner: number;
+  distance: string;
+  price: string;
+  buildingType: string;
+  description: string;
+  bedrooms: number;
+  bathrooms: number;
+  kitchens: number;
+  pets: boolean;
+  smokes: boolean;
+  drinks: boolean;
 }
 
 let csrfToken: string | null = null;
@@ -186,5 +204,22 @@ export const getProfilePicture = async (email: string): Promise<GetProfilePictur
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch profile picture");
+  }
+};
+
+// get listings
+export const getListings = async (): Promise<Listing[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/listings/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+    console.log("Listings data:", response.data);
+    return response.data.listings; // Access the listings property
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch listings");
   }
 };

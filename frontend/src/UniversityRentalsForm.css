@@ -8,6 +8,7 @@
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
     animation: slide-in 0.5s forwards;
     z-index: 1000;
+    overflow-y: auto;
   }
   
   #university-details-form {

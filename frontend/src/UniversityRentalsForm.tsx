@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState }from "react";
 import "./UniversityRentalsForm.css";
 import {
   FaMapMarkerAlt,
@@ -7,44 +7,39 @@ import {
   FaToilet,
   FaBuilding,
 } from "react-icons/fa";
+import { getListings, Listing } from "./api";
 
 interface UniversityDetailsFormProps {
   university: string;
   address: string;
-  rentals: string[];
   onClose: () => void;
   onPrevious: () => void;
   onNext: () => void;
-  onRentalClick: (property: {
-    owner: string;
-    address: string;
-    distance: string;
-    price: string;
-    buildingType: string;
-    description: string;
-  }) => void;
+  onRentalClick: (property: Listing) => void;
 }
 
 const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
   university,
   address,
-  rentals,
   onClose,
   onPrevious,
   onNext,
   onRentalClick,
 }) => {
-  const handleRentalClick = (rental: string) => {
-    const property = {
-      address: rental,
-      owner: "John Doe",
-      distance: "1 km",
-      price: "$1000/month",
-      buildingType: "Apartment",
-      description: "A nice place to live.",
+  const [listings, setListings] = useState<Listing[]>([]);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const listingsData = await getListings();
+        setListings(listingsData);
+      } catch (error) {
+        console.error("Failed to fetch listings", error);
+      }
     };
-    onRentalClick(property);
-  };
+
+    fetchListings();
+  }, []);
 
   return (
     <div id="university-details-container">
@@ -56,25 +51,27 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
         <p id="university-address">{address}</p>
         <h3 id="nearby-rentals-title">Nearby Rentals</h3>
         <ul id="rentals-list">
-          {rentals.map((rental, index) => (
+          {listings.map((listing) => (
             <li
-              key={index}
+              key={listing.id}
               className="rental-item"
-              onClick={() => handleRentalClick(rental)}
+              onClick={() =>
+                onRentalClick(listing)
+              }
             >
               <div className="rental-details">
                 <h4 className="rental-address">
-                  <FaMapMarkerAlt /> 123 Main Street, Scarborough Ontario
+                  <FaMapMarkerAlt /> {listing.address}
                 </h4>
                 <p className="rental-type">
-                  <FaBuilding /> Apartment
+                  <FaBuilding /> {listing.buildingType}
                 </p>
                 <p className="rental-price">
-                  <FaDollarSign /> 1000/month
+                  <FaDollarSign /> {listing.price} CAD
                 </p>
                 <div className="rental-icons">
-                  <FaBed className="icon" />
-                  <FaToilet className="icon" />
+                  <FaBed className="icon" /> {listing.bedrooms}
+                  <FaToilet className="icon" /> {listing.bathrooms}
                 </div>
               </div>
             </li>
