@@ -223,7 +223,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
                   checked={profile.preferences.smokes}
                   onChange={handleCheckboxChange}
                 />
-                smokes
+                Smokes
               </label>
               <label>
                 <input
@@ -232,7 +232,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
                   checked={profile.preferences.pets}
                   onChange={handleCheckboxChange}
                 />
-                Pet Owner
+                Pets
               </label>
               <label>
                 <input
