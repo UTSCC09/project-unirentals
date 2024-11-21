@@ -116,7 +116,11 @@ def userProfileView(request, id):
 
           # Attempt to find a school matching the name submitted in the form
           try:
-            school = School.objects.get(name=request.POST['school'])
+            if request.POST['school'] == '':
+              school = None
+            else:
+              school = School.objects.get(name=request.POST['school'])
+
             form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
 
             # Check that the values submitted are valid for the DB
