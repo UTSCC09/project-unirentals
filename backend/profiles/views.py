@@ -16,49 +16,49 @@ def selfProfileView(request):
     profile = userProfile.objects.get(user=request.user)
 
     # Check that user is authenticated
-    if request.user.is_authenticated:
+    #if request.user.is_authenticated:
       
-      # On GET - Return information about current users profile
-      if request.method == 'GET':
-        user_info = ProfileSerializer(profile)
-        return JsonResponse(user_info.data, status=200)
+    # On GET - Return information about current users profile
+    if request.method == 'GET':
+      user_info = ProfileSerializer(profile)
+      return JsonResponse(user_info.data, status=200)
+    
+    # On POST - Update profile information for given user
+    if request.method == 'POST':
       
-      # On POST - Update profile information for given user
-      if request.method == 'POST':
+      # Attempt to find school matching value submitted in form
+      try:
+        if request.POST['school'] == '':
+          school = None
+        else:
+          school = School.objects.get(name=request.POST['school'])
+
+        form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
+
+        # Check that the form fields submitted are valid
+        if form.is_valid():
+          form.instance.school = school
+          form.save()
+
+          # If everything works okay, save the form and return 200 status
+          return JsonResponse({"message": "Profile updated."}, status=200)
         
-        # Attempt to find school matching value submitted in form
-        try:
-          if request.POST['school'] == '':
-            school = None
-          else:
-            school = School.objects.get(name=request.POST['school'])
+        # If something is wrong with the form, return 400 status
+        return JsonResponse({"errors": form.errors}, status=400)
 
-          form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
-
-          # Check that the form fields submitted are valid
-          if form.is_valid():
-            form.instance.school = school
-            form.save()
-
-            # If everything works okay, save the form and return 200 status
-            return JsonResponse({"message": "Profile updated."}, status=200)
-          
-          # If something is wrong with the form, return 400 status
-          return JsonResponse({"errors": form.errors}, status=400)
-
-        # If the given school does not exist, return 404 status
-        except School.DoesNotExist:
-          return JsonResponse({"errors": "School does not exist."}, status=404)
-      
-        # If the form is submitted without a school field, return 400 status
-        except MultiValueDictKeyError:
-          return JsonResponse({"errors": "Form is missing school field."}, status=400)
-      
-      # If not a GET/POST request, return 405 status
-      return JsonResponse({"errors": "Method not allowed."}, status=405)
+      # If the given school does not exist, return 404 status
+      except School.DoesNotExist:
+        return JsonResponse({"errors": "School does not exist."}, status=404)
+    
+      # If the form is submitted without a school field, return 400 status
+      except MultiValueDictKeyError:
+        return JsonResponse({"errors": "Form is missing school field."}, status=400)
+    
+    # If not a GET/POST request, return 405 status
+    return JsonResponse({"errors": "Method not allowed."}, status=405)
 
     # If user is not signed in, return 401 status
-    return JsonResponse({"errors": "User must be signed in to perform this action."}, status=401)
+    #return JsonResponse({"errors": "User must be signed in to perform this action."}, status=401)
 
   # If no profile exists for the user, return a 404 status
   except userProfile.DoesNotExist:
@@ -109,10 +109,10 @@ def userProfileView(request, id):
     if request.method == 'POST':
 
       # Check that the user is authenticated
-      if request.user.is_authenticated:
+      #if request.user.is_authenticated:
 
         # Check that the user is modifying their own form (A little redundant given other endpoints)
-        if request.user == targetUser:
+        #if request.user == targetUser:
 
           # Attempt to find a school matching the name submitted in the form
           try:
@@ -143,10 +143,10 @@ def userProfileView(request, id):
             return JsonResponse({"errors": "Form is missing school field."}, status=400)
         
         # If the user is attempting to modify someone elses profile, return 403 status
-        return JsonResponse({"errors": "Cannot modify another users profile."}, status=403)
+        #return JsonResponse({"errors": "Cannot modify another users profile."}, status=403)
       
       # If the user is not signed in, return 401 status
-      return JsonResponse({"errors": "User must be signed in to perform this action."}, status=401)
+      #return JsonResponse({"errors": "User must be signed in to perform this action."}, status=401)
     
     # If the user is attempting to make a non GET/POST request, return 405 status
     return JsonResponse({"errors": "Method not allowed."}, status=405)
