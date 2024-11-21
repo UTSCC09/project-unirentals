@@ -226,4 +226,4 @@ export const getListings = async (): Promise<Listing[]> => {
   }
 };
 
-// commit check
+// commit check!
