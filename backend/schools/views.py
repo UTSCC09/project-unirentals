@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import School
+from .serializers import SchoolSerializer
 
 # Create your views here.
 def schoolView(request):
