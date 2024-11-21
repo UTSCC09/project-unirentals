@@ -28,8 +28,12 @@ def selfProfileView(request):
         
         # Attempt to find school matching value submitted in form
         try:
-          school = School.objects.get(name=request.POST['school'])
-          form = forms.profileForm(request.POST, request.FILES, instance=profile)
+          if request.POST['school'] == '':
+            school = None
+          else:
+            school = School.objects.get(name=request.POST['school'])
+
+          form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
 
           # Check that the form fields submitted are valid
           if form.is_valid():
@@ -113,7 +117,7 @@ def userProfileView(request, id):
           # Attempt to find a school matching the name submitted in the form
           try:
             school = School.objects.get(name=request.POST['school'])
-            form = forms.profileForm(request.POST, request.FILES, instance=profile)
+            form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
 
             # Check that the values submitted are valid for the DB
             if form.is_valid():
