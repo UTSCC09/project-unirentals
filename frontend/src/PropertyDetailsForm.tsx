@@ -41,12 +41,15 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           &#8249;
         </span>
         <h2 id="property-address">
-          <FaMapMarkerAlt />
           {property.address}
         </h2>
         <p id="property-distance">
           <FaRuler />
           Distance from campus: {property.distance}
+        </p>
+        <p id="property-coordinates">
+          <FaMapMarkerAlt />
+          Coordinates: {property.latitude}, {property.longitude}
         </p>
         <p id="property-price">
           <FaDollarSign />
