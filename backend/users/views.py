@@ -13,6 +13,8 @@ def csrfView(request):
   # On any type of request to the endpoint, return the CSRF cookie  
   return JsonResponse({"csrfToken": request.META.get("CSRF_COOKIE")})
 
+# ------------------------------------------------------------------------------------------ #
+
 @csrf_exempt
 def registerView(request):
   form = forms.CustomUserCreationForm()
@@ -40,6 +42,8 @@ def registerView(request):
   
   # If non POST request, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+# ------------------------------------------------------------------------------------------ #
 
 @csrf_exempt
 def loginView(request):
@@ -69,6 +73,8 @@ def loginView(request):
     
   # If a non POST request is sent, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+# ------------------------------------------------------------------------------------------ #
 
 @csrf_exempt
 def logoutView(request):
