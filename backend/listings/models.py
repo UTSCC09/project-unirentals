@@ -5,7 +5,7 @@ from schools.models import School
 # Create your models here.
 class Listing(models.Model):
   owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-  school = models.ForeignKey(School, on_delete=models.CASCADE)
+  school = models.ForeignKey(School, on_delete=models.CASCADE, null=True)
 
   price = models.PositiveIntegerField(null=True)
   
