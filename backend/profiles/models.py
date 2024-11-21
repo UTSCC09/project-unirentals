@@ -1,17 +1,18 @@
 from django.db import models
 from users.models import CustomUser
+from schools.models import School
 
 # Create your models here.
 class userProfile(models.Model):
   
   user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True)
+  school = models.ForeignKey(School, on_delete=models.CASCADE, null=True)
 
   first_name = models.CharField(max_length=30, blank=True, null=True)
   last_name = models.CharField(max_length=30, blank=True, null=True)
 
   age = models.PositiveIntegerField(blank=True, null=True)
   pronouns = models.CharField(max_length=20, blank=True, null=True)
-  school = models.CharField(max_length=100, blank=True, null=True)
 
   bio = models.TextField(blank=True, null=True)
 

@@ -4,6 +4,8 @@ from . import forms
 from users.models import CustomUser
 from .models import userProfile
 from .serializers import ProfileSerializer
+from schools.models import School
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
 @csrf_exempt
@@ -18,13 +20,23 @@ def selfProfileInformation(request):
         return JsonResponse(user_info.data, status=200)
       
       if request.method == 'POST':
-        form = forms.profileForm(request.POST, request.FILES, instance=profile)
-          
-        if form.is_valid():
-          form.save()
-          return JsonResponse({"message": "Profile updated."}, status=200)
         
-        return JsonResponse({"errors": form.errors}, status=400)
+        try:
+          school = School.objects.get(name=request.POST['school'])
+          form = forms.profileForm(request.POST, request.FILES, instance=profile)
+
+          if form.is_valid():
+            form.instance.school = school
+            form.save()
+            return JsonResponse({"message": "Profile updated."}, status=200)
+          
+          return JsonResponse({"errors": form.errors}, status=400)
+
+        except School.DoesNotExist:
+          return JsonResponse({"errors": "School does not exist."}, status=404)
+      
+        except MultiValueDictKeyError:
+          return JsonResponse({"errors": "Form is missing school field."}, status=400)
       
       return JsonResponse({"errors": "Method not allowed."}, status=405)
 
@@ -63,16 +75,23 @@ def userProfileInformation(request, id):
     
     if request.method == 'POST':
       if request.user.is_authenticated:
-
         if request.user == targetUser:
-          form = forms.profileForm(request.POST, request.FILES, instance=profile)
-          
-          if form.is_valid():
-            form.save()
-            return JsonResponse({"message": "Profile updated."}, status=200)
-          
-          else:
+          try:
+            school = School.objects.get(name=request.POST['school'])
+            form = forms.profileForm(request.POST, request.FILES, instance=profile)
+
+            if form.is_valid():
+              form.instance.school = school
+              form.save()
+              return JsonResponse({"message": "Profile updated."}, status=200)
+            
             return JsonResponse({"errors": form.errors}, status=400)
+
+          except School.DoesNotExist:
+            return JsonResponse({"errors": "School does not exist."}, status=404)
+        
+          except MultiValueDictKeyError:
+            return JsonResponse({"errors": "Form is missing school field."}, status=400)
         
         return JsonResponse({"errors": "Cannot modify another users profile."}, status=403)
       
