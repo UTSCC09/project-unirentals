@@ -6,4 +6,4 @@ class profileForm(ModelForm):
   class Meta:
     model = userProfile
     fields = '__all__'
-    exclude = ['user']
+    exclude = ['user', 'school', 'created_at']
