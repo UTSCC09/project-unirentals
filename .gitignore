@@ -1,4 +1,6 @@
 # --- Python (Django) Related --- #
+# Ignore OSRM data files
+/osrm-data/
 
 # Virtual environment
 venv/
