@@ -7,3 +7,7 @@ class School(models.Model):
   address = models.CharField(max_length=300)
   longitude = models.FloatField()
   latitude = models.FloatField()
+
+  def __str__(self):
+    return self.name
+
