@@ -4,6 +4,7 @@ from .models import School
 from .serializers import SchoolSerializer
 
 # Create your views here.
+@csrf_exempt
 def schoolView(request):
   if request.method == 'GET':
     schools = School.objects.all()
@@ -13,6 +14,7 @@ def schoolView(request):
   
   return JsonResponse({"errors": "Method not allowed."}, status=405)
 
+@csrf_exempt
 def specificSchoolView(request, id):
   if request.method == 'GET':
     try:
