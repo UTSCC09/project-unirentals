@@ -225,3 +225,5 @@ export const getListings = async (): Promise<Listing[]> => {
     throw new Error("Failed to fetch listings");
   }
 };
+
+// commit check
