@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+    'storages',
 ]
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\jerry\school\C09\keys\unirentals-33aa49b63a3e.json"
+
+GS_BUCKET_NAME = 'unirentals-images'
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
+GS_CREDENTIALS = None 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
