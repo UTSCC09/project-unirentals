@@ -37,3 +37,11 @@ def specificSchoolView(request, id):
   
   # If non GET Method, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+@csrf_exempt
+def schoolListingView(request):
+  print('hello world')
+
+@csrf_exempt
+def specificSchoolListingView(request, id):
+  print('hello world')
