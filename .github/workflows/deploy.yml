@@ -47,14 +47,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "Host gcp-vm" >> ~/.ssh/config
-          echo "  HostName 35.224.56.180" >> ~/.ssh/config
-          echo "  User jjjchen52" >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
           ssh-keyscan -H 35.224.56.180 >> ~/.ssh/known_hosts
 
       - name: Deploy React app
         run: |
-          ssh gcp-vm << 'EOF'
+          ssh -T gcp-vm << 'EOF'
             cd /home/jjjchen52/project-unirentals/frontend
             git pull origin main
             npm install
