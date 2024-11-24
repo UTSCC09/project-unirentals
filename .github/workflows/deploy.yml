@@ -46,7 +46,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "Host gcp-vm" >> ~/.ssh/config
-          echo "  HostName your-vm-ip" >> ~/.ssh/config
+          echo "  HostName http://35.224.56.180/" >> ~/.ssh/config
           echo "  User your-username" >> ~/.ssh/config
           echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
 
