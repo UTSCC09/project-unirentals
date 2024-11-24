@@ -47,6 +47,9 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "Host gcp-vm" >> ~/.ssh/config
+          echo "  HostName 35.224.56.180" >> ~/.ssh/config   # Use actual IP address here
+          echo "  User jjjchen52" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
           ssh-keyscan -H 35.224.56.180 >> ~/.ssh/known_hosts
 
       - name: Deploy React app
