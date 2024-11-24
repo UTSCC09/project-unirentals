@@ -12,7 +12,17 @@ class Listing(models.Model):
   address = models.CharField(max_length=300, null=True)
   longitude = models.FloatField(null=True)
   latitude = models.FloatField(null=True)
-  #distance = models.DecimalField(max_digits=6, decimal_places=2)
+  distance = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+
+  HOUSING_TYPE_CHOICES = [
+          ('Apartment', 'Apartment'),
+          ('House', 'House'),
+          ('Studio', 'Studio'),
+          ('Basement', 'Basement'),
+          ('Room', 'Room'),
+      ]
+
+  type = models.CharField(max_length=10, choices=HOUSING_TYPE_CHOICES, null=True)
 
   bedrooms = models.PositiveIntegerField(null=True)
   bathrooms = models.PositiveIntegerField(null=True)
@@ -28,4 +38,3 @@ class Listing(models.Model):
 
   def __str__(self):
     return self.address
-
