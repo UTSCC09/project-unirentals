@@ -62,6 +62,7 @@ jobs:
       - name: Authenticate to Google Cloud
         run: |
           echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json" 
+          cat ${HOME}/gcloud-key.json
           gcloud auth activate-service-account --key-file="${HOME}/gcloud-key.json" 
 
       - name: Set up GCP VM access
