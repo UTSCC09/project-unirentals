@@ -7,7 +7,6 @@ def make_profile(sender, instance, created, **kwargs):
     userProfile.objects.create(
       user=instance
     )
-    print("Profile Created")
 
 
 post_save.connect(make_profile, sender=CustomUser)

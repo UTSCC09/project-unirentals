@@ -6,4 +6,4 @@ class ListingForm(ModelForm):
   class Meta:
     model = Listing
     fields = '__all__'
-    exclude = ['owner', 'school', 'created_at']
+    exclude = ['owner', 'school', 'distance', 'created_at']
