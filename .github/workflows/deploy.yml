@@ -44,12 +44,12 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           echo "Host gcp-vm" >> ~/.ssh/config
           echo "  HostName 35.224.56.180" >> ~/.ssh/config   # Use actual IP address here
           echo "  User jjjchen52" >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
           ssh-keyscan -H 35.224.56.180 >> ~/.ssh/known_hosts
 
       - name: Deploy React app
