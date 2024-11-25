@@ -50,6 +50,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          run: echo ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       # - name: Debug Service Account Key
       #   run: |
