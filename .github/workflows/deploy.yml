@@ -77,7 +77,7 @@ jobs:
         run: |
           VM_IP="35.224.56.180" 
           VM_USER="jjjchen52" 
-          gcloud compute ssh $VM_USER@$VM_IP --zone YOUR_VM_ZONE --project unirentals --tunnel-through-iap
+          gcloud compute ssh $VM_USER@$VM_IP --zone us-central1-a --project unirentals --tunnel-through-iap
 
       - name: Verify Connection
         run: |
