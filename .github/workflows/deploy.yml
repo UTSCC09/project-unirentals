@@ -40,16 +40,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-     # - name: Configure SSH
-     #    run: |
-     #      mkdir -p ~/.ssh
-     #      echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-     #      chmod 600 ~/.ssh/id_ed25519
-     #      echo "Host gcp-vm" >> ~/.ssh/config
-     #      echo "  HostName 35.224.56.180" >> ~/.ssh/config   # Use actual IP address here
-     #      echo "  User jjjchen52" >> ~/.ssh/config
-     #      echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
-     #      ssh-keyscan -H 35.224.56.180 >> ~/.ssh/known_hosts
+
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -60,13 +51,13 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: Debug Service Account Key
-        run: |
-          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json"
-          echo "Contents of gcloud-key.json:"
-          cat "${HOME}/gcloud-key.json"
-          echo "Validating JSON format:"
-          cat "${HOME}/gcloud-key.json" | jq .  # Requires `jq` (JSON processor)
+      # - name: Debug Service Account Key
+      #   run: |
+      #     echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json"
+      #     echo "Contents of gcloud-key.json:"
+      #     cat "${HOME}/gcloud-key.json"
+      #     echo "Validating JSON format:"
+      #     cat "${HOME}/gcloud-key.json" | jq .  # Requires `jq` (JSON processor)
 
       - name: Authenticate to Google Cloud
         run: |
