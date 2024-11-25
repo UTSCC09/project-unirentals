@@ -54,7 +54,11 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
          project_id: unirentals  # The GCP project ID
-         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Service Account key stored in GitHub secrets
+
+      - name: Authenticate with Service Account
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACOOUNT_KEY }}
 
       - name: Debug Service Account Key
         run: |
