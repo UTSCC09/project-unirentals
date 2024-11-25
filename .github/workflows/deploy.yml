@@ -40,7 +40,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-
+      - name: Check if secret exists
+        run: echo "Secret is available"
+        env:
+          MY_SECRET: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          
+      - name: Print secret value (for debugging only)
+        run: echo "Secret value: $GCP_SERVICE_ACCOUNT_KEY "
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+      
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -50,10 +59,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-      - name: test
-        run: |
-          cat ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-
+   
       # - name: Debug Service Account Key
       #   run: |
       #     echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json"
