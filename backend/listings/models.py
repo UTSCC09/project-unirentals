@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 from schools.models import School
+from geopy.distance import geodesic
 
 # Create your models here.
 class Listing(models.Model):
@@ -38,3 +39,10 @@ class Listing(models.Model):
 
   def __str__(self):
     return self.address
+  
+  def save(self, *args, **kwargs):
+    coords1 = (self.latitude, self.longitude)
+    coords2 = (self.school.latitude, self.school.longitude)
+    self.distance = round(geodesic(coords1, coords2).kilometers, 2)
+    
+    super().save(*args, **kwargs)
