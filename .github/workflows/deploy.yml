@@ -54,7 +54,7 @@ jobs:
 
       - name: Deploy React app
         run: |
-          ssh -T gcp-vm << 'EOF'
+          ssh -T 35.224.56.180 << 'EOF'
             cd /home/jjjchen52/project-unirentals/frontend
             git pull origin main
             npm install
@@ -65,7 +65,7 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ssh gcp-vm << 'EOF'
+          ssh -T 35.224.56.180 << 'EOF'
             cd /home/jjjchen52/project-unirentals
             git pull origin main
             source /venv/bin/activate
