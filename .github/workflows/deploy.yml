@@ -58,7 +58,7 @@ jobs:
       - name: Authenticate with Service Account
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACOOUNT_KEY }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Debug Service Account Key
         run: |
