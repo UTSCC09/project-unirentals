@@ -54,11 +54,11 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
          project_id: unirentals  # The GCP project ID
-         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Service Account key stored in GitHub secrets
+         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Service Account key stored in GitHub secrets
 
       - name: Debug Service Account Key
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > "${HOME}/gcloud-key.json"
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json"
           echo "Contents of gcloud-key.json:"
           cat "${HOME}/gcloud-key.json"
           echo "Validating JSON format:"
@@ -66,7 +66,7 @@ jobs:
 
       - name: Authenticate to Google Cloud
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > "${HOME}/gcloud-key.json" 
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json" 
           gcloud auth activate-service-account --key-file="${HOME}/gcloud-key.json" 
 
       - name: Set up GCP VM access
