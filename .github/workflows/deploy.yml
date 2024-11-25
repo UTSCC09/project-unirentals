@@ -52,6 +52,14 @@ jobs:
           echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
           ssh-keyscan -H 35.224.56.180 >> ~/.ssh/known_hosts
 
+      - name: Check SSH Key File
+        run: |
+          if [ -f ~/.ssh/id_ed25519 ]; then
+            echo "SSH key exists."
+          else
+            echo "SSH key is missing."
+          fi
+
       - name: Deploy React app
         run: |
           ssh -T gcp-vm << 'EOF'
