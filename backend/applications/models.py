@@ -11,18 +11,18 @@ class RentalApplication(models.Model):
   full = models.BooleanField(default=False)
 
   def __str__(self):
-    return self.listing.address + " (id:" + self.id + ")"
+    return self.listing.address
   
   def save(self, *args, **kwargs):
     # Check if the application has associated users, if not, delete
-    if not self.users.exists():
+    if self.pk and not self.users.exists():
       super.delete()
 
     # Save normally
     else:
       
       # Check if the number of applications matches the number of bedrooms, and set to full if so
-      if self.users.count() == self.listing.bedrooms:
+      if self.pk and self.users.count() == self.listing.bedrooms:
         self.full = True
 
       super().save(*args, **kwargs)
