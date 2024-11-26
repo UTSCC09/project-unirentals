@@ -12,7 +12,7 @@ def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&fu
   #A constant value for the pagination count
   APPLICATION_PAGINATION_COUNT = 5
 
-  # On GET: return paginated non-full listings 
+  # On GET: return paginated (full/open) listings 
   if request.method == 'GET':
 
     # Attempt to find a listing matching the given id
@@ -28,7 +28,7 @@ def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&fu
       
       # If page is supplied with an improper value, return 404 status
       except (TypeError, ValueError): 
-        return JsonResponse({"errors": "Page must be an integer1."}, status=400)
+        return JsonResponse({"errors": "Page must be an integer."}, status=400)
     
       # Attempt to get the boolean value for whether or not to display full listings
       full = request.GET.get('full', 'false').lower()
@@ -56,7 +56,7 @@ def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&fu
     except Listing.DoesNotExist:
       return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
     
-    
+
 
   # If a non GET/POST method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
