@@ -2,6 +2,7 @@ from django.db import models
 from users.models import CustomUser
 from schools.models import School
 from geopy.distance import geodesic
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Listing(models.Model):
@@ -25,7 +26,7 @@ class Listing(models.Model):
 
   type = models.CharField(max_length=10, choices=HOUSING_TYPE_CHOICES, null=True)
 
-  bedrooms = models.PositiveIntegerField(null=True)
+  bedrooms = models.PositiveIntegerField(null=True, validators=[MinValueValidator(1)])
   bathrooms = models.PositiveIntegerField(null=True)
   kitchens = models.PositiveIntegerField(null=True)
   
