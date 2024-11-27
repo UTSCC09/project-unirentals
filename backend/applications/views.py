@@ -126,6 +126,7 @@ def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/application
     except RentalApplication.DoesNotExist:
       return JsonResponse({"errors": "Application with given ID does not exist for given listing."}, status=404)
     
+    # Check that the user is signed in
     if request.user.is_authenticated:
       user = request.user
 
@@ -144,5 +145,38 @@ def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/application
     # If a user is not signed in they are unable to apply to the listing
     return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
 
+  if request.method == 'DELETE':
+    # Attempt to find the listing and application with the given ID's
+    try:
+      listing = Listing.objects.get(id=lid)
+      application = RentalApplication.objects.get(listing=listing, id=rid)
+
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # If application with given ID not found, return 404 status
+    except RentalApplication.DoesNotExist:
+      return JsonResponse({"errors": "Application with given ID does not exist for given listing."}, status=404)
+    
+    # Check that the user is signed in
+    if request.user.is_authenticated:
+      user = request.user
+
+      # Check if the user is part of this application
+      if user in application.users.all():
+        
+        # The user is associated with this application, so we can remove the relationship and return a 200 status
+        application.users.remove(user)
+        return JsonResponse({"message": "User successfully removed from application."}, status=200) 
+      
+      # If the user is not a part of this application, they cannot delete themselves from it
+      return JsonResponse({"errors": "User is not a member of this application."}, status=403) 
+
+    # If a user is not signed in they are unable to apply to the listing
+    return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
+
   # If a non GET/POST/DELETE method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+# ------------------------------------------------------------------------------------------ #
