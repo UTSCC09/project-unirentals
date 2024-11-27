@@ -180,3 +180,40 @@ def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/application
   return JsonResponse({"errors": "Method not allowed."}, status=405)
 
 # ------------------------------------------------------------------------------------------ #
+
+@csrf_exempt
+def applicationSelfView(request, lid):
+
+  # On GET: Return informaton about the application the user is assocaited with
+  if request.method == 'GET':
+    
+    # Attempt to find the listing with the given id
+    try:
+      listing = Listing.objects.get(id=lid)
+
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # Check if the user is signed in
+    if request.user.is_authenticated:
+
+      user = request.user
+
+      # Check that the user has an application for this listing
+      try:
+        application = user.user_applications.get(listing=listing)
+
+      # If no such application exists, then we return a 404 status
+      except RentalApplication.DoesNotExist:
+        return JsonResponse({"errors": "User does not have an application to this listing"}, status=404) 
+      
+      # Serialize the listing and return
+      serializer = ApplicationSerializer(application)
+      return JsonResponse(serializer.data, status=200) 
+
+    # If a user is not signed in they are unable to apply to the listing
+    return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
+
+  # If a non GET/DELETE method is attempted, return 405 status
+  return JsonResponse({"errors": "Method not allowed."}, status=405)
