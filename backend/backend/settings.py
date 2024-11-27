@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'listings',
     'profiles',
     'schools',
+    'applications',
 ]
 
 CORS_ALLOWED_ORIGINS = [
