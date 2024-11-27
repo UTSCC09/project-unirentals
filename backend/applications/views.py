@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage
 
 # Create your views here.
 @csrf_exempt
-def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&full=Bool
+def applicationView(request, lid):
 
   # A constant value for the pagination count
   APPLICATION_PAGINATION_COUNT = 5
@@ -87,5 +87,27 @@ def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&fu
 
 # ------------------------------------------------------------------------------------------ #
 
-# @csrf_exempt
-# def applicationSpecificView(request, lid, rid): #/api/listings/<id>/applications/<id>/
+@csrf_exempt
+def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/applications/<rid>/
+
+  # On GET: return paginated (full/open) listings 
+  if request.method == 'GET':
+
+    # Attempt to find a listing matching the given id
+    try:
+      listing = Listing.objects.get(id=lid)
+      applications = RentalApplication.objects.get(listing=listing, id=rid)
+
+      serializer = ApplicationSerializer(applications)
+      return JsonResponse(serializer.data, status=200)
+    
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # If application with given ID not found, return 404 status
+    except RentalApplication.DoesNotExist:
+      return JsonResponse({"errors": "Application with given ID does not exist for given listing."}, status=404)
+  
+  # If a non GET/POST method is attempted, return 405 status
+  return JsonResponse({"errors": "Method not allowed."}, status=405)
