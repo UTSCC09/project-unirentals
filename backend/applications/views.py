@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, EmptyPage
 @csrf_exempt
 def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&full=Bool
 
-  #A constant value for the pagination count
+  # A constant value for the pagination count
   APPLICATION_PAGINATION_COUNT = 5
 
   # On GET: return paginated (full/open) listings 
@@ -56,10 +56,36 @@ def applicationView(request, lid): #/api/listings/<id>/applications/?page=int&fu
     except Listing.DoesNotExist:
       return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
     
+  if request.method == 'POST':
+    
+    # Attempt to find the listing with the given ID
+    try:
+      listing = Listing.objects.get(id=lid)
 
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # Check that the user is signed in
+    if request.user.is_authenticated:
+      user = request.user
+
+      # Check if the user has another application with this listing
+      if user.user_applications.filter(listing=listing).exists():
+        return JsonResponse({"errors": "User already has an application to this listing."}, status=409)
+      
+      # Create a new application to the listing, with the requesting user as a user
+      application = RentalApplication.objects.create(listing=listing)
+      application.users.add(user)
+      
+      return JsonResponse({"message": "Application created successfully"}, status=200)
+    
+    return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
 
   # If a non GET/POST method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
-    
+
+# ------------------------------------------------------------------------------------------ #
+
 # @csrf_exempt
 # def applicationSpecificView(request, lid, rid): #/api/listings/<id>/applications/<id>/
