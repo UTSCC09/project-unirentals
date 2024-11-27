@@ -7,7 +7,7 @@ def applicationUserChange(sender, instance, action, **kwargs):
 
   # Check if a user is being added or removed
   if action in ['post_add', 'post_remove']:
-    instance.full = instance.users.count() == instance.listing.bedrooms
+    instance.full = instance.users.count() >= instance.listing.bedrooms
     instance.save(update_fields=['full'])
 
   if action in ['post_remove', 'post_clear']:  # Check after users are removed or cleared

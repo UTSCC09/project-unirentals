@@ -80,6 +80,7 @@ def applicationView(request, lid):
       
       return JsonResponse({"message": "Application created successfully"}, status=200)
     
+    # If the user is not signed in, they are unable to make a post
     return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
 
   # If a non GET/POST method is attempted, return 405 status
@@ -90,15 +91,15 @@ def applicationView(request, lid):
 @csrf_exempt
 def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/applications/<rid>/
 
-  # On GET: return paginated (full/open) listings 
+  # On GET: return listing details 
   if request.method == 'GET':
 
     # Attempt to find a listing matching the given id
     try:
       listing = Listing.objects.get(id=lid)
-      applications = RentalApplication.objects.get(listing=listing, id=rid)
+      application = RentalApplication.objects.get(listing=listing, id=rid)
 
-      serializer = ApplicationSerializer(applications)
+      serializer = ApplicationSerializer(application)
       return JsonResponse(serializer.data, status=200)
     
     # If listing with given ID not found, return 404 status
@@ -109,5 +110,39 @@ def applicationSpecificView(request, lid, rid): #/api/listings/<lid>/application
     except RentalApplication.DoesNotExist:
       return JsonResponse({"errors": "Application with given ID does not exist for given listing."}, status=404)
   
-  # If a non GET/POST method is attempted, return 405 status
+  # On POST: Add a user to an existing application
+  if request.method == 'POST':
+    
+    # Attempt to find the listing and application with the given ID's
+    try:
+      listing = Listing.objects.get(id=lid)
+      application = RentalApplication.objects.get(listing=listing, id=rid)
+
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # If application with given ID not found, return 404 status
+    except RentalApplication.DoesNotExist:
+      return JsonResponse({"errors": "Application with given ID does not exist for given listing."}, status=404)
+    
+    if request.user.is_authenticated:
+      user = request.user
+
+      # Check if the user has another application with this listing
+      if user.user_applications.filter(listing=listing).exists():
+        return JsonResponse({"errors": "User already has an application to this listing."}, status=409)
+      
+      # Check if the application is full, if so, we can't allow another user to join
+      if application.full:
+        return JsonResponse({"errors": "This application is full and no longer accepting applicants."}, status=403)
+      
+      # If the application is not full, then the user is able to apply
+      application.users.add(user)
+      return JsonResponse({"message": "Application joined successfully"}, status=200)
+
+    # If a user is not signed in they are unable to apply to the listing
+    return JsonResponse({"errors": "User must be logged in for this action."}, status=401) 
+
+  # If a non GET/POST/DELETE method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
