@@ -61,7 +61,7 @@ const SignInForm: React.FC<{
           </button>
         </form>
         <div id="or-text">OR</div>
-        <Login/>
+        <Login onClose={onClose} onSignUpClick={onSignUpClick} onSignInSuccess={onSignInSuccess}/>
         <div id="sign-in-text">
           No account?{" "}
           <a href="#" onClick={onSignUpClick}>

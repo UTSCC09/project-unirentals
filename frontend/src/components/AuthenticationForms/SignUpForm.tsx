@@ -8,29 +8,29 @@ import "./AuthForms.css";
 const SignUpForm: React.FC<{
     onClose: () => void;
     onSignUpBackClick: () => void;
-  }> = ({ onClose, onSignUpBackClick }) => {
+    onSignInSuccess: (email: string) => void;
+  }> = ({ onClose, onSignUpBackClick, onSignInSuccess}) => {
     const [email, setemail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
   
-    const handleSignUp = async () => {
-      console.log("signUp: ", email, password, confirmPassword);
+    const handleSignUp = async (e: React.FormEvent) => {
+      e.preventDefault();
       if (password !== confirmPassword) {
         setErrorMessage("Passwords do not match");
         return;
       }
       // call sign up
-      // Create FormData object
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password1", password);
       formData.append("password2", confirmPassword);
       try {
-        console.log("signUp: ", formData);
         const response = await signUp(formData);
         if (response.success) {
           console.log("User signed up successfully", email);
+          onSignInSuccess(email);
           onClose();
         } else {
           setErrorMessage(response.message);
@@ -85,7 +85,7 @@ const SignUpForm: React.FC<{
             
           </form>
           <div id="or-text">OR</div>
-          <Login/>
+          <Login onClose={onClose} onSignUpClick={onSignUpBackClick} onSignInSuccess={onSignInSuccess}/>
         </div>
       </div>
     );

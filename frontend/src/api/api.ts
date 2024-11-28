@@ -97,3 +97,4 @@ export const signOut = async (): Promise<SignOutResponse> => {
     return { success: false, message: "Failed to sign out" };
   }
 };
+

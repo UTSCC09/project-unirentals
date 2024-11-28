@@ -2,7 +2,11 @@ import { GoogleLogin, CredentialResponse} from '@react-oauth/google';
 import axios  from 'axios';
 const clientId = "202435428933-3lre5ob5rajcfimt8q4r64c9n2a1t7cl.apps.googleusercontent.com";
 
-const Login: React.FC = () => {
+const Login: React.FC<{
+    onClose: () => void;
+    onSignUpClick: () => void;
+    onSignInSuccess: (email: string) => void;
+  }> = ({ onClose, onSignUpClick, onSignInSuccess }) => {
 
     const onSuccess = async (res : CredentialResponse) => {
         try{
@@ -14,6 +18,9 @@ const Login: React.FC = () => {
                 });
                 if(response.status === 200){
                     console.log('[Login Success] User authenticated:', response.data);
+                    onSignInSuccess(response.data.email);
+                    onSignUpClick();
+                    onClose();
                 }
                 
             }else{

@@ -213,6 +213,7 @@ const App: React.FC = () => {
         <SignUpForm
           onClose={handleCloseForm}
           onSignUpBackClick={handleSignUpBackClick}
+          onSignInSuccess={handleSignInSuccess}
         />
       )}
       {showSearch && <SearchForm onClose={handleCloseSearch} />}
