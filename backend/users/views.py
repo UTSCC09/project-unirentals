@@ -2,8 +2,13 @@ from django.http import JsonResponse
 from . import forms
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
+import json
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from .models import CustomUser
 
-# Create your views here.
+
+CLIENT_ID = "202435428933-3lre5ob5rajcfimt8q4r64c9n2a1t7cl.apps.googleusercontent.com"
 
 # keep this here
 @ensure_csrf_cookie
@@ -28,7 +33,6 @@ def registerUser(request):
                 if error.code == 'email_in_use':
                     return JsonResponse({"error": "This email is already in use."}, status=409)
       
-      # Default response if no error matched
       return JsonResponse({"errors": form.errors}, status=400)
   
   return JsonResponse(
@@ -48,7 +52,6 @@ def loginUser(request):
           login(request, user)
           return JsonResponse({"message": "User signed in successfully."}, status=200)
       else:
-          # Default response if no error matched
           return JsonResponse({"error": "The user was unable to be authenticated"}, status=400)
       
   return JsonResponse(
@@ -70,3 +73,32 @@ def logoutUser(request):
                 {"errors": "Method not allowed."},
                 status=405
             )
+
+@csrf_exempt
+def oauth(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+            token = body.get('token')
+
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+            email = idinfo['email']
+            print(email)
+            user, created = CustomUser.objects.get_or_create(email=email)
+            if created:
+                user.set_unusable_password() 
+                user.save()
+
+            login(request, user)
+
+            if created:
+                message = "Sign-up successful and user logged in."
+            else:
+                message = "Login successful."
+
+            return JsonResponse({'message': message, 'user': {'email': email}})
+
+        except ValueError as e:
+            return JsonResponse({'error': 'Invalid token'}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
