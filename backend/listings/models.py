@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import CustomUser
 from schools.models import School
+from geopy.distance import geodesic
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Listing(models.Model):
@@ -12,9 +14,19 @@ class Listing(models.Model):
   address = models.CharField(max_length=300, null=True)
   longitude = models.FloatField(null=True)
   latitude = models.FloatField(null=True)
-  #distance = models.DecimalField(max_digits=6, decimal_places=2)
+  distance = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
 
-  bedrooms = models.PositiveIntegerField(null=True)
+  HOUSING_TYPE_CHOICES = [
+          ('Apartment', 'Apartment'),
+          ('House', 'House'),
+          ('Studio', 'Studio'),
+          ('Basement', 'Basement'),
+          ('Room', 'Room'),
+      ]
+
+  type = models.CharField(max_length=10, choices=HOUSING_TYPE_CHOICES, null=True)
+
+  bedrooms = models.PositiveIntegerField(null=True, validators=[MinValueValidator(1)])
   bathrooms = models.PositiveIntegerField(null=True)
   kitchens = models.PositiveIntegerField(null=True)
   
@@ -28,4 +40,10 @@ class Listing(models.Model):
 
   def __str__(self):
     return self.address
-
+  
+  def save(self, *args, **kwargs):
+    coords1 = (self.latitude, self.longitude)
+    coords2 = (self.school.latitude, self.school.longitude)
+    self.distance = round(geodesic(coords1, coords2).kilometers, 2)
+    
+    super().save(*args, **kwargs)
