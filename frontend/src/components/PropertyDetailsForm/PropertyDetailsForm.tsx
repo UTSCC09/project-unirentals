@@ -13,7 +13,7 @@ import {
   FaSmoking,
   FaWineGlass,
 } from "react-icons/fa";
-import { Listing } from "./api";
+import { Listing } from "../../api/api";
 
 interface PropertyDetailsFormProps {
   property: Listing;
