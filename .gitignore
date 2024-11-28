@@ -9,7 +9,7 @@ __pycache__/
 # SQLite database (if used in development)               
 *.sqlite3
 # Log files               
-*.log                   
+*.log            
 
 # --- Django Related --- #
 
@@ -18,7 +18,7 @@ __pycache__/
 # Static files collected by Django
 /staticfiles/           
 # User-uploaded media files (if managed by Django)
-/media/                 
+media/                 
 # SQLite database file
 db.sqlite3              
 # Celery schedule database (if using Celery)

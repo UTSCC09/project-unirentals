@@ -39,15 +39,23 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+    'listings',
+    'profiles',
+    'schools',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    'http://35.224.56.180'
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
+    'http://35.224.56.180'
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -144,3 +152,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/api/images/'
+
+MEDIA_ROOT = BASE_DIR / 'media/'

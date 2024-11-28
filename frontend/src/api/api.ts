@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
 
 interface SignUpResponse {
@@ -17,16 +18,62 @@ interface SignOutResponse {
   message: string;
 }
 
+interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+}
+
+interface GetProfileResponse {
+  id: number;
+  first_name: string | null;
+  last_name: string | null;
+  age: number | null;
+  pronouns: string | null;
+  school: string | null;
+  bio: string;
+  smokes: boolean;
+  pets: boolean;
+  drinks: boolean;
+  profile_pic: string;
+  created_at: string;
+  user: number;
+}
+
+interface GetProfilePictureResponse {
+  url: string;
+}
+
+export interface Listing {
+  id: number;
+  university: string;
+  address: string;
+  owner: number;
+  distance: string;
+  price: string;
+  buildingType: string;
+  description: string;
+  bedrooms: number;
+  bathrooms: number;
+  kitchens: number;
+  pets: boolean;
+  smokes: boolean;
+  drinks: boolean;
+}
+
 let csrfToken: string | null = null;
 
 // Fetch CSRF token on app startup
 export const fetchCSRFToken = async (): Promise<void> => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/api/getcsrf/`);
-    csrfToken = response.data.csrfToken;
-    console.log("CSRF token:", csrfToken);
-  } catch (error) {
-    console.error("Error fetching CSRF token:", error);
+  if (!csrfToken) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/getcsrf/`, {
+        withCredentials: true,
+      });
+      csrfToken = response.data.csrfToken;
+      console.log("Cookie:", document.cookie);
+    } catch (error) {
+      console.error("Error fetching CSRF token:", error);
+    }
   }
 };
 
@@ -42,6 +89,7 @@ export const signUp = async (formData: FormData): Promise<SignUpResponse> => {
           "Content-Type": "multipart/form-data",
           "X-Csrftoken": csrfToken || "",
         },
+        withCredentials: true,
       }
     );
 
@@ -53,20 +101,15 @@ export const signUp = async (formData: FormData): Promise<SignUpResponse> => {
 };
 
 // sign in
-export const signIn = async (
-formData: FormData
-): Promise<SignInResponse> => {
+export const signIn = async (formData: FormData): Promise<SignInResponse> => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/login/`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "X-Csrftoken": csrfToken || "",
-        },
-      }
-    );
+    const response = await axios.post(`${API_BASE_URL}/api/login/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
 
     return {
       success: response.status === 200,
@@ -86,6 +129,7 @@ export const signOut = async (): Promise<SignOutResponse> => {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
+      withCredentials: true,
     });
 
     return {
@@ -98,3 +142,84 @@ export const signOut = async (): Promise<SignOutResponse> => {
   }
 };
 
+// update profile
+export const updateProfile = async (
+  formData: FormData,
+  email: string
+): Promise<UpdateProfileResponse> => {
+  console.log("Caling update profile with cookie:", document.cookie);
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/profiles/${email}/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-Csrftoken": csrfToken || "",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return {
+      success: response.status === 200,
+      message: response.data.message,
+    };
+  } catch (error) {
+    console.log("Failed to update profile:", error);
+    return { success: false, message: "Failed to update profile" };
+  }
+};
+
+// get profile
+export const getProfile = async (
+  email: string
+): Promise<GetProfileResponse> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch profile");
+  }
+};
+
+// get profile picture
+export const getProfilePicture = async (email: string): Promise<GetProfilePictureResponse> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/picture/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch profile picture");
+  }
+};
+
+// get listings
+export const getListings = async (): Promise<Listing[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/listings/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+    console.log("Listings data:", response.data);
+    return response.data.listings; // Access the listings property
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch listings");
+  }
+};

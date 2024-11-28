@@ -39,6 +39,7 @@ def registerUser(request):
                 {"errors": "Method not allowed."},
                 status=405
             )
+
 @csrf_exempt
 def loginUser(request):
   
@@ -58,6 +59,7 @@ def loginUser(request):
                 {"errors": "Method not allowed."},
                 status=405
             )
+
 @csrf_exempt
 def logoutUser(request):
   
