@@ -2,9 +2,15 @@ from django.http import JsonResponse
 from . import forms
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
+import json
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from .models import CustomUser
+
 from django.utils.datastructures import MultiValueDictKeyError
 
-# Create your views here.
+
+CLIENT_ID = "202435428933-3lre5ob5rajcfimt8q4r64c9n2a1t7cl.apps.googleusercontent.com"
 
 # keep this here
 @ensure_csrf_cookie
@@ -37,7 +43,7 @@ def registerView(request):
                 if error.code == 'email_in_use':
                     return JsonResponse({"errors": "This email is already in use."}, status=409)
       
-      # If no error is matched, return 400 status
+
       return JsonResponse({"errors": form.errors}, status=400)
   
   # If non POST request, return 405 status
@@ -60,12 +66,11 @@ def loginView(request):
       user = authenticate(request, email=email, password=password)
     
       if user is not None:
-        # Log in the user, setting the necessary cookies, returning 200 status
-        login(request, user)
-        return JsonResponse({"message": "User signed in successfully."}, status=200)
-      
-      # If the credentials don't match a profile, return 400 status
-      return JsonResponse({"errors": "The user was unable to be authenticated"}, status=400)
+          login(request, user)
+          return JsonResponse({"message": "User signed in successfully."}, status=200)
+      else:
+          return JsonResponse({"error": "The user was unable to be authenticated"}, status=400)
+
       
     # If the form is submitted with missing fields, return 400 status
     except MultiValueDictKeyError:
@@ -84,5 +89,39 @@ def logoutView(request):
       logout(request)
       return JsonResponse({"message": "User signed out successfully."}, status=200)
 
-  # If method is non GET - return 405 status
-  return JsonResponse({"errors": "Method not allowed."}, status=405)
+  print("Method is" + request.METHOD)    
+  return JsonResponse(
+                {"errors": "Method not allowed."},
+                status=405
+            )
+
+@csrf_exempt
+def oauth(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+            token = body.get('token')
+
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+            email = idinfo['email']
+            print(email)
+            user, created = CustomUser.objects.get_or_create(email=email)
+            if created:
+                user.set_unusable_password() 
+                user.save()
+
+            login(request, user)
+
+            if created:
+                message = "Sign-up successful and user logged in."
+            else:
+                message = "Login successful."
+
+            return JsonResponse({'message': message, 'user': {'email': email}})
+
+        except ValueError as e:
+            return JsonResponse({'error': 'Invalid token'}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
