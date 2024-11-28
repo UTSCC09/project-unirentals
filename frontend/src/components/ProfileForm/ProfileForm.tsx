@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ProfileForm.css";
-import { getProfile, updateProfile, getProfilePicture } from "./api";
+import { getProfile, updateProfile, getProfilePicture } from "../../api/api";
 
 // Replace with actual API base URL later
 const API_BASE_URL = "http://localhost:8000";

@@ -7,7 +7,7 @@ import {
   FaToilet,
   FaBuilding,
 } from "react-icons/fa";
-import { getListings, Listing } from "./api";
+import { getListings, Listing } from "../../api/api";
 
 interface UniversityDetailsFormProps {
   university: string;
