@@ -1,0 +1,87 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 10; 
+  }
+  
+  .listing-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding: 10px;
+    
+  }
+  .popup-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: white; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    z-index: 11; 
+    max-width: 600px;
+    width: 90%; 
+  }
+  
+  .popup-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .popup-form input,
+  .popup-form textarea {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .popup-form select{
+    width: 84%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .submit-listing {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .submit-listing:hover {
+    background-color: #0056b3;
+  }
+  
+  .cancel-button {
+    position: absolute;
+    top: 2%;
+    right: 5%;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: #333;
+    background: none;
+    border: none;
+    outline: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .cancel-button:hover {
+    color: #ff0000;
+    transform: scale(1.4);
+  }

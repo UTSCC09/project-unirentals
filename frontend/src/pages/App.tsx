@@ -9,6 +9,8 @@ import Navbar from "../components/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
 import SignUpForm from "../components/AuthenticationForms/SignUpForm";
 import SearchForm from "../components/SearchForm/SearchForm";
+import AddListingButton from "../components/AddListing/AddListing";
+import AddListingForm from "../components/AddListingForm/AddListingForm";
 
 
 const App: React.FC = () => {
@@ -21,6 +23,7 @@ const App: React.FC = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showAddListing, setShowAddListing] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -71,6 +74,7 @@ const App: React.FC = () => {
     setUserEmail(email);
     setIsSignedIn(true);
   };
+  
 
   const handleSignUpClick = () => {
     setShowSignIn(false);
@@ -161,6 +165,10 @@ const App: React.FC = () => {
     setShowProfileForm(true);
   };
 
+  const handleAddListingCancel = () => {
+    setShowAddListing(false); 
+  };
+
   const handleSignOut = async () => {
     try {
       const response = await signOut();
@@ -174,6 +182,15 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("An error occurred during sign out", error);
     }
+  };
+
+  const handleAddListingClick = () => {
+    setShowAddListing(true);
+  };
+
+  const handleAddListingFormSubmit = (data: any) => {
+    console.log("Form Data Submitted:", data);
+    setShowAddListing(false);
   };
 
   // actual components being rendered
@@ -234,14 +251,18 @@ const App: React.FC = () => {
           email={userEmail}
         />
       )}
-      {
-        // search bar
-        /* {!showSearch && (
+      
+      {!showSearch && (
         <button id="search-toggle-button" onClick={handleSearchClick}>
           Search
         </button>
-      )} */
-      }
+      )} 
+      <AddListingButton onClick={handleAddListingClick} />
+      {showAddListing && (
+        <div style={{ marginTop: "20px" }}>
+          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
+        </div>
+      )}
     </div>
   );
 };
