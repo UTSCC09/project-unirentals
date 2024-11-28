@@ -6,7 +6,7 @@ import UniversityDetailsForm from "./UniversityRentalsForm";
 import PropertyDetailsForm from "./PropertyDetailsForm";
 import RoommateProfilesList from "./RoommateProfilesList";
 import ProfileForm from "./ProfileForm";
-import { signUp, signIn, signOut, fetchCSRFToken } from "./api";
+import { signUp, signIn, signOut, fetchCSRFToken, Listing } from "./api";
 import Map from "./Map";
 
 /* Navbar component */
@@ -335,22 +335,11 @@ const App: React.FC = () => {
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-  const [rentals, setRentals] = useState<string[]>([
-    "123 Main St, Scarborough Ontario",
-    "330 University Ave, Toronto Ontario",
-    "1234 Military Trail, Scarborough Ontario",
-  ]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState({
-    owner: "",
-    address: "",
-    distance: "",
-    price: "",
-    buildingType: "",
-    description: "",
-  });
+  const [selectedProperty, setSelectedProperty] = useState<Listing | null>(null); // Use Listing or null
+
 
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
@@ -439,19 +428,10 @@ const App: React.FC = () => {
   const handleNext = () => {};
 
   // Property Details Form
-
-  const handleRentalClick = (property: {
-    owner: string;
-    address: string;
-    distance: string;
-    price: string;
-    buildingType: string;
-    description: string;
-  }) => {
+  const handleRentalClick = (property: Listing) => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
   };
-
   const handleClosePropertyDetails = () => {
     setShowPropertyDetails(false);
   };
@@ -523,14 +503,13 @@ const App: React.FC = () => {
         <UniversityDetailsForm
           university={selectedUniversity}
           address={selectedAddress}
-          rentals={rentals}
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
           onNext={handleNext}
           onRentalClick={handleRentalClick}
         />
       )}
-      {showPropertyDetails && (
+      {showPropertyDetails && selectedProperty && (
         <PropertyDetailsForm
           property={selectedProperty}
           onClose={handleClosePropertyDetails}
