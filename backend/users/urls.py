@@ -6,4 +6,6 @@ urlpatterns = [
   path('api/register/', views.registerView, name="register"),
   path('api/login/', views.loginView, name="login"),
   path('api/logout/', views.logoutView, name="logout"),
+  path('api/oauth/', views.oauth, name="oauth"),
+
 ]
