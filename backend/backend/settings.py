@@ -47,14 +47,30 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\jerry\school\C09\keys\unirentals-33aa49b63a3e.json"
+# Getting Credentials - update on local machine
+from google.oauth2 import service_account
 
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+  #"C:\\jerry\\school\\C09\\keys\\unirentals-33aa49b63a3e.json"
+  "C:\\Users\\Kieran Hansen\\Desktop\\School Work\\CSCC09\\keys\\imageStorageKey.json"
+)
+
+# Configuration for media file storing and reriving media file from gcloud 
+STORAGES = {
+  "default": {
+    "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+  },
+  "staticfiles": {
+    "BACKEND": 'django.contrib.staticfiles.storage.StaticFilesStorage'
+  },
+}
+
+GS_PROJECT_ID = 'unirentals'
 GS_BUCKET_NAME = 'unirentals-images'
+GS_STATIC_BUCKET_NAME = 'unirentals-static'
 
-
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-
-GS_CREDENTIALS = None 
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+GS_FILE_OVERWRITE = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -164,7 +180,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-MEDIA_URL = '/api/images/'
-
-MEDIA_ROOT = BASE_DIR / 'media/'
