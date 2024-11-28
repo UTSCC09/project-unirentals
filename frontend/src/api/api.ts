@@ -206,7 +206,23 @@ export const getProfilePicture = async (email: string): Promise<GetProfilePictur
     throw new Error("Failed to fetch profile picture");
   }
 };
+// add listing
+export const addListing = async (formData: FormData): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/listings/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
 
+    return response.status === 201;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
 // get listings
 export const getListings = async (): Promise<Listing[]> => {
   try {

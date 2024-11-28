@@ -30,6 +30,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     const fetchProfile = async () => {
       try {
         const profileData = await getProfile(email);
+        
         setProfile({
           photo: profileData.profile_pic,
           firstname: profileData.first_name || "",
@@ -214,34 +215,36 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
             ></textarea>
           </div>
           <div className="form-group">
-            <label>Preferences</label>
             <div className="preferences">
               <label>
+              Smokes
                 <input
                   type="checkbox"
                   name="smokes"
                   checked={profile.preferences.smokes}
                   onChange={handleCheckboxChange}
                 />
-                Smokes
+                
               </label>
               <label>
+                Pets
                 <input
                   type="checkbox"
                   name="pets"
                   checked={profile.preferences.pets}
                   onChange={handleCheckboxChange}
                 />
-                Pets
+                
               </label>
               <label>
+                Drinks
                 <input
                   type="checkbox"
                   name="drinks"
                   checked={profile.preferences.drinks}
                   onChange={handleCheckboxChange}
                 />
-                Drinks
+                
               </label>
             </div>
           </div>

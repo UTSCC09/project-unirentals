@@ -8,14 +8,22 @@ interface AddListingFormProps {
 
 const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = React.useState({
+    owner: "",
     address: "",
     school: "",
+    longitude: "",
+    latitude: "",
     price: "",
     housingType: "",
     bedrooms: "",
     bathrooms: "",
     kitchens: "",
     description: "",
+    preferences: {
+      pets: false,
+      smokes: false,
+      drinks: false,
+    },
   });
 
   const handleChange = (
@@ -23,6 +31,14 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
   ) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData({
+      ...formData,
+      preferences: { ...formData.preferences, [name]: checked },
+    });
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -133,6 +149,37 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               required
             />
           </div>
+          <div className="preferences">
+              <label>
+                Smokes
+                <input
+                  type="checkbox"
+                  name="smokes"
+                  checked={formData.preferences.smokes}
+                  onChange={handleCheckboxChange}
+                />
+              </label>
+              <label>
+                Pets
+                <input
+                  type="checkbox"
+                  name="pets"
+                  checked={formData.preferences.pets}
+                  onChange={handleCheckboxChange}
+                />
+                
+              </label>
+              <label>
+                Drinks
+                <input
+                  type="checkbox"
+                  name="drinks"
+                  checked={formData.preferences.drinks}
+                  onChange={handleCheckboxChange}
+                />
+                
+              </label>
+            </div>
           <button type="submit" className="submit-listing">Add Listing</button>
           
         </form>

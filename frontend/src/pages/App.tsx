@@ -3,7 +3,7 @@ import UniversityDetailsForm from "../components/UniversityRentalsForm/Universit
 import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetailsForm";
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
-import { signOut, fetchCSRFToken, Listing } from "../api/api";
+import { signOut, fetchCSRFToken, Listing, addListing } from "../api/api";
 import Map from "../components/Map";
 import Navbar from "../components/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
@@ -11,6 +11,7 @@ import SignUpForm from "../components/AuthenticationForms/SignUpForm";
 import SearchForm from "../components/SearchForm/SearchForm";
 import AddListingButton from "../components/AddListing/AddListing";
 import AddListingForm from "../components/AddListingForm/AddListingForm";
+import Alert from "../components/AlertComponent/AlertComponent";
 
 
 const App: React.FC = () => {
@@ -26,6 +27,11 @@ const App: React.FC = () => {
   const [showAddListing, setShowAddListing] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  //alerts
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<'success' | 'error' | 'warning' | 'info'>('info');
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
@@ -162,7 +168,13 @@ const App: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    setShowProfileForm(true);
+    if(!isSignedIn) {
+      setAlertMessage('Users must sign in to view your profile!');
+      setAlertType('warning'); 
+      setAlertVisible(true);
+    }else{
+      setShowProfileForm(true);
+    }
   };
 
   const handleAddListingCancel = () => {
@@ -185,12 +197,23 @@ const App: React.FC = () => {
   };
 
   const handleAddListingClick = () => {
-    setShowAddListing(true);
+    if(!isSignedIn) {
+      setAlertMessage('Users must sign in to add a listing!');
+      setAlertType('warning'); 
+      setAlertVisible(true);
+    }else{
+      setShowAddListing(true);
+    }
   };
 
   const handleAddListingFormSubmit = (data: any) => {
     console.log("Form Data Submitted:", data);
+    addListing(data);
     setShowAddListing(false);
+  };
+
+  const handleAlertClose = () => {
+    setAlertVisible(false);
   };
 
   // actual components being rendered
@@ -263,6 +286,14 @@ const App: React.FC = () => {
           <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
         </div>
       )}
+       {alertVisible && (
+        <Alert
+          message={alertMessage}
+          type={alertType}
+          onClose={handleAlertClose}
+        />
+      )}
+
     </div>
   );
 };
