@@ -217,6 +217,7 @@ def listingSpecificImageView(request, lid, iid):
   # On GET: Return the information for the image with the given id
   if request.method == 'GET':
 
+    # Attempt to find the listing and image with the given ids
     try:
       listing = Listing.objects.get(id=lid)
       image = ListingImage.objects.get(id=iid, listing=listing)
@@ -232,7 +233,26 @@ def listingSpecificImageView(request, lid, iid):
     serializer = ListingImageSerializer(image)
     return JsonResponse(serializer.data, status=200)
 
-  #if request.method == 'DELETE':
-  
+  if request.method == 'DELETE':
+    
+    # Attempt to find the listing and image with the given ids
+    try:
+      listing = Listing.objects.get(id=lid)
+      image = ListingImage.objects.get(id=iid, listing=listing)
+
+    # If the listing does not exist, return a 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # If the image does not exist, return a 404 status
+    except ListingImage.DoesNotExist:
+      return JsonResponse({"errors": "Image with given ID does not exist for the given listing."}, status=404)
+    
+    # If the image does exist, then we delete it
+    image.delete()
+
+    # Return a successful status
+    return JsonResponse({"message": "Photos removed from listing successfully"}, status=200)    
+
   # If a non GET/DELETE method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
