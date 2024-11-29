@@ -137,6 +137,7 @@ def listingSpecificView(request, id): #/api/listings/id/
 
 # ------------------------------------------------------------------------------------------ #
 
+@csrf_exempt
 def listingGetImageView(request, lid): # /api/listings/id/images/?page=X
   # On GET: Return a paginated list of the items
   if request.method == 'GET':
@@ -169,9 +170,48 @@ def listingGetImageView(request, lid): # /api/listings/id/images/?page=X
 
     return JsonResponse({'images': list(page_obj.object_list)}, status=200)
   
+  if request.method == 'POST':
+    
+    # Attempt to find the listing with the given id
+    try:
+      listing = Listing.objects.get(id=lid)
+    
+    # If listing with given ID not found, return 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+
+    # Check that the requesting user is logged in
+    if request.user.is_authenticated:
+
+      # Check that the requesting user owns this listing
+      if listing.owner == request.user:
+
+        # Check that the given image files are appropriate
+        for file in request.FILES.getlist('images'):
+          try:
+            Image.open(file).verify()  # Verify the file is an image
+          except Exception:
+            return JsonResponse({"errors": "Uploaded files must be valid image files."}, status=400)
+
+        # If the files are appropriate, we add them to the listing
+        for file in request.FILES.getlist('images'):
+          ListingImage.objects.create(image=file, listing=listing)
+
+        # Return a successfull status
+        return JsonResponse({"message": "Photos uploaded to listing successfully"}, status=200)
+
+      # If a user is attempting to modify someone elses listing, return a 403 status
+      return JsonResponse({"errors": "Cannot modify listing owned by another user."}, status=403)
+    
+    # If the user is not logged in, return a 401 status
+    return JsonResponse({"errors": "User must be logged in for this action."}, status=401)
+  
   # If a non GET/POST method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
 # ------------------------------------------------------------------------------------------ #
 
-#def listingModifyImageView(request, lid, iid): # /api/listings/id/images/id/
-  
+#@csrf_exempt
+#def listingDeleteImageView(request, lid, iid): # /api/listings/id/images/id/
+
+  #if request.method == 'DELETE':
