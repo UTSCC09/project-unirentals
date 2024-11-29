@@ -77,7 +77,7 @@ def listingView(request):
 # ------------------------------------------------------------------------------------------ #
 
 @csrf_exempt
-def listingSpecificView(request, id): #/api/listings/id/
+def listingSpecificView(request, id): 
 
   # Attempt to find a listing matching the given id
   try:
@@ -138,7 +138,7 @@ def listingSpecificView(request, id): #/api/listings/id/
 # ------------------------------------------------------------------------------------------ #
 
 @csrf_exempt
-def listingGetImageView(request, lid): # /api/listings/id/images/?page=X
+def listingImageView(request, lid): 
   # On GET: Return a paginated list of the items
   if request.method == 'GET':
 
@@ -211,7 +211,28 @@ def listingGetImageView(request, lid): # /api/listings/id/images/?page=X
 
 # ------------------------------------------------------------------------------------------ #
 
-#@csrf_exempt
-#def listingDeleteImageView(request, lid, iid): # /api/listings/id/images/id/
+@csrf_exempt
+def listingSpecificImageView(request, lid, iid): 
+
+  # On GET: Return the information for the image with the given id
+  if request.method == 'GET':
+
+    try:
+      listing = Listing.objects.get(id=lid)
+      image = ListingImage.objects.get(id=iid, listing=listing)
+
+    # If the listing does not exist, return a 404 status
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    # If the image does not exist, return a 404 status
+    except ListingImage.DoesNotExist:
+      return JsonResponse({"errors": "Image with given ID does not exist for the given listing."}, status=404)
+    
+    serializer = ListingImageSerializer(image)
+    return JsonResponse(serializer.data, status=200)
 
   #if request.method == 'DELETE':
+  
+  # If a non GET/DELETE method is attempted, return 405 status
+  return JsonResponse({"errors": "Method not allowed."}, status=405)
