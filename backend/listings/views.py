@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import forms
-from .models import Listing
+from .models import Listing, ListingImage
 from .serializers import ListingSerializer
 from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
@@ -34,7 +34,11 @@ def listingView(request):
           # Set owner of listing to be user sending req
           form.instance.owner = request.user 
           form.instance.school = school
-          form.save()
+          listing = form.save()
+
+          # Create the images associated with the listing
+          for file in request.FILES.getlist('images'):
+            ListingImage.objects.create(image=file, listing=listing)
 
           # Return a successful response
           return JsonResponse({"message": "Listing created successfully"}, status=200)
@@ -120,3 +124,10 @@ def listingSpecificView(request, id): #/api/listings/id/
     return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
 
 # ------------------------------------------------------------------------------------------ #
+
+#def listingGetImageView(request, lid): # /api/listings/id/images/
+ 
+# ------------------------------------------------------------------------------------------ #
+
+#def listingModifyImageView(request, lid, iid): # /api/listings/id/images/id/
+  
