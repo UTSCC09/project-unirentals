@@ -5,6 +5,7 @@ from .models import Listing, ListingImage
 from .serializers import ListingSerializer
 from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
+from PIL import Image
 
 # Create your views here.
 @csrf_exempt
@@ -30,6 +31,13 @@ def listingView(request):
 
         # Check that information passed to form is valid
         if form.is_valid():
+
+          # Check that all given images are valid
+          for file in request.FILES.getlist('images'):
+            try:
+              Image.open(file).verify()  # Verify the file is an image
+            except Exception:
+              return JsonResponse({"errors": "Uploaded files must be valid image files."}, status=400)
 
           # Set owner of listing to be user sending req
           form.instance.owner = request.user 

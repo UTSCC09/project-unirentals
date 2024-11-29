@@ -3,6 +3,19 @@ from users.models import CustomUser
 from schools.models import School
 from geopy.distance import geodesic
 from django.core.validators import MinValueValidator
+from django.utils.crypto import get_random_string
+import os, uuid
+
+# Helper function to randomly generate a filename
+def generate_unique_filename(instance, filename):
+    # Get file extension
+    ext = filename.split('.')[-1]
+    
+    # Generate a unique name for the file (UUID and random string)
+    unique_filename = f"{get_random_string(8)}_{uuid.uuid4().hex[:8]}.{ext}"
+    
+    # Define the directory structure in the bucket
+    return os.path.join('listing_images/', unique_filename)
 
 # Create your models here.
 class Listing(models.Model):
@@ -51,5 +64,5 @@ class Listing(models.Model):
 
 class ListingImage(models.Model):
   listing = models.ForeignKey(Listing, related_name='images', on_delete=models.CASCADE)
-  image = models.ImageField(upload_to='listing_images/')
+  image = models.ImageField(upload_to=generate_unique_filename)
   uploaded_at = models.DateTimeField(auto_now_add=True)
