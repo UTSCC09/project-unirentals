@@ -1,16 +1,16 @@
 import React from "react";
 import "./AddListingForm.css";
+import { addListing } from "../../api/api";
 
 interface AddListingFormProps {
-  onSubmit: (data: any) => void;
   onCancel: () => void;
 }
 
-const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) => {
-  const [formData, setFormData] = React.useState({
+const AddListingForm: React.FC<AddListingFormProps> = ({ onCancel }) => {
+  const [listing, setListing] = React.useState({
     owner: "",
     address: "",
-    school: "",
+    school: "UTSC",
     longitude: "",
     latitude: "",
     price: "",
@@ -30,20 +30,48 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setListing((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    setFormData({
-      ...formData,
-      preferences: { ...formData.preferences, [name]: checked },
+    setListing({
+      ...listing,
+      preferences: { ...listing.preferences, [name]: checked },
     });
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(formData);
+
+    const formData = new FormData();
+    formData.append("owner", listing.owner);
+    formData.append("address", listing.address);
+    formData.append("school", listing.school);
+    formData.append("longitude", listing.longitude);
+    formData.append("latitude", listing.latitude);
+    formData.append("price", listing.price);
+    formData.append("housingType", listing.housingType);
+    formData.append("bedrooms", listing.bedrooms);
+    formData.append("bathrooms", listing.bathrooms);
+    formData.append("kitchens", listing.kitchens);
+    formData.append("description", listing.description);
+    formData.append("pets", listing.preferences.pets.toString());
+    formData.append("smokes", listing.preferences.smokes.toString());
+    formData.append("drinks", listing.preferences.drinks.toString());
+
+    try {
+      const response = await addListing(formData);
+      
+      if (response) {
+        console.log("Listing added successfully");
+      } else {
+        console.error("Error adding listing");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    
   };
 
   return (
@@ -60,7 +88,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               type="text"
               id="address"
               name="address"
-              value={formData.address}
+              value={listing.address}
               onChange={handleChange}
               required
             />
@@ -70,14 +98,14 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
             <select
               id="school"
               name="school"
-              value={formData.school}
+              value={listing.school}
               onChange={handleChange}
               required
             >
               <option value="">Select a school</option>
-              <option value="School A">School A</option>
-              <option value="School B">School B</option>
-              <option value="School C">School C</option>
+              <option value="School A">UTSG</option>
+              <option value="School B">UTSC</option>
+              <option value="School C">UTM</option>
             </select>
           </div>
           <div>
@@ -86,7 +114,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               type="number"
               id="price"
               name="price"
-              value={formData.price}
+              value={listing.price}
               onChange={handleChange}
               required
             />
@@ -96,7 +124,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
             <select
               id="housingType"
               name="housingType"
-              value={formData.housingType}
+              value={listing.housingType}
               onChange={handleChange}
               required
             >
@@ -112,7 +140,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               type="number"
               id="bedrooms"
               name="bedrooms"
-              value={formData.bedrooms}
+              value={listing.bedrooms}
               onChange={handleChange}
               required
             />
@@ -123,7 +151,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               type="number"
               id="bathrooms"
               name="bathrooms"
-              value={formData.bathrooms}
+              value={listing.bathrooms}
               onChange={handleChange}
               required
             />
@@ -134,7 +162,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               type="number"
               id="kitchens"
               name="kitchens"
-              value={formData.kitchens}
+              value={listing.kitchens}
               onChange={handleChange}
               required
             />
@@ -144,7 +172,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
             <textarea
               id="description"
               name="description"
-              value={formData.description}
+              value={listing.description}
               onChange={handleChange}
               required
             />
@@ -155,7 +183,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
                 <input
                   type="checkbox"
                   name="smokes"
-                  checked={formData.preferences.smokes}
+                  checked={listing.preferences.smokes}
                   onChange={handleCheckboxChange}
                 />
               </label>
@@ -164,7 +192,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
                 <input
                   type="checkbox"
                   name="pets"
-                  checked={formData.preferences.pets}
+                  checked={listing.preferences.pets}
                   onChange={handleCheckboxChange}
                 />
                 
@@ -174,7 +202,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
                 <input
                   type="checkbox"
                   name="drinks"
-                  checked={formData.preferences.drinks}
+                  checked={listing.preferences.drinks}
                   onChange={handleCheckboxChange}
                 />
                 

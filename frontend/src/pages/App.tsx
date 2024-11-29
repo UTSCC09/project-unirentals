@@ -283,7 +283,7 @@ const App: React.FC = () => {
       <AddListingButton onClick={handleAddListingClick} />
       {showAddListing && (
         <div style={{ marginTop: "20px" }}>
-          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
+          <AddListingForm onCancel={handleAddListingCancel} />
         </div>
       )}
        {alertVisible && (

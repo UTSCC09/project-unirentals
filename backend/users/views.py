@@ -21,7 +21,7 @@ def csrfView(request):
 
 # ------------------------------------------------------------------------------------------ #
 
-@csrf_exempt
+@ensure_csrf_cookie
 def registerView(request):
   form = forms.CustomUserCreationForm()
 
@@ -51,7 +51,7 @@ def registerView(request):
 
 # ------------------------------------------------------------------------------------------ #
 
-@csrf_exempt
+@ensure_csrf_cookie
 def loginView(request):
   
   # On POST - Attempt to login a user with given credentials
@@ -81,7 +81,7 @@ def loginView(request):
 
 # ------------------------------------------------------------------------------------------ #
 
-@csrf_exempt
+@ensure_csrf_cookie
 def logoutView(request):
   
   # On GET - Sign out user

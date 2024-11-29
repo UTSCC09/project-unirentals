@@ -1,6 +1,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
-const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
+// const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
+const API_BASE_URL = "http://localhost:8000";
+
 
 interface SignUpResponse {
   success: boolean;
@@ -157,7 +159,6 @@ export const updateProfile = async (
           "Content-Type": "multipart/form-data",
           "X-Csrftoken": csrfToken || "",
         },
-        withCredentials: true,
       }
     );
 
@@ -227,10 +228,10 @@ export const addListing = async (formData: FormData): Promise<boolean> => {
 export const getListings = async (): Promise<Listing[]> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/listings/`, {
+      withCredentials: true,
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
-      withCredentials: true,
     });
     console.log("Listings data:", response.data);
     return response.data.listings; // Access the listings property
