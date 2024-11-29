@@ -42,8 +42,14 @@ class Listing(models.Model):
     return self.address
   
   def save(self, *args, **kwargs):
+    # Calculate the distance to campus based on the given coordinates
     coords1 = (self.latitude, self.longitude)
     coords2 = (self.school.latitude, self.school.longitude)
     self.distance = round(geodesic(coords1, coords2).kilometers, 2)
     
     super().save(*args, **kwargs)
+
+class ListingImage(models.Model):
+  listing = models.ForeignKey(Listing, related_name='images', on_delete=models.CASCADE)
+  image = models.ImageField(upload_to='listing_images/')
+  uploaded_at = models.DateTimeField(auto_now_add=True)
