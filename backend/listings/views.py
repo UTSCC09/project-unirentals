@@ -2,10 +2,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import forms
 from .models import Listing, ListingImage
-from .serializers import ListingSerializer
+from .serializers import ListingSerializer, ListingImageSerializer
 from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
+from django.core.paginator import Paginator, EmptyPage
+
+#LISTING_PAGINATION_COUNT = X
+IMAGE_PAGINATION_COUNT = 5
 
 # Create your views here.
 @csrf_exempt
@@ -133,8 +137,40 @@ def listingSpecificView(request, id): #/api/listings/id/
 
 # ------------------------------------------------------------------------------------------ #
 
-#def listingGetImageView(request, lid): # /api/listings/id/images/
- 
+def listingGetImageView(request, lid): # /api/listings/id/images/?page=X
+  # On GET: Return a paginated list of the items
+  if request.method == 'GET':
+
+    # Attempt to find the given listing
+    try: 
+      listing = Listing.objects.get(id=lid)
+
+    # If no listing is found with the given id, we return a 404 status code
+    except Listing.DoesNotExist:
+      return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
+    
+    try:
+      page = request.GET.get('page', 1)
+      page = int(page)
+    
+    # If page is supplied with an improper value, return 404 status
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Page must be an integer."}, status=400)
+    
+    images = listing.images.all()
+    
+    paginator = Paginator(ListingImageSerializer(images, many=True).data, IMAGE_PAGINATION_COUNT)
+
+    # Attempt to get the page for which we are queried, if we are queried out of our range, we return the last page
+    try:
+      page_obj = paginator.page(page)
+    except EmptyPage:
+      page_obj = paginator.page(paginator.num_pages)
+
+    return JsonResponse({'images': list(page_obj.object_list)}, status=200)
+  
+  # If a non GET/POST method is attempted, return 405 status
+  return JsonResponse({"errors": "Method not allowed."}, status=405)
 # ------------------------------------------------------------------------------------------ #
 
 #def listingModifyImageView(request, lid, iid): # /api/listings/id/images/id/

@@ -5,12 +5,12 @@ from listings.models import Listing
 from .serializers import ApplicationSerializer
 from django.core.paginator import Paginator, EmptyPage
 
+# A constant value for the pagination count
+APPLICATION_PAGINATION_COUNT = 5
+
 # Create your views here.
 @csrf_exempt
 def applicationView(request, lid):
-
-  # A constant value for the pagination count
-  APPLICATION_PAGINATION_COUNT = 5
 
   # On GET: return paginated (full/open) listings 
   if request.method == 'GET':
