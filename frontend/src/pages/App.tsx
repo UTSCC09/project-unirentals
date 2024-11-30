@@ -79,6 +79,9 @@ const App: React.FC = () => {
   const handleSignInSuccess = (email: string) => {
     setUserEmail(email);
     setIsSignedIn(true);
+    setAlertMessage('User signed in successfully!');
+      setAlertType('success'); 
+      setAlertVisible(true);
   };
   
 
@@ -185,9 +188,11 @@ const App: React.FC = () => {
     try {
       const response = await signOut();
       if (response.success) {
-        console.log("User signed out successfully");
         setIsSignedIn(false);
         setUserEmail("");
+        setAlertMessage('User signed out successfully!');
+        setAlertType('success'); 
+        setAlertVisible(true);
       } else {
         console.error(response.message);
       }
