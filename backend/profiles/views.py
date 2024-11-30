@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import forms
 from users.models import CustomUser
-from .models import userProfile, DEFAULT_PICTURE_PATH
+from .models import userProfile
 from .serializers import ProfileSerializer
 from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
@@ -25,7 +25,7 @@ def selfProfileView(request):
       
       # On POST - Update profile information for given user
       if request.method == 'POST':
-
+        
         # Attempt to find school matching value submitted in form
         try:
           if request.POST['school'] == '':
@@ -37,14 +37,7 @@ def selfProfileView(request):
 
           # Check that the form fields submitted are valid
           if form.is_valid():
-
-            # Set the appropriate school
             form.instance.school = school
-            
-            # Check that there is an image uploaded, otherwise set the profile_pic to the default
-            if not request.FILES.get('profile_pic'): 
-              form.instance.profile_pic = DEFAULT_PICTURE_PATH
-            
             form.save()
 
             # If everything works okay, save the form and return 200 status

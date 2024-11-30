@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from .models import Listing, ListingImage
+from .models import Listing
 
 class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
-        fields = '__all__'
-
-class ListingImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ListingImage
         fields = '__all__'
