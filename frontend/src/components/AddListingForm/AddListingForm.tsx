@@ -11,7 +11,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
   const [listing, setListing] = React.useState({
     owner: "",
     address: "",
-    school: "UTSC",
+    school: "",
     longitude: "",
     latitude: "",
     price: "",
@@ -52,7 +52,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
     formData.append("longitude", listing.longitude);
     formData.append("latitude", listing.latitude);
     formData.append("price", listing.price);
-    formData.append("housingType", listing.housingType);
+    formData.append("type", listing.housingType);
     formData.append("bedrooms", listing.bedrooms);
     formData.append("bathrooms", listing.bathrooms);
     formData.append("kitchens", listing.kitchens);
@@ -63,7 +63,6 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
     //change these
     formData.append("longitude", "-79.1864");
     formData.append("latitude", "43.7845");
-    formData.append("type", "House");
 
     try {
       const response = await addListing(formData);
@@ -135,7 +134,10 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
               <option value="">Select a type</option>
               <option value="Apartment">Apartment</option>
               <option value="House">House</option>
-              <option value="Dormitory">Dormitory</option>
+              <option value="Studio">Studio</option>
+              <option value="Basement">Basement</option>
+              <option value="Room">Room</option>
+
             </select>
           </div>
           <div>
