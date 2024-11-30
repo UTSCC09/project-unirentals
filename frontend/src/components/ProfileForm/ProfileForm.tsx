@@ -151,13 +151,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
             />
           </div>
           <div className="form-group">
-            <label htmlFor="firstname">First name</label>
+            <label htmlFor="firstname">First name*</label>
             <input
               type="text"
               id="firstname"
               name="firstname"
               value={profile.firstname}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -168,6 +169,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
               name="lastname"
               value={profile.lastname}
               onChange={handleInputChange}
+              
             />
           </div>
           <div className="form-group">
@@ -192,14 +194,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
             />
           </div>
           <div className="form-group">
-            <label htmlFor="school">School</label>
+            <label htmlFor="school">School*</label>
             <select
               id="school"
               name="school"
               value={profile.school}
               onChange={handleInputChange}
+              required
             >
-              <option value="">Select a school</option>
+              <option value="">{profile.school}</option>
               <option value="UTSG">UTSG</option>
               <option value="UTSC">UTSC</option>
               <option value="UTM">UTM</option>

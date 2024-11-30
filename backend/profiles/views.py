@@ -21,6 +21,7 @@ def selfProfileView(request):
       # On GET - Return information about current users profile
       if request.method == 'GET':
         user_info = ProfileSerializer(profile)
+        user_info._data = {**user_info.data, 'school': profile.school.name}
         return JsonResponse(user_info.data, status=200)
       
       # On POST - Update profile information for given user
