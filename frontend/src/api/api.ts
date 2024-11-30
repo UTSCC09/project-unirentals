@@ -151,10 +151,9 @@ export const updateProfile = async (
   formData: FormData,
   email: string
 ): Promise<UpdateProfileResponse> => {
-  console.log("Caling update profile with cookie:", document.cookie);
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/api/profiles/${email}/`,
+      `${API_BASE_URL}/api/profiles/`,
       formData,
       {
         headers: {
@@ -169,7 +168,6 @@ export const updateProfile = async (
       message: response.data.message,
     };
   } catch (error) {
-    console.log("Failed to update profile:", error);
     return { success: false, message: "Failed to update profile" };
   }
 };
@@ -179,7 +177,7 @@ export const getProfile = async (
   email: string
 ): Promise<GetProfileResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/`, {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/`, {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
