@@ -3,12 +3,15 @@ import UniversityDetailsForm from "../components/UniversityRentalsForm/Universit
 import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetailsForm";
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
-import { signOut, fetchCSRFToken, Listing } from "../api/api";
+import { signOut, fetchCSRFToken, Listing, addListing } from "../api/api";
 import Map from "../components/Map";
 import Navbar from "../components/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
 import SignUpForm from "../components/AuthenticationForms/SignUpForm";
 import SearchForm from "../components/SearchForm/SearchForm";
+import AddListingButton from "../components/AddListing/AddListing";
+import AddListingForm from "../components/AddListingForm/AddListingForm";
+import Alert from "../components/AlertComponent/AlertComponent";
 
 
 const App: React.FC = () => {
@@ -21,8 +24,14 @@ const App: React.FC = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showAddListing, setShowAddListing] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  //alerts
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<'success' | 'error' | 'warning' | 'info'>('info');
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
@@ -62,7 +71,7 @@ const App: React.FC = () => {
   ]);
 
   /* Event Handlers */
-  const handleSignInClick = () => {
+  const handleSignInClick = async () => {
     setShowSignIn(true);
     setShowSignUp(false);
   };
@@ -71,6 +80,7 @@ const App: React.FC = () => {
     setUserEmail(email);
     setIsSignedIn(true);
   };
+  
 
   const handleSignUpClick = () => {
     setShowSignIn(false);
@@ -158,7 +168,17 @@ const App: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    setShowProfileForm(true);
+    if(!isSignedIn) {
+      setAlertMessage('Users must sign in to view your profile!');
+      setAlertType('warning'); 
+      setAlertVisible(true);
+    }else{
+      setShowProfileForm(true);
+    }
+  };
+
+  const handleAddListingCancel = () => {
+    setShowAddListing(false); 
   };
 
   const handleSignOut = async () => {
@@ -174,6 +194,28 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("An error occurred during sign out", error);
     }
+  };
+
+  const handleAddListingClick = () => {
+    if(!isSignedIn) {
+      setAlertMessage('Users must sign in to add a listing!');
+      setAlertType('warning'); 
+      setAlertVisible(true);
+    }else{
+      setShowAddListing(true);
+    }
+  };
+
+  const handleAddListingFormSubmit = () => {
+    setShowAddListing(false);
+    setAlertMessage('New Listing Added Successfully!');
+    setAlertType('success'); 
+    setAlertVisible(true);
+
+  };
+
+  const handleAlertClose = () => {
+    setAlertVisible(false);
   };
 
   // actual components being rendered
@@ -234,14 +276,26 @@ const App: React.FC = () => {
           email={userEmail}
         />
       )}
-      {
-        // search bar
-        /* {!showSearch && (
+      
+      {!showSearch && (
         <button id="search-toggle-button" onClick={handleSearchClick}>
           Search
         </button>
-      )} */
-      }
+      )} 
+      <AddListingButton onClick={handleAddListingClick} />
+      {showAddListing && (
+        <div style={{ marginTop: "20px" }}>
+          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
+        </div>
+      )}
+       {alertVisible && (
+        <Alert
+          message={alertMessage}
+          type={alertType}
+          onClose={handleAlertClose}
+        />
+      )}
+
     </div>
   );
 };

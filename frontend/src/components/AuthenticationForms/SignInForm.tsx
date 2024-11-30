@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signIn } from "../../api/api";
+import { signIn, fetchCSRFToken } from "../../api/api";
 import Login from "./login";
 import "./AuthForms.css"
 
@@ -21,10 +21,12 @@ const SignInForm: React.FC<{
     formData.append("password", password);
     try {
       console.log("signIn: ", formData);
+
       const response = await signIn(formData);
       if (response.success) {
         console.log("User signed in successfully:", email);
         onSignInSuccess(email);
+        
         onClose();
       } else {
         setErrorMessage(response.message);

@@ -21,7 +21,7 @@ def csrfView(request):
 
 # ------------------------------------------------------------------------------------------ #
 
-@csrf_exempt
+
 def registerView(request):
   form = forms.CustomUserCreationForm()
 
@@ -50,7 +50,6 @@ def registerView(request):
   return JsonResponse({"errors": "Method not allowed."}, status=405)
 
 # ------------------------------------------------------------------------------------------ #
-
 @csrf_exempt
 def loginView(request):
   
@@ -87,14 +86,14 @@ def logoutView(request):
   # On GET - Sign out user
   if request.method == 'GET':
       logout(request)
-      return JsonResponse({"message": "User signed out successfully."}, status=200)
+      response = JsonResponse({"message": "User signed out successfully."}, status=200)
+      return response
 
   print("Method is" + request.METHOD)    
   return JsonResponse(
                 {"errors": "Method not allowed."},
                 status=405
             )
-
 @csrf_exempt
 def oauth(request):
     if request.method == "POST":

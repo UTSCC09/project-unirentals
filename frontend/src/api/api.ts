@@ -1,6 +1,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
-const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
+// const API_BASE_URL = "http://127.0.0.1:8000"; // replace with API URL
+const API_BASE_URL = "http://localhost:8000";
+
 
 interface SignUpResponse {
   success: boolean;
@@ -131,7 +133,9 @@ export const signOut = async (): Promise<SignOutResponse> => {
       },
       withCredentials: true,
     });
-
+    // if(response.status === 200){
+    //   csrfToken = null;
+    // }
     return {
       success: response.status === 200,
       message: response.data.message,
@@ -157,7 +161,6 @@ export const updateProfile = async (
           "Content-Type": "multipart/form-data",
           "X-Csrftoken": csrfToken || "",
         },
-        withCredentials: true,
       }
     );
 
@@ -206,15 +209,30 @@ export const getProfilePicture = async (email: string): Promise<GetProfilePictur
     throw new Error("Failed to fetch profile picture");
   }
 };
-
+// add listing
+export const addListing = async (formData: FormData): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/listings/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
 // get listings
 export const getListings = async (): Promise<Listing[]> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/listings/`, {
+      withCredentials: true,
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
-      withCredentials: true,
     });
     console.log("Listings data:", response.data);
     return response.data.listings; // Access the listings property

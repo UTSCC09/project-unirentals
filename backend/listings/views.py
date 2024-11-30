@@ -24,7 +24,7 @@ def listingView(request):
   
   # On POST: create a new listing
   if request.method == 'POST':
-    
+    print(request.user)
     # Check that user is authenticated
     if request.user.is_authenticated:
 
