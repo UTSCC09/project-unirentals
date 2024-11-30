@@ -7,6 +7,7 @@ from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
 from django.core.paginator import Paginator, EmptyPage
+import requests
 
 #LISTING_PAGINATION_COUNT = X
 IMAGE_PAGINATION_COUNT = 5
@@ -30,7 +31,8 @@ def listingView(request):
 
       # Attempt to find a school matching the given one
       try:
-        form = forms.ListingForm(request.POST)
+        form = forms.ListingForm(request.POST)      
+       
         school = School.objects.get(name=request.POST['school'])
 
         # Check that information passed to form is valid
@@ -46,7 +48,14 @@ def listingView(request):
           # Set owner of listing to be user sending req
           form.instance.owner = request.user 
           form.instance.school = school
+          result = validateAddress(request.POST['address'])
+          if(result == None):
+            return JsonResponse({"errors": "Address not found."}, status=404)
+          form.instance.latitude = result['lon']
+          form.instance.longitude = result['lat']
+
           listing = form.save()
+          print(listing)
 
           # Create the images associated with the listing
           for file in request.FILES.getlist('images'):
@@ -256,3 +265,24 @@ def listingSpecificImageView(request, lid, iid):
 
   # If a non GET/DELETE method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+@csrf_exempt
+def validateAddress(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": address,
+        "format": "json",
+        "addressdetails": 1 
+    }
+    headers= {
+        "User-Agent": "unirentals (jjjchen52@gmail.com)"
+    }
+    response = requests.get(url, params=params, headers=headers)
+    if response.status_code == 200:
+        results = response.json()
+        if results:
+            return results[0]  # Return the first matched result
+        else:
+            return None  # Address not found
+    else:
+        response.raise_for_status()
