@@ -133,7 +133,9 @@ export const signOut = async (): Promise<SignOutResponse> => {
       },
       withCredentials: true,
     });
-
+    // if(response.status === 200){
+    //   csrfToken = null;
+    // }
     return {
       success: response.status === 200,
       message: response.data.message,
@@ -217,8 +219,7 @@ export const addListing = async (formData: FormData): Promise<boolean> => {
       },
       withCredentials: true,
     });
-
-    return response.status === 201;
+    return response.status === 200;
   } catch (error) {
     console.log(error);
     return false;

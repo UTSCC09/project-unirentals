@@ -3,10 +3,11 @@ import "./AddListingForm.css";
 import { addListing } from "../../api/api";
 
 interface AddListingFormProps {
+  onSubmit: () => void;
   onCancel: () => void;
 }
 
-const AddListingForm: React.FC<AddListingFormProps> = ({ onCancel }) => {
+const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) => {
   const [listing, setListing] = React.useState({
     owner: "",
     address: "",
@@ -59,12 +60,15 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onCancel }) => {
     formData.append("pets", listing.preferences.pets.toString());
     formData.append("smokes", listing.preferences.smokes.toString());
     formData.append("drinks", listing.preferences.drinks.toString());
+    //change these
+    formData.append("longitude", "-79.1864");
+    formData.append("latitude", "43.7845");
+    formData.append("type", "House");
 
     try {
       const response = await addListing(formData);
-      
       if (response) {
-        console.log("Listing added successfully");
+        onSubmit();
       } else {
         console.error("Error adding listing");
       }
@@ -103,9 +107,9 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onCancel }) => {
               required
             >
               <option value="">Select a school</option>
-              <option value="School A">UTSG</option>
-              <option value="School B">UTSC</option>
-              <option value="School C">UTM</option>
+              <option value="UTSG">UTSG</option>
+              <option value="UTSC">UTSC</option>
+              <option value="UTM">UTM</option>
             </select>
           </div>
           <div>

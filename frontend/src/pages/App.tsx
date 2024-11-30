@@ -71,7 +71,7 @@ const App: React.FC = () => {
   ]);
 
   /* Event Handlers */
-  const handleSignInClick = () => {
+  const handleSignInClick = async () => {
     setShowSignIn(true);
     setShowSignUp(false);
   };
@@ -206,10 +206,12 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAddListingFormSubmit = (data: any) => {
-    console.log("Form Data Submitted:", data);
-    addListing(data);
+  const handleAddListingFormSubmit = () => {
     setShowAddListing(false);
+    setAlertMessage('New Listing Added Successfully!');
+    setAlertType('success'); 
+    setAlertVisible(true);
+
   };
 
   const handleAlertClose = () => {
@@ -283,7 +285,7 @@ const App: React.FC = () => {
       <AddListingButton onClick={handleAddListingClick} />
       {showAddListing && (
         <div style={{ marginTop: "20px" }}>
-          <AddListingForm onCancel={handleAddListingCancel} />
+          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
         </div>
       )}
        {alertVisible && (
