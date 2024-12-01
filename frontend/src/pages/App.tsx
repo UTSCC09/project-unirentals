@@ -4,8 +4,8 @@ import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetai
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
 import { signOut, fetchCSRFToken, Listing, addListing, getListings } from "../api/api";
-import Map from "../components/Map";
-import Navbar from "../components/Navbar";
+import Map from "../components/Map/Map";
+import Navbar from "../components/Navbar/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
 import SignUpForm from "../components/AuthenticationForms/SignUpForm";
 import SearchForm from "../components/SearchForm/SearchForm";
