@@ -155,6 +155,7 @@ def listingView(request):
 
     serializer = ListingSerializer(listings, many=True)
 
+
     # If we are sending back all listings, we just serialize and return
     if all:
       return JsonResponse({"listings": serializer.data}, status=200)
@@ -169,6 +170,7 @@ def listingView(request):
     # If the given page is out of range, we just return the last page
     except EmptyPage:
       page_obj = paginator.page(paginator.num_pages)
+
   
     return JsonResponse({'listings': list(page_obj.object_list), 'lastpage': page >= paginator.num_pages}, status=200)
 

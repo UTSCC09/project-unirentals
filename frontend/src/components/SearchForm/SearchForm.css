@@ -1,0 +1,133 @@
+/* Search form */
+#search-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(36, 35, 35, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slide-up 0.5s forwards;
+  }
+  
+  #search-form {
+    background-color: #f9f9f9;
+    width: 20%;
+    padding: 2rem;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  #search-form-title {
+    font-size: 2rem;
+    margin-top: 0.5rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  #search-form input {
+    width: 96%;
+    height: 5%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.2rem;
+  }
+  
+  #search-form input::placeholder {
+    font-size: 1.2rem;
+    color: #888;
+  }
+  
+  .filter-group {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  #filters-toggle-button {
+    font-size: 1.2rem;
+    margin: auto;
+    cursor: pointer;
+  }
+  
+  #filters-toggle-button:hover {
+    text-decoration: underline;
+    color: #506C84;
+  }
+  
+  #filters input {
+    height: 20px;
+    margin-top: 0.5rem;
+    margin-right: -0.7rem;
+  }
+  
+  .filters-label {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    color:#333232
+  }
+  
+  #search-form button {
+    justify-content: center;
+    display: block;
+    width: 100%;
+    height: 45px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #506C84;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+  }
+  
+  #search-form button:hover {
+    background-color: #6A85A0;
+  }
+  
+  #close-search-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: #333;
+    background: none;
+    border: none;
+    outline: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  #close-search-button:hover {
+    color: #ff0000;
+    transform: scale(1.4);
+  }
+  
+  /* The actual search button on render that you click to get the search bar */
+  #search-toggle-button {
+    position: fixed;
+    bottom: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #506C84;
+    color: white;
+    border-radius: 10px;
+    width: 620px;
+    height: 75px;
+    font-size: 3.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  #search-toggle-button:hover {
+    background-color: #6A85A0;
+  }
+  

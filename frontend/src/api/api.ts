@@ -47,12 +47,12 @@ interface GetProfilePictureResponse {
 
 export interface Listing {
   id: number;
-  university: string;
+  school: string;
   address: string;
   owner: number;
   distance: string;
   price: string;
-  buildingType: string;
+  type: string;
   description: string;
   bedrooms: number;
   bathrooms: number;
@@ -233,7 +233,7 @@ export const getListings = async (): Promise<Listing[]> => {
       },
     });
     console.log("Listings data:", response.data);
-    return response.data.listings; // Access the listings property
+    return response.data.listings;
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch listings");

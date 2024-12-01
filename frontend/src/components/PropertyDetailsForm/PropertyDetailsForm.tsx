@@ -40,49 +40,50 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         <span id="back-button" onClick={onBack}>
           &#8249;
         </span>
-        <h2 id="property-address">
+        <div id="property-address">
           <FaMapMarkerAlt />
           {property.address}
-        </h2>
-        <p id="property-distance">
+        </div>
+        <div className="component" id="property-distance">
           <FaRuler />
-          Distance from campus: {property.distance}
-        </p>
-        <p id="property-price">
+          Distance from campus: {property.distance}km
+        </div>
+        <div className="component" id="property-price">
           <FaDollarSign />
           Price: {property.price}
-        </p>
-        <p id="property-building-type">
+        </div>
+        <div className="component" id="property-building-type">
           <FaBuilding />
-          Building type: {property.buildingType}
-        </p>
-        <p id="property-owner">
+          Building type: {property.type}
+        </div>
+        <div className="component" id="property-owner">
           <FaUser />
           Owned by: {property.owner}
-        </p>
-        <p id="property-bedrooms">
+        </div>
+        <div className="component" id="property-bedrooms">
           <FaBed />
           Bedrooms: {property.bedrooms}
-        </p>
-        <p id="property-bathrooms">
+        </div>
+        <div className="component" id="property-bathrooms">
           <FaToilet />
           Bathrooms: {property.bathrooms}
-        </p>
-        <div className="property-icons">
+        </div>
+        <div className="component property-icons">
           <p>This property allows:</p>
           {property.pets && <FaPaw className="icon" title="Pets allowed" />}
           {property.smokes && <FaSmoking className="icon" title="Smoking allowed" />}
           {property.drinks && <FaWineGlass className="icon" title="Drinks allowed" />}
         </div>
-        <p id="property-description">
+        <div className="component" id="property-description">
           <FaInfoCircle />
           Description: {property.description}
           {showMoreInfo && <span> (More information about the property)</span>}
-        </p>
-        <a id="toggle-more-info-button" onClick={handleToggleMoreInfo}>
+        </div>
+        <div id="toggle-more-info-button" onClick={handleToggleMoreInfo}>
           {showMoreInfo ? "Show less" : "Show more"}
-        </a>
+        </div>
 
+        <button className="styled-button" >Routes to school</button>
         <button id="find-roommates-button" onClick={onFindRoommates}>Find Roommates</button>
       </div>
     </div>

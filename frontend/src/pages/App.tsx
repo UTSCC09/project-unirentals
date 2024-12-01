@@ -4,8 +4,8 @@ import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetai
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
 import { signOut, fetchCSRFToken, Listing } from "../api/api";
-import Map from "../components/Map";
-import Navbar from "../components/Navbar";
+import Map from "../components/Map/Map";
+import Navbar from "../components/Navbar/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
 import SignUpForm from "../components/AuthenticationForms/SignUpForm";
 import SearchForm from "../components/SearchForm/SearchForm";
@@ -40,12 +40,8 @@ const App: React.FC = () => {
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
+  const [selectedUniversityShort, setSelectedUniversityShort] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-  // const [rentals, setRentals] = useState<string[]>([
-  //   "123 Main St, Scarborough Ontario",
-  //   "330 University Ave, Toronto Ontario",
-  //   "1234 Military Trail, Scarborough Ontario",
-  // ]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
@@ -123,10 +119,12 @@ const App: React.FC = () => {
   // University and Rentails Form
   const handleUniversityClick = (
     university: string,
+    universityShort: string,
     address: string,
     coordinates: [number, number]
   ) => {
     setSelectedUniversity(university);
+    setSelectedUniversityShort(universityShort);
     setSelectedAddress(address);
     setShowUniversityDetails(true);
     setCenter(coordinates);
@@ -265,6 +263,7 @@ const App: React.FC = () => {
       {showUniversityDetails && (
         <UniversityDetailsForm
           university={selectedUniversity}
+          universityShort={selectedUniversityShort}
           address={selectedAddress}
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
