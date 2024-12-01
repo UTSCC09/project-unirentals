@@ -57,7 +57,7 @@ def applicationView(request, lid):
       except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-      return JsonResponse({'applications': list(page_obj.object_list)})
+      return JsonResponse({'applications': list(page_obj.object_list), 'lastpage': page >= paginator.num_pages})
     
     # If listing with given ID not found, return 404 status
     except Listing.DoesNotExist:
