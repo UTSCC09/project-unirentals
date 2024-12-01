@@ -3,7 +3,7 @@ import UniversityDetailsForm from "../components/UniversityRentalsForm/Universit
 import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetailsForm";
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
-import { signOut, fetchCSRFToken, Listing, addListing } from "../api/api";
+import { signOut, fetchCSRFToken, Listing, addListing, getListings } from "../api/api";
 import Map from "../components/Map";
 import Navbar from "../components/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
@@ -21,6 +21,7 @@ const App: React.FC = () => {
     console.log("CSRF token fetched", csrfToken);
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -46,6 +47,8 @@ const App: React.FC = () => {
   //   "330 University Ave, Toronto Ontario",
   //   "1234 Military Trail, Scarborough Ontario",
   // ]);
+
+  const [listings, setListings] = useState<Listing[]>([]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
@@ -79,9 +82,6 @@ const App: React.FC = () => {
   const handleSignInSuccess = (email: string) => {
     setUserEmail(email);
     setIsSignedIn(true);
-    setAlertMessage('User signed in successfully!');
-      setAlertType('success'); 
-      setAlertVisible(true);
   };
   
 
@@ -121,7 +121,7 @@ const App: React.FC = () => {
   };
 
   // University and Rentails Form
-  const handleUniversityClick = (
+  const handleUniversityClick = async (
     university: string,
     address: string,
     coordinates: [number, number]
@@ -130,7 +130,19 @@ const App: React.FC = () => {
     setSelectedAddress(address);
     setShowUniversityDetails(true);
     setCenter(coordinates);
-    setZoom(8);
+    setZoom(15);
+    setLoading(true);
+
+    // get all the listings to be displayed as markers on the map
+    try {
+      const listingsData = await getListings();
+      console.log("Listings fetched", listingsData);
+      setListings(listingsData);
+    } catch (error) {
+      console.error("Failed to fetch listings", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCloseUniversityDetails = () => {
@@ -146,6 +158,8 @@ const App: React.FC = () => {
   const handleRentalClick = (property: Listing) => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
+    setCenter([property.longitude, property.latitude]);
+    setZoom(15);
   };
 
   const handleClosePropertyDetails = () => {
@@ -188,11 +202,9 @@ const App: React.FC = () => {
     try {
       const response = await signOut();
       if (response.success) {
+        console.log("User signed out successfully");
         setIsSignedIn(false);
         setUserEmail("");
-        setAlertMessage('User signed out successfully!');
-        setAlertType('success'); 
-        setAlertVisible(true);
       } else {
         console.error(response.message);
       }
@@ -234,7 +246,7 @@ const App: React.FC = () => {
         onProfileClick={handleProfileClick}
         isSignedIn={isSignedIn}
       />
-      <Map center={center} zoom={zoom} />
+      <Map center={center} zoom={zoom} listings={listings}/>
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -258,6 +270,7 @@ const App: React.FC = () => {
           onPrevious={handlePrevious}
           onNext={handleNext}
           onRentalClick={handleRentalClick}
+          listings={listings}
         />
       )}
       {showPropertyDetails && selectedProperty && (

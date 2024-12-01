@@ -1,0 +1,11 @@
+#map-container {
+    margin-top: 100px;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .leaflet-container {
+    height: 1250px;
+    width: 100%;
+    z-index: 1;
+  }

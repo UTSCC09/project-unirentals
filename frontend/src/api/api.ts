@@ -60,6 +60,8 @@ export interface Listing {
   pets: boolean;
   smokes: boolean;
   drinks: boolean;
+  longitude: number;
+  latitude: number;
 }
 
 let csrfToken: string | null = null;

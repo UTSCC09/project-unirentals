@@ -16,6 +16,7 @@ interface UniversityDetailsFormProps {
   onPrevious: () => void;
   onNext: () => void;
   onRentalClick: (property: Listing) => void;
+  listings: Listing[];
 }
 
 const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
@@ -25,21 +26,23 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
   onPrevious,
   onNext,
   onRentalClick,
+  listings = [],
 }) => {
-  const [listings, setListings] = useState<Listing[]>([]);
+  console.log("UniversityDetailsForm listings: ", listings);
+  // const [listings, setListings] = useState<Listing[]>([]);
 
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const listingsData = await getListings();
-        setListings(listingsData);
-      } catch (error) {
-        console.error("Failed to fetch listings", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchListings = async () => {
+  //     try {
+  //       const listingsData = await getListings();
+  //       setListings(listingsData);
+  //     } catch (error) {
+  //       console.error("Failed to fetch listings", error);
+  //     }
+  //   };
 
-    fetchListings();
-  }, []);
+  //   fetchListings();
+  // }, []);
 
   return (
     <div id="university-details-container">
@@ -51,7 +54,8 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
         <p id="university-address">{address}</p>
         <h3 id="nearby-rentals-title">Nearby Rentals</h3>
         <ul id="rentals-list">
-          {listings.map((listing) => (
+          {listings.length > 0 ? (
+          listings.map((listing) => (
             <li
               key={listing.id}
               className="rental-item"
@@ -75,7 +79,8 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
                 </div>
               </div>
             </li>
-          ))}
+          ))
+          ) : ( <li>No rentals found</li> )}
         </ul>
       </div>
     </div>
