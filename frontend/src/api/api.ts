@@ -47,12 +47,12 @@ interface GetProfilePictureResponse {
 
 export interface Listing {
   id: number;
-  university: string;
+  school: string;
   address: string;
   owner: number;
   distance: string;
   price: string;
-  buildingType: string;
+  type: string;
   description: string;
   bedrooms: number;
   bathrooms: number;
@@ -153,10 +153,9 @@ export const updateProfile = async (
   formData: FormData,
   email: string
 ): Promise<UpdateProfileResponse> => {
-  console.log("Caling update profile with cookie:", document.cookie);
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/api/profiles/${email}/`,
+      `${API_BASE_URL}/api/profiles/`,
       formData,
       {
         headers: {
@@ -171,7 +170,6 @@ export const updateProfile = async (
       message: response.data.message,
     };
   } catch (error) {
-    console.log("Failed to update profile:", error);
     return { success: false, message: "Failed to update profile" };
   }
 };
@@ -181,7 +179,7 @@ export const getProfile = async (
   email: string
 ): Promise<GetProfileResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/`, {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/`, {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
@@ -237,7 +235,7 @@ export const getListings = async (): Promise<Listing[]> => {
       },
     });
     console.log("Listings data:", response.data);
-    return response.data.listings; // Access the listings property
+    return response.data.listings;
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch listings");

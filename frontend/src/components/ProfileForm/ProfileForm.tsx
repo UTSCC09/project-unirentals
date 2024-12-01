@@ -7,10 +7,12 @@ const API_BASE_URL = "http://localhost:8000";
 
 interface ProfileFormProps {
   onClose: () => void;
+  onSubmit: () => void;
+  onError: () => void;
   email: string;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, email }) => {
   const [profile, setProfile] = useState({
     photo: "",
     firstname: "",
@@ -63,7 +65,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
   // event handlers
   // call this whenever the input fields change
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
@@ -95,8 +97,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     const formData = new FormData();
     //formData.append("email", email);
     //formData.append("photo", profile.photo);
-    formData.append("firstname", profile.firstname);
-    formData.append("lastname", profile.lastname);
+    console.log(profile)
+    formData.append("first_name", profile.firstname);
+    formData.append("last_name", profile.lastname);
     formData.append("age", profile.age);
     formData.append("pronouns", profile.pronouns);
     formData.append("school", profile.school);
@@ -109,7 +112,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     try {
       console.log("Calling updateProfile with email:", email);
       const response = await updateProfile(formData, email);
-      onClose();
+      console.log(formData)
+      if(response.success) {
+        onClose();
+        onSubmit();
+      }else{
+        onClose();
+        onError();
+      }
     } catch (error) {
       console.error("An error occurred during profile submission", error);
     }
@@ -141,13 +151,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="firstname">First name</label>
+            <label htmlFor="firstname">First name*</label>
             <input
               type="text"
               id="firstname"
               name="firstname"
               value={profile.firstname}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -158,6 +169,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
               name="lastname"
               value={profile.lastname}
               onChange={handleInputChange}
+              
             />
           </div>
           <div className="form-group">
@@ -182,14 +194,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="school">Job/School</label>
-            <input
-              type="text"
+            <label htmlFor="school">School*</label>
+            <select
               id="school"
               name="school"
               value={profile.school}
               onChange={handleInputChange}
-            />
+              required
+            >
+              <option value="">{profile.school}</option>
+              <option value="UTSG">UTSG</option>
+              <option value="UTSC">UTSC</option>
+              <option value="UTM">UTM</option>
+            </select>
           </div>
           {/* Can add these fields back as needed 
           <div className="form-group">

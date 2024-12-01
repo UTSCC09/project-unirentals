@@ -4,6 +4,7 @@ import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetai
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
 import { signOut, fetchCSRFToken, Listing, addListing, getListings } from "../api/api";
+
 import Map from "../components/Map/Map";
 import Navbar from "../components/Navbar/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
@@ -41,12 +42,8 @@ const App: React.FC = () => {
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
+  const [selectedUniversityShort, setSelectedUniversityShort] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-  // const [rentals, setRentals] = useState<string[]>([
-  //   "123 Main St, Scarborough Ontario",
-  //   "330 University Ave, Toronto Ontario",
-  //   "1234 Military Trail, Scarborough Ontario",
-  // ]);
 
   const [listings, setListings] = useState<Listing[]>([]);
 
@@ -123,10 +120,12 @@ const App: React.FC = () => {
   // University and Rentails Form
   const handleUniversityClick = async (
     university: string,
+    universityShort: string,
     address: string,
     coordinates: [number, number]
   ) => {
     setSelectedUniversity(university);
+    setSelectedUniversityShort(universityShort);
     setSelectedAddress(address);
     setShowUniversityDetails(true);
     setCenter(coordinates);
@@ -235,6 +234,18 @@ const App: React.FC = () => {
     setAlertVisible(false);
   };
 
+  const handleProfileSubmitSuccess = () => {
+    setAlertMessage('Profile Updated Successfully!');
+    setAlertType('success'); 
+    setAlertVisible(true);
+  }
+
+  const handleProfileSubmitError = () => {
+    setAlertMessage('Error updating profile');
+    setAlertType('error'); 
+    setAlertVisible(true);
+  };
+
   // actual components being rendered
   return (
     <div>
@@ -265,6 +276,7 @@ const App: React.FC = () => {
       {showUniversityDetails && (
         <UniversityDetailsForm
           university={selectedUniversity}
+          universityShort={selectedUniversityShort}
           address={selectedAddress}
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
@@ -291,6 +303,8 @@ const App: React.FC = () => {
       {showProfileForm && (
         <ProfileForm
           onClose={() => setShowProfileForm(false)}
+          onSubmit={handleProfileSubmitSuccess}
+          onError={handleProfileSubmitError}
           email={userEmail}
         />
       )}
@@ -303,7 +317,9 @@ const App: React.FC = () => {
       <AddListingButton onClick={handleAddListingClick} />
       {showAddListing && (
         <div style={{ marginTop: "20px" }}>
-          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
+          <AddListingForm 
+          onSubmit={handleAddListingFormSubmit} 
+          onCancel={handleAddListingCancel} />
         </div>
       )}
        {alertVisible && (

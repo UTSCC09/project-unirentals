@@ -4,6 +4,7 @@ import { Listing } from "../api/api";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
+
 interface MapProps {
   center: [number, number];
   zoom: number;
@@ -47,6 +48,7 @@ const MapUpdater: React.FC<{ center: [number, number]; zoom: number }> = ({ cent
     </Marker>
   );
 };
+
 
 
 export default Map;
