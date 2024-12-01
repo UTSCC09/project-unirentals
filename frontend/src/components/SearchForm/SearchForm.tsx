@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./SearchForm.css";
 
 const SearchForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [showFilters, setShowFilters] = useState(false);

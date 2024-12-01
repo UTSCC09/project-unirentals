@@ -20,7 +20,6 @@ def listingView(request):
   if request.method == 'GET':
     listings = Listing.objects.all()
     serializer = ListingSerializer(listings, many=True)
-
     return JsonResponse({"listings": serializer.data}, status=200)
   
   # On POST: create a new listing
