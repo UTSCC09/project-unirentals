@@ -47,7 +47,7 @@ interface GetProfilePictureResponse {
 
 export interface Listing {
   id: number;
-  university: string;
+  school: string;
   address: string;
   owner: number;
   distance: string;

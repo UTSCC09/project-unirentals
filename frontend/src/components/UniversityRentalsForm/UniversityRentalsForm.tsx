@@ -11,6 +11,7 @@ import { getListings, Listing } from "../../api/api";
 
 interface UniversityDetailsFormProps {
   university: string;
+  universityShort: string;
   address: string;
   onClose: () => void;
   onPrevious: () => void;
@@ -20,6 +21,7 @@ interface UniversityDetailsFormProps {
 
 const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
   university,
+  universityShort,
   address,
   onClose,
   onPrevious,
@@ -32,6 +34,7 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
     const fetchListings = async () => {
       try {
         const listingsData = await getListings();
+        console.log(universityShort);
         setListings(listingsData);
       } catch (error) {
         console.error("Failed to fetch listings", error);
@@ -52,7 +55,7 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
         <h3 id="nearby-rentals-title">Nearby Rentals</h3>
         <ul id="rentals-list">
           {listings
-            .filter((listing) => listing.university === university)
+            .filter((listing) => listing.school === universityShort)
             .map((listing) => (
             <li
               key={listing.id}
@@ -65,7 +68,7 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
                 <h4 className="rental-address">
                   <FaMapMarkerAlt /> {listing.address}
                   <div></div>
-                  University: {listing.university}
+                  University: {listing.school}
                 </h4>
                 <p className="rental-type">
                   <FaBuilding /> {listing.type}

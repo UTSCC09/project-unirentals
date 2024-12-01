@@ -263,6 +263,7 @@ const App: React.FC = () => {
       {showUniversityDetails && (
         <UniversityDetailsForm
           university={selectedUniversity}
+          universityShort={selectedUniversityShort}
           address={selectedAddress}
           onClose={handleCloseUniversityDetails}
           onPrevious={handlePrevious}
