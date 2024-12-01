@@ -235,6 +235,18 @@ const App: React.FC = () => {
     setAlertVisible(false);
   };
 
+  const handleProfileSubmitSuccess = () => {
+    setAlertMessage('Profile Updated Successfully!');
+    setAlertType('success'); 
+    setAlertVisible(true);
+  }
+
+  const handleProfileSubmitError = () => {
+    setAlertMessage('Error updating profile');
+    setAlertType('error'); 
+    setAlertVisible(true);
+  };
+
   // actual components being rendered
   return (
     <div>
@@ -291,6 +303,8 @@ const App: React.FC = () => {
       {showProfileForm && (
         <ProfileForm
           onClose={() => setShowProfileForm(false)}
+          onSubmit={handleProfileSubmitSuccess}
+          onError={handleProfileSubmitError}
           email={userEmail}
         />
       )}
@@ -303,7 +317,9 @@ const App: React.FC = () => {
       <AddListingButton onClick={handleAddListingClick} />
       {showAddListing && (
         <div style={{ marginTop: "20px" }}>
-          <AddListingForm onSubmit={handleAddListingFormSubmit} onCancel={handleAddListingCancel} />
+          <AddListingForm 
+          onSubmit={handleAddListingFormSubmit} 
+          onCancel={handleAddListingCancel} />
         </div>
       )}
        {alertVisible && (

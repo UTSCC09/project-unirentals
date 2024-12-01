@@ -7,11 +7,14 @@ const API_BASE_URL = "http://localhost:8000";
 
 interface ProfileFormProps {
   onClose: () => void;
+  onSubmit(): void;
+  onError(): void;
   email: string;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
   const [profile, setProfile] = useState({
+    id: 0,
     photo: "",
     firstname: "",
     lastname: "",
@@ -29,9 +32,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const profileData = await getProfile(email);
+        const profileData = await getProfile();
         
         setProfile({
+          id: profileData.id,
           photo: profileData.profile_pic,
           firstname: profileData.first_name || "",
           lastname: profileData.last_name || "",
@@ -47,10 +51,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
         });
 
         // Fetch profile picture URL
-        const pictureData = await getProfilePicture(email);
+        const pictureData = await getProfilePicture(profileData.id);
+        console.log("pictureData", pictureData);
         setProfile((prevProfile) => ({
           ...prevProfile,
-          photo: `${API_BASE_URL}/${pictureData.url}`,
+          photo: pictureData.url,
         }));
       } catch (error) {
         console.error("Failed to fetch profile", error);
@@ -94,7 +99,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
 
     const formData = new FormData();
     //formData.append("email", email);
-    //formData.append("photo", profile.photo);
+    formData.append("photo", profile.photo);
     formData.append("firstname", profile.firstname);
     formData.append("lastname", profile.lastname);
     formData.append("age", profile.age);
@@ -105,10 +110,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, email }) => {
     formData.append("pets", profile.preferences.pets.toString());
     formData.append("drinks", profile.preferences.drinks.toString());
 
+    console.log("profile photo: ", profile.photo);
+
     // Call the updateProfile function
     try {
-      console.log("Calling updateProfile with email:", email);
-      const response = await updateProfile(formData, email);
+      //console.log("Calling updateProfile with data", formData.profile.firstname);
+      const response = await updateProfile(formData);
       onClose();
     } catch (error) {
       console.error("An error occurred during profile submission", error);
