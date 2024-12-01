@@ -177,11 +177,9 @@ export const updateProfile = async (
 };
 
 // get profile
-export const getProfile = async (
-  email: string
-): Promise<GetProfileResponse> => {
+export const getProfile = async (): Promise<GetProfileResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/`, {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/`, {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
@@ -198,7 +196,7 @@ export const getProfile = async (
 // get profile picture
 export const getProfilePicture = async (email: string): Promise<GetProfilePictureResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/picture/`, {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/picture/`, {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },
