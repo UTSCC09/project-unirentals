@@ -15,29 +15,36 @@ def applicationView(request, lid):
   # On GET: return paginated (full/open) listings 
   if request.method == 'GET':
 
+    # -------- PARAMS -------- # 
+
+    # PAGE - Tells us which page to display
+
+    try: 
+      page = request.GET.get('page', 1)
+      page = int(page)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+    
+    if page < 1:
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+    
+    # FULL - Tells us if we send all applications, or just those with space
+
+    full = request.GET.get('full', 'false').lower()
+    
+    if full not in ['true', 'false', '1', '0', 'yes', 'no']:
+      return JsonResponse({'errors': "Invalid value for 'full'. Use 'true' or 'false'."}, status=400)
+      
+    full = full in ['true', '1', 'yes']
+
+    # ------------------------ #
+
     # Attempt to find a listing matching the given id
     try:
       listing = Listing.objects.get(id=lid)
       applications = RentalApplication.objects.filter(listing=listing)
-
-      #Set our parameter values for pagination and display
-      page = request.GET.get('page', 1)
-      
-      try:
-        page = int(page)
-      
-      # If page is supplied with an improper value, return 404 status
-      except (TypeError, ValueError): 
-        return JsonResponse({"errors": "Page must be an integer."}, status=400)
     
-      # Attempt to get the boolean value for whether or not to display full listings
-      full = request.GET.get('full', 'false').lower()
-      if full not in ['true', 'false', '1', '0', 'yes', 'no']:
-        print(full)
-        return JsonResponse({'errors': "Invalid value for 'full'. Use 'true' or 'false'."}, status=400)
-      
-      full = full in ['true', '1', 'yes']
-
       # If we are allowing for full listings we show everything
       if not full:
         applications = applications.filter(full=False)
@@ -50,7 +57,7 @@ def applicationView(request, lid):
       except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-      return JsonResponse({'applications': list(page_obj.object_list)})
+      return JsonResponse({'applications': list(page_obj.object_list), 'lastpage': page >= paginator.num_pages})
     
     # If listing with given ID not found, return 404 status
     except Listing.DoesNotExist:
