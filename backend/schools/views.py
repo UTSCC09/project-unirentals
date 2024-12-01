@@ -5,7 +5,7 @@ from .serializers import SchoolSerializer
 from listings.models import Listing
 from listings.serializers import ListingSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from listings.views import LISTING_PAGINATION_COUNT
+from listings.views import LISTING_PAGINATION_COUNT, MAX_VALUE
 
 # Create your views here.
 @csrf_exempt
@@ -72,17 +72,126 @@ def schoolListingView(request, sid):
     
     all = all in ['true', '1', 'yes']
 
+    # PRICE - Gives us the maximum price for a listing
+
+    try: 
+      price = request.GET.get('price', MAX_VALUE)
+      price = float(price)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Price must be a positive number."}, status=400)
+    
+    if price < 0:
+      return JsonResponse({"errors": "Price must be a positive number."}, status=400)
+
+    # DISTANCE - Gives us the maximum distance for a listing
+
+    try: 
+      distance = request.GET.get('distance', MAX_VALUE)
+      distance = float(distance)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Distance must be a positive number."}, status=400)
+    
+    if distance < 0:
+      return JsonResponse({"errors": "Distance must be a positive number."}, status=400)
+
+    # TYPE - Gives us the type of apartment the user is looking for
+
+    type = request.GET.get('type', None)
+
+    # BEDROOMS - Gives us the minimum number of bedrooms
+
+    try: 
+      bedrooms = request.GET.get('bedrooms', 0)
+      bedrooms = int(bedrooms)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Bedrooms must be a positive integer."}, status=400)
+    
+    if bedrooms < 0:
+      return JsonResponse({"errors": "Bedrooms must be a positive integer."}, status=400)
+
+    # BATHROOMS - Gives us the minimum number of bathrooms
+
+    try: 
+      bathrooms = request.GET.get('bathrooms', 0)
+      bathrooms = int(bathrooms)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Bathrooms must be a positive integer."}, status=400)
+    
+    if bathrooms < 0:
+      return JsonResponse({"errors": "Bathrooms must be a positive integer."}, status=400)
+
+    # KITCHENS - Gives us the minimum number of kitchens
+
+    try: 
+      kitchens = request.GET.get('kitchens', 0)
+      kitchens = int(kitchens)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Kitchens must be a positive integer."}, status=400)
+    
+    if kitchens < 0:
+      return JsonResponse({"errors": "Kitchens must be a positive integer."}, status=400)
+
+    # PETS - Flag for whether to include properties with no pet tolerance
+
+    pets = request.GET.get('pets', 'false').lower()
+    
+    if pets not in ['true', 'false', '1', '0', 'yes', 'no']:
+      return JsonResponse({'errors': "Invalid value for 'pets'. Use 'true' or 'false'."}, status=400)
+    
+    pets = pets in ['true', '1', 'yes']
+
+    # SMOKES - Flag for whether to include properties with no smoking tolerance
+
+    smokes = request.GET.get('smokes', 'false').lower()
+    
+    if smokes not in ['true', 'false', '1', '0', 'yes', 'no']:
+      return JsonResponse({'errors': "Invalid value for 'smokes'. Use 'true' or 'false'."}, status=400)
+    
+    smokes = smokes in ['true', '1', 'yes']
+
+    # DRINKS - Flag for whether to include properties with no drinking tolerance
+
+    drinks = request.GET.get('drinks', 'false').lower()
+    
+    if drinks not in ['true', 'false', '1', '0', 'yes', 'no']:
+      return JsonResponse({'errors': "Invalid value for 'drinks'. Use 'true' or 'false'."}, status=400)
+    
+    drinks = drinks in ['true', '1', 'yes']
+
     # ------------------------ #
     
     # Attempt to find a school with a matching sid
     try:
       school = School.objects.get(id=sid)
-      listings = Listing.objects.filter(school=school)
-      serializer = ListingSerializer(listings, many=True)
 
     # If no school is found matching the sid, return 404 status
     except School.DoesNotExist:
       return JsonResponse({"errors": "School with given ID does not exist."}, status=404)
+
+    # Filter our listings by our given filters
+    listings = Listing.objects.filter(price__lte=price,
+                                       distance__lte=distance, 
+                                       bedrooms__gte=bedrooms, 
+                                       bathrooms__gte=bathrooms,
+                                       kitchens__gte=kitchens,
+                                       school=school)
+    
+    # Filter the boolean fields + type. If someone doesn't want pets, they can still live in a pet accepting household
+    if pets:
+      listings = listings.filter(pets=pets)
+    if smokes:
+      listings = listings.filter(smokes=smokes)
+    if drinks:
+      listings = listings.filter(drinks=drinks)
+    if type:
+      listings = listings.filter(type=type)
+
+    serializer = ListingSerializer(listings, many=True)
 
     # If the all flag is present return all listings for the school with the given sid
     if all:
