@@ -39,7 +39,13 @@ const MapUpdater: React.FC<{ center: [number, number]; zoom: number }> = ({ cent
     map.setView(center, zoom);
   }, [center, zoom, map]);
 
-  return null;
+  return (
+    <Marker position={center}>
+      <Popup>
+        Center Location
+      </Popup>
+    </Marker>
+  );
 };
 
 

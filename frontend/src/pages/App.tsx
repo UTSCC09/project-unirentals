@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
-  const [zoom, setZoom] = useState(2); // zoom level
+  const [zoom, setZoom] = useState(10); // zoom level
 
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
@@ -130,7 +130,7 @@ const App: React.FC = () => {
     setSelectedAddress(address);
     setShowUniversityDetails(true);
     setCenter(coordinates);
-    setZoom(15);
+    setZoom(17);
     setLoading(true);
 
     // get all the listings to be displayed as markers on the map
@@ -159,7 +159,7 @@ const App: React.FC = () => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
     setCenter([property.longitude, property.latitude]);
-    setZoom(15);
+    setZoom(17);
   };
 
   const handleClosePropertyDetails = () => {
