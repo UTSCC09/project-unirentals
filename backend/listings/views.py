@@ -226,7 +226,7 @@ def listingImageView(request, lid):
     except EmptyPage:
       page_obj = paginator.page(paginator.num_pages)
 
-    return JsonResponse({'images': list(page_obj.object_list)}, status=200)
+    return JsonResponse({'images': list(page_obj.object_list), 'lastpage': page >= paginator.num_pages}, status=200)
   
   if request.method == 'POST':
     
