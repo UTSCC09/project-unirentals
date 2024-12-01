@@ -6,10 +6,10 @@ from .serializers import ListingSerializer, ListingImageSerializer
 from schools.models import School
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import requests
 
-#LISTING_PAGINATION_COUNT = X
+LISTING_PAGINATION_COUNT = 5
 IMAGE_PAGINATION_COUNT = 5
 
 # Create your views here.
@@ -18,11 +18,52 @@ def listingView(request):
 
   # On GET: return all listings
   if request.method == 'GET':
+
+    # -------- PARAMS -------- # 
+
+    # PAGE - Tells us which page to display
+
+    try: 
+      page = request.GET.get('page', 1)
+      page = int(page)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+    
+    if page < 1:
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+    
+    # ALL - Tells us if we send all listings, or just a paginated subsection
+
+    all = request.GET.get('all', 'false').lower()
+    
+    if all not in ['true', 'false', '1', '0', 'yes', 'no']:
+      return JsonResponse({'errors': "Invalid value for 'all'. Use 'true' or 'false'."}, status=400)
+    
+    all = all in ['true', '1', 'yes']
+
+    # ------------------------ #
+
     listings = Listing.objects.all()
     serializer = ListingSerializer(listings, many=True)
 
-    return JsonResponse({"listings": serializer.data}, status=200)
+    # If we are sending back all listings, we just serialize and return
+    if all:
+      return JsonResponse({"listings": serializer.data}, status=200)
+    
+    # Otherwise, create a paginator with the listings
+    paginator = Paginator(serializer.data, LISTING_PAGINATION_COUNT)
+
+    # Attempt to get the desired page
+    try:
+      page_obj = paginator.page(page)
+
+    # If the given page is out of range, we just return the last page
+    except EmptyPage:
+      page_obj = paginator.page(paginator.num_pages)
   
+    return JsonResponse({'listings': list(page_obj.object_list), 'lastpage': page >= paginator.num_pages}, status=200)
+
   # On POST: create a new listing
   if request.method == 'POST':
     print(request.user)
@@ -151,6 +192,22 @@ def listingImageView(request, lid):
   # On GET: Return a paginated list of the items
   if request.method == 'GET':
 
+    # -------- PARAMS -------- # 
+
+    # PAGE - Tells us which page to display
+
+    try: 
+      page = request.GET.get('page', 1)
+      page = int(page)
+
+    except (TypeError, ValueError): 
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+    
+    if page < 1:
+      return JsonResponse({"errors": "Page must be a positive integer."}, status=400)
+
+    # ------------------------ #
+
     # Attempt to find the given listing
     try: 
       listing = Listing.objects.get(id=lid)
@@ -265,6 +322,8 @@ def listingSpecificImageView(request, lid, iid):
 
   # If a non GET/DELETE method is attempted, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
+
+# ------------------------------------------------------------------------------------------ #
 
 @csrf_exempt
 def validateAddress(address):

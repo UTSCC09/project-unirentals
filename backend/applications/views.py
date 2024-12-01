@@ -33,7 +33,6 @@ def applicationView(request, lid):
       # Attempt to get the boolean value for whether or not to display full listings
       full = request.GET.get('full', 'false').lower()
       if full not in ['true', 'false', '1', '0', 'yes', 'no']:
-        print(full)
         return JsonResponse({'errors': "Invalid value for 'full'. Use 'true' or 'false'."}, status=400)
       
       full = full in ['true', '1', 'yes']
