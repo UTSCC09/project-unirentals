@@ -13,8 +13,8 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
   console.log("Map listings: ", listings);
   return (
-    <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-    <MapContainer center={center} zoom={zoom} style={{ height: '50vh', width: '50vw' }}>
+    <div style={{ zIndex: -5000, height: '91vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <MapContainer center={center} zoom={zoom} style={{ height: '90vh', width: '100vw' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
