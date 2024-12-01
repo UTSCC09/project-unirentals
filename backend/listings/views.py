@@ -216,14 +216,6 @@ def listingImageView(request, lid):
     except Listing.DoesNotExist:
       return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
     
-    try:
-      page = request.GET.get('page', 1)
-      page = int(page)
-    
-    # If page is supplied with an improper value, return 404 status
-    except (TypeError, ValueError): 
-      return JsonResponse({"errors": "Page must be an integer."}, status=400)
-    
     images = listing.images.all()
     
     paginator = Paginator(ListingImageSerializer(images, many=True).data, IMAGE_PAGINATION_COUNT)
