@@ -69,7 +69,8 @@
   }
   
   .form-group input,
-  .form-group textarea {
+  .form-group textarea,
+  .form-group select {
     width: 100%;
     padding: 1%;
     font-size: 1rem;
@@ -114,4 +115,11 @@
   
   #save-profile-button:hover {
     background-color: #6A85A0;
+  }
+
+  #email{
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
   }
