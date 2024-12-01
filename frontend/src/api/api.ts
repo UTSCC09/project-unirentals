@@ -156,7 +156,7 @@ export const updateProfile = async (
   console.log("Caling update profile with cookie:", document.cookie);
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/api/profiles/${email}/`,
+      `${API_BASE_URL}/api/profiles/`,
       formData,
       {
         headers: {
