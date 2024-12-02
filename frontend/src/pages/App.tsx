@@ -160,7 +160,7 @@ const App: React.FC = () => {
   const handleRentalClick = (property: Listing) => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
-    setCenter([property.longitude, property.latitude]);
+    setCenter([property.latitude, property.longitude]);
     setZoom(17);
   };
 

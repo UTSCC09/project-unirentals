@@ -8,6 +8,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import requests, math
+import json
 
 LISTING_PAGINATION_COUNT = 5
 IMAGE_PAGINATION_COUNT = 5
@@ -199,15 +200,15 @@ def listingView(request):
           # Set owner of listing to be user sending req
           form.instance.owner = request.user 
           form.instance.school = school
+          print(school)
           result = validateAddress(request.POST['address'])
           if(result == None):
             return JsonResponse({"errors": "Address not found."}, status=404)
-          form.instance.latitude = result['lon']
-          form.instance.longitude = result['lat']
+          form.instance.latitude = result['lat']
+          form.instance.longitude = result['lon']
 
           listing = form.save()
-          print(listing)
-
+          print(school)
           # Create the images associated with the listing
           for file in request.FILES.getlist('images'):
             ListingImage.objects.create(image=file, listing=listing)
@@ -464,3 +465,31 @@ def validateAddress(address):
             return None  # Address not found
     else:
         response.raise_for_status()
+
+@csrf_exempt
+def routing(request):
+        try:
+            # Parse request body for input data
+            data = json.loads(request.body)
+            start = data.get('start')  
+            end = data.get('end')      
+
+            if not start or not end:
+                return JsonResponse({'error': 'Both start and end coordinates are required.'}, status=400)
+
+            # Construct the OSRM API URL
+            osrm_url = f"http://router.project-osrm.org/route/v1/driving/{start};{end}?overview=full&geometries=geojson"
+
+            # Make the request to the OSRM API
+            response = requests.get(osrm_url)
+
+            # Check if the response is successful
+            if response.status_code == 200:
+                return JsonResponse(response.json(), safe=False)
+            else:
+                return JsonResponse({'error': 'OSRM API returned an error', 'details': response.text}, status=response.status_code)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON payload.'}, status=400)
+        except requests.RequestException as e:
+            return JsonResponse({'error': 'Failed to connect to OSRM API', 'details': str(e)}, status=500)
