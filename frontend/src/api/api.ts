@@ -151,7 +151,6 @@ export const signOut = async (): Promise<SignOutResponse> => {
 // update profile
 export const updateProfile = async (
   formData: FormData,
-  email: string
 ): Promise<UpdateProfileResponse> => {
   try {
     const response = await axios.post(
@@ -175,9 +174,7 @@ export const updateProfile = async (
 };
 
 // get profile
-export const getProfile = async (
-  email: string
-): Promise<GetProfileResponse> => {
+export const getProfile = async (): Promise<GetProfileResponse> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/profiles/`, {
       headers: {
@@ -194,9 +191,9 @@ export const getProfile = async (
 };
 
 // get profile picture
-export const getProfilePicture = async (email: string): Promise<GetProfilePictureResponse> => {
+export const getProfilePicture = async (id: number): Promise<GetProfilePictureResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/profiles/${email}/picture/`, {
+    const response = await axios.get(`${API_BASE_URL}/api/profiles/picture/`, {
       headers: {
         "X-Csrftoken": csrfToken || "",
       },

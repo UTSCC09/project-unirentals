@@ -14,6 +14,7 @@ interface ProfileFormProps {
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, email }) => {
   const [profile, setProfile] = useState({
+    id: 0,
     photo: "",
     firstname: "",
     lastname: "",
@@ -27,13 +28,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
       drinks: false,
     },
   });
-
+  const [profilePicFile, setProfilePicFile] = useState<File | null>(null); 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const profileData = await getProfile(email);
+        const profileData = await getProfile();
         
         setProfile({
+          id: profileData.id,
           photo: profileData.profile_pic,
           firstname: profileData.first_name || "",
           lastname: profileData.last_name || "",
@@ -49,10 +51,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
         });
 
         // Fetch profile picture URL
-        const pictureData = await getProfilePicture(email);
+        const pictureData = await getProfilePicture(profileData.id);
+        console.log("pictureData", pictureData.url, "profileData", profileData, "profile id", profileData.id);
         setProfile((prevProfile) => ({
           ...prevProfile,
-          photo: `${API_BASE_URL}/${pictureData.url}`,
+          photo: pictureData.url,
         }));
       } catch (error) {
         console.error("Failed to fetch profile", error);
@@ -71,8 +74,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
     setProfile({ ...profile, [name]: value });
   };
 
+  // call this whenever the file for pfp changes
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      setProfilePicFile(e.target.files[0]);
       const reader = new FileReader();
       reader.onload = (event) => {
         setProfile({ ...profile, photo: event.target?.result as string });
@@ -96,8 +101,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
 
     const formData = new FormData();
     //formData.append("email", email);
-    //formData.append("photo", profile.photo);
-    console.log(profile)
+    //formData.append("profile_pic", profile.photo);
+    if (profilePicFile) {
+      formData.append("profile_pic", profilePicFile);
+    }
     formData.append("first_name", profile.firstname);
     formData.append("last_name", profile.lastname);
     formData.append("age", profile.age);
@@ -110,9 +117,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
 
     // Call the updateProfile function
     try {
-      console.log("Calling updateProfile with email:", email);
-      const response = await updateProfile(formData, email);
-      console.log(formData)
+      console.log("Calling updateProfile with formData", formData);
+      const response = await updateProfile(formData);
       if(response.success) {
         onClose();
         onSubmit();
