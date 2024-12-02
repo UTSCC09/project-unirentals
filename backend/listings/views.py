@@ -281,16 +281,33 @@ def listingSpecificView(request, id):
             return JsonResponse({"errors": "Form is missing school field."}, status=400)
 
         # If user does not match owner of listing, return 403 status
-        else:
-          return JsonResponse({"errors": "Cannot modify listing owned by another user."}, status=403)
+        return JsonResponse({"errors": "Cannot modify listing owned by another user."}, status=403)
         
       # If user is not signed in, return 401 status
-      else:
-        return JsonResponse({"errors": "User must be logged in for this action."}, status=401)
+      return JsonResponse({"errors": "User must be logged in for this action."}, status=401)
       
+    # On DELETE - Delete the listing with the given id
+    if request.method == 'DELETE':
+      
+      # Check that the user is signed in
+      if request.user.is_authenticated:
+
+        # Check that the user is attempting to delete their own listing
+        if listing.owner == request.user:
+
+          # Delete the listing and return a 200 status
+          listing.delete()
+          return JsonResponse({'message': 'Listing deleted successfully.'}, status=200)
+        
+        # If user does not match owner of listing, return 403 status
+        return JsonResponse({"errors": "Cannot modify listing owned by another user."}, status=403)
+      
+      # If user is not signed in, return 401 status
+      return JsonResponse({"errors": "User must be logged in for this action."}, status=401)
+
     # If a non GET/POST method is attempted, return 405 status
     return JsonResponse({"errors": "Method not allowed."}, status=405)
-  
+
   # If listing with given ID not found, return 404 status
   except Listing.DoesNotExist:
     return JsonResponse({"errors": "Listing with given ID does not exist."}, status=404)
