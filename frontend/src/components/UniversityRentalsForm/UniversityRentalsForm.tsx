@@ -86,7 +86,7 @@ const UniversityDetailsForm: React.FC<UniversityDetailsFormProps> = ({
               </div>
             </li>
           ))
-          )}
+          }
         </ul>
       </div>
     </div>

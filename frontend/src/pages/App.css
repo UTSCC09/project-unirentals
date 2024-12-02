@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+.navbar {
+  position: fixed; /* Ensure the navbar stays at the top of the viewport */
+  top: 0;
+  left: 0;
+  width: 100%; /* Stretch the navbar across the width of the viewport */
+  z-index: 10; /* Higher z-index to place it above other elements */
+  background-color: white; /* Optional: to ensure it has a visible background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: for a shadow effect */
+}

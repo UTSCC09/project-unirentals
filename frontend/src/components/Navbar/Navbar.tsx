@@ -4,6 +4,7 @@ import "./Navbar.css";
 
 
 interface NavbarProps {
+  className?: string;
   onSignInClick: () => void;
   onSignOutClick: () => void;
   onUniversityClick: (

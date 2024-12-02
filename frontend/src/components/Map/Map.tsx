@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
-import L from "leaflet";
-import { Listing } from "../api/api";
+// import L from "leaflet";
+import { Listing } from "../../api/api";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
@@ -14,21 +14,21 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
   console.log("Map listings: ", listings);
   return (
-    <div style={{ zIndex: -5000, height: '91vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-    <MapContainer center={center} zoom={zoom} style={{ height: '90vh', width: '100vw' }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {listings.map((listing, index) => (
-        <Marker key={index} position={[listing.latitude, listing.longitude]}>
-          <Popup>
-            {listing.address}
-          </Popup>
-        </Marker>
-      ))}
-      <MapUpdater center={center} zoom={zoom} />
-    </MapContainer>
+    <div style={{ position: 'absolute', top: 0, left: 0, height: '100vh', width: '100vw', zIndex:0 }}>
+      <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {listings.map((listing, index) => (
+          <Marker key={index} position={[listing.latitude, listing.longitude]}>
+            <Popup>
+              {listing.address}
+            </Popup>
+          </Marker>
+        ))}
+        <MapUpdater center={center} zoom={zoom} />
+      </MapContainer>
     </div>
   );
 };

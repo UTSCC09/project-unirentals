@@ -250,14 +250,17 @@ const App: React.FC = () => {
   return (
     <div>
       <Navbar
-        onSignInClick={handleSignInClick}
-        onSignOutClick={handleSignOut}
-        onUniversityClick={handleUniversityClick}
-        onHomeClick={onHomeClick}
-        onProfileClick={handleProfileClick}
-        isSignedIn={isSignedIn}
-      />
-      <Map center={center} zoom={zoom} listings={listings}/>
+      className="navbar"
+  onSignInClick={handleSignInClick}
+  onSignOutClick={handleSignOut}
+  onUniversityClick={handleUniversityClick}
+  onHomeClick={onHomeClick}
+  onProfileClick={handleProfileClick}
+  isSignedIn={isSignedIn}
+/>
+<div style={{ height: 'calc(100vh - 50px)', width: '100vw', position: 'absolute', top: '50px' }}>
+  <Map center={center} zoom={zoom} listings={listings} />
+</div>
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
