@@ -20,6 +20,7 @@ interface PropertyDetailsFormProps {
   onClose: () => void;
   onBack: () => void;
   onFindRoommates: () => void;
+  onRouteToSchoolClick: () => void;
 }
 
 const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
@@ -27,6 +28,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
   onClose,
   onBack,
   onFindRoommates,
+  onRouteToSchoolClick,
 }) => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
 
@@ -83,7 +85,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           {showMoreInfo ? "Show less" : "Show more"}
         </div>
 
-        <button className="styled-button" >Routes to school</button>
+        <button className="styled-button" id="routes-to-school-button" onClick={onRouteToSchoolClick} >Routes to school</button>
         <button id="find-roommates-button" onClick={onFindRoommates}>Find Roommates</button>
       </div>
     </div>

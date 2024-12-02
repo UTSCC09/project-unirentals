@@ -19,6 +19,7 @@ import SearchForm from "../components/SearchForm/SearchForm";
 import AddListingButton from "../components/AddListing/AddListing";
 import AddListingForm from "../components/AddListingForm/AddListingForm";
 import Alert from "../components/AlertComponent/AlertComponent";
+import RoutesForm from "../components/RoutesForm/RoutesForm";
 
 const App: React.FC = () => {
   // Fetch CSRF token on app startup
@@ -59,6 +60,8 @@ const App: React.FC = () => {
   const [selectedProperty, setSelectedProperty] = useState<Listing | null>(
     null
   ); // Use Listing or null
+
+  const [showRoutesForm, setShowRoutesForm] = useState(false);
 
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
@@ -117,6 +120,7 @@ const App: React.FC = () => {
     setShowPropertyDetails(false);
     setShowRoommateProfiles(false);
     setShowProfileForm(false);
+    setShowRoutesForm(false); 
   };
 
   // Search form
@@ -256,6 +260,27 @@ const App: React.FC = () => {
     setAlertVisible(true);
   };
 
+  const handleCarClick = () => {
+    console.log("Car route selected");
+  };
+
+  const handlePublicTransitClick = () => {
+    console.log("Public transit route selected");
+  };
+
+  const handleWalkClick = () => {
+    console.log("Walk route selected");
+  };
+
+  const handleRouteToSchoolClick = () => {
+    console.log("Route to school clicked");
+    setShowRoutesForm(true); 
+  };
+
+  const handleCloseRoutesForm = () => {
+    setShowRoutesForm(false); 
+  }
+
   // actual components being rendered
   return (
     <div>
@@ -311,8 +336,10 @@ const App: React.FC = () => {
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
           onFindRoommates={handleFindRoommates}
+          onRouteToSchoolClick={handleRouteToSchoolClick}
         />
       )}
+
       {showRoommateProfiles && (
         <RoommateProfilesList
           profiles={roommateProfiles}
@@ -329,7 +356,15 @@ const App: React.FC = () => {
           isSignedIn={isSignedIn}
         />
       )}
-
+      {showRoutesForm && (
+        console.log("showing routes form"),
+        <RoutesForm
+          onBack={handleCloseRoutesForm}
+          onCarClick={handleCarClick}
+          onPublicTransitClick={handlePublicTransitClick}
+          onWalkClick={handleWalkClick}
+        />
+      )}
       {!showSearch && (
         <button id="search-toggle-button" onClick={handleSearchClick}>
           Search
