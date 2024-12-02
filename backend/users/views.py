@@ -33,18 +33,31 @@ def registerView(request):
     if form.is_valid():
       form.save()
 
-      # If the form is valid, submit and create the new user
-      return JsonResponse({"message": "User created successfully."}, status=201)
+      email = request.POST['email']
+      password = request.POST['password1']
+
+      # Authenticate user, checking that it exists in backend
+      user = authenticate(request, email=email, password=password)
+
+      # Once we confirm that the user actually exists in our backend now
+      if user is not None:
+        
+        # Log in the user as well
+        login(request, user)
+
+        # If the form is valid, submit and create the new user
+        return JsonResponse({"message": "User created successfully."}, status=201)
+      
+      return JsonResponse({"error": "The user was unable to be authenticated"}, status=400)
     
     # If there is an error with the form, return a 409 error in the case of a conflicting email, and 400 error otherwise
-    else:
-      errors = form.errors.as_data()
-      for error in errors['email']:
-                if error.code == 'email_in_use':
-                    return JsonResponse({"errors": "This email is already in use."}, status=409)
-      
+    # else:
+    #   errors = form.errors.as_data()
+    #   for error in errors['email']:
+    #             if error.code == 'email_in_use':
+    #                 return JsonResponse({"errors": "This email is already in use."}, status=409)
 
-      return JsonResponse({"errors": form.errors}, status=400)
+    return JsonResponse({"errors": form.errors}, status=400)
   
   # If non POST request, return 405 status
   return JsonResponse({"errors": "Method not allowed."}, status=405)
