@@ -79,6 +79,9 @@ const App: React.FC = () => {
   const handleSignInSuccess = (email: string) => {
     setUserEmail(email);
     setIsSignedIn(true);
+    setAlertMessage('User signed in successfully!');
+      setAlertType('success'); 
+      setAlertVisible(true);
   };
   
 
