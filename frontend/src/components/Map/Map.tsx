@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import { Listing } from "../../api/api";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import "./Map.css"
 
 
 interface MapProps {
@@ -14,8 +15,8 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
   console.log("Map listings: ", listings);
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, height: '100vh', width: '100vw', zIndex:0 }}>
-      <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
+  
+      <MapContainer center={center} zoom={zoom}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -29,7 +30,6 @@ const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
         ))}
         <MapUpdater center={center} zoom={zoom} />
       </MapContainer>
-    </div>
   );
 };
 
