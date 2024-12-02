@@ -3,7 +3,13 @@ import UniversityDetailsForm from "../components/UniversityRentalsForm/Universit
 import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetailsForm";
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
-import { signOut, fetchCSRFToken, Listing, addListing, getListings } from "../api/api";
+import {
+  signOut,
+  fetchCSRFToken,
+  Listing,
+  addListing,
+  getListings,
+} from "../api/api";
 
 import Map from "../components/Map/Map";
 import Navbar from "../components/Navbar/Navbar";
@@ -13,7 +19,7 @@ import SearchForm from "../components/SearchForm/SearchForm";
 import AddListingButton from "../components/AddListing/AddListing";
 import AddListingForm from "../components/AddListingForm/AddListingForm";
 import Alert from "../components/AlertComponent/AlertComponent";
-
+import RoutesForm from "../components/RoutesForm/RoutesForm";
 
 const App: React.FC = () => {
   // Fetch CSRF token on app startup
@@ -32,8 +38,10 @@ const App: React.FC = () => {
 
   //alerts
   const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "warning" | "info"
+  >("info");
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
@@ -49,7 +57,11 @@ const App: React.FC = () => {
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Listing | null>(null); // Use Listing or null
+  const [selectedProperty, setSelectedProperty] = useState<Listing | null>(
+    null
+  ); // Use Listing or null
+
+  const [showRoutesForm, setShowRoutesForm] = useState(false);
 
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showRoommateProfiles, setShowRoommateProfiles] = useState(false);
@@ -83,7 +95,6 @@ const App: React.FC = () => {
       setAlertType('success'); 
       setAlertVisible(true);
   };
-  
 
   const handleSignUpClick = () => {
     setShowSignIn(false);
@@ -109,6 +120,7 @@ const App: React.FC = () => {
     setShowPropertyDetails(false);
     setShowRoommateProfiles(false);
     setShowProfileForm(false);
+    setShowRoutesForm(false); 
   };
 
   // Search form
@@ -187,17 +199,17 @@ const App: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    if(!isSignedIn) {
-      setAlertMessage('Users must sign in to view your profile!');
-      setAlertType('warning'); 
+    if (!isSignedIn) {
+      setAlertMessage("Users must sign in to view your profile!");
+      setAlertType("warning");
       setAlertVisible(true);
-    }else{
+    } else {
       setShowProfileForm(true);
     }
   };
 
   const handleAddListingCancel = () => {
-    setShowAddListing(false); 
+    setShowAddListing(false);
   };
 
   const handleSignOut = async () => {
@@ -216,21 +228,20 @@ const App: React.FC = () => {
   };
 
   const handleAddListingClick = () => {
-    if(!isSignedIn) {
-      setAlertMessage('Users must sign in to add a listing!');
-      setAlertType('warning'); 
+    if (!isSignedIn) {
+      setAlertMessage("Users must sign in to add a listing!");
+      setAlertType("warning");
       setAlertVisible(true);
-    }else{
+    } else {
       setShowAddListing(true);
     }
   };
 
   const handleAddListingFormSubmit = () => {
     setShowAddListing(false);
-    setAlertMessage('New Listing Added Successfully!');
-    setAlertType('success'); 
+    setAlertMessage("New Listing Added Successfully!");
+    setAlertType("success");
     setAlertVisible(true);
-
   };
 
   const handleAlertClose = () => {
@@ -238,32 +249,60 @@ const App: React.FC = () => {
   };
 
   const handleProfileSubmitSuccess = () => {
-    setAlertMessage('Profile Updated Successfully!');
-    setAlertType('success'); 
-    setAlertVisible(true);
-  }
-
-  const handleProfileSubmitError = () => {
-    setAlertMessage('Error updating profile');
-    setAlertType('error'); 
+    setAlertMessage("Profile Updated Successfully!");
+    setAlertType("success");
     setAlertVisible(true);
   };
+
+  const handleProfileSubmitError = () => {
+    setAlertMessage("Error updating profile");
+    setAlertType("error");
+    setAlertVisible(true);
+  };
+
+  const handleCarClick = () => {
+    console.log("Car route selected");
+  };
+
+  const handlePublicTransitClick = () => {
+    console.log("Public transit route selected");
+  };
+
+  const handleWalkClick = () => {
+    console.log("Walk route selected");
+  };
+
+  const handleRouteToSchoolClick = () => {
+    console.log("Route to school clicked");
+    setShowRoutesForm(true); 
+  };
+
+  const handleCloseRoutesForm = () => {
+    setShowRoutesForm(false); 
+  }
 
   // actual components being rendered
   return (
     <div>
       <Navbar
-      className="navbar"
-  onSignInClick={handleSignInClick}
-  onSignOutClick={handleSignOut}
-  onUniversityClick={handleUniversityClick}
-  onHomeClick={onHomeClick}
-  onProfileClick={handleProfileClick}
-  isSignedIn={isSignedIn}
-/>
-<div style={{ height: 'calc(100vh - 50px)', width: '100vw', position: 'absolute', top: '50px' }}>
-  <Map center={center} zoom={zoom} listings={listings} />
-</div>
+        className="navbar"
+        onSignInClick={handleSignInClick}
+        onSignOutClick={handleSignOut}
+        onUniversityClick={handleUniversityClick}
+        onHomeClick={onHomeClick}
+        onProfileClick={handleProfileClick}
+        isSignedIn={isSignedIn}
+      />
+      <div
+        style={{
+          height: "calc(100vh - 50px)",
+          width: "100vw",
+          position: "absolute",
+          top: "50px",
+        }}
+      >
+        <Map center={center} zoom={zoom} listings={listings} />
+      </div>
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -297,8 +336,10 @@ const App: React.FC = () => {
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
           onFindRoommates={handleFindRoommates}
+          onRouteToSchoolClick={handleRouteToSchoolClick}
         />
       )}
+
       {showRoommateProfiles && (
         <RoommateProfilesList
           profiles={roommateProfiles}
@@ -312,33 +353,41 @@ const App: React.FC = () => {
           onSubmit={handleProfileSubmitSuccess}
           onError={handleProfileSubmitError}
           email={userEmail}
+          isSignedIn={isSignedIn}
         />
       )}
-      
+      {showRoutesForm && (
+        console.log("showing routes form"),
+        <RoutesForm
+          onBack={handleCloseRoutesForm}
+          onCarClick={handleCarClick}
+          onPublicTransitClick={handlePublicTransitClick}
+          onWalkClick={handleWalkClick}
+        />
+      )}
       {!showSearch && (
         <button id="search-toggle-button" onClick={handleSearchClick}>
           Search
         </button>
-      )} 
+      )}
       <AddListingButton onClick={handleAddListingClick} />
       {showAddListing && (
         <div style={{ marginTop: "20px" }}>
-          <AddListingForm 
-          onSubmit={handleAddListingFormSubmit} 
-          onCancel={handleAddListingCancel} />
+          <AddListingForm
+            onSubmit={handleAddListingFormSubmit}
+            onCancel={handleAddListingCancel}
+          />
         </div>
       )}
-       {alertVisible && (
+      {alertVisible && (
         <Alert
           message={alertMessage}
           type={alertType}
           onClose={handleAlertClose}
         />
       )}
-
     </div>
   );
 };
 
-
-export default App
+export default App;
