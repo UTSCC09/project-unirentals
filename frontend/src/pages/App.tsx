@@ -10,6 +10,7 @@ import {
   addListing,
   getListings,
 } from "../api/api";
+import axios from "axios";
 
 import Map from "../components/Map/Map";
 import Navbar from "../components/Navbar/Navbar";
@@ -45,6 +46,7 @@ const App: React.FC = () => {
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
   const [zoom, setZoom] = useState(10); // zoom level
+  const [route, setRoute] = useState<[number, number][]>([]);
 
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
@@ -162,7 +164,7 @@ const App: React.FC = () => {
 
   // Property Details Form
 
-  const handleRentalClick = (property: Listing) => {
+  const handleRentalClick = async (property: Listing) => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
     setCenter([property.longitude, property.latitude]);
@@ -253,6 +255,20 @@ const App: React.FC = () => {
     setAlertVisible(true);
   };
 
+  const handleRouteToSchoolClick = async (property: Listing) => {
+    // Fetch the route from OSRM API
+  try {
+    const response = await axios.get(
+      `/route/v1/driving/${property.longitude},${property.latitude};${center[1]},${center[0]}?overview=full&geometries=geojson`    );
+    const routeCoordinates = response.data.routes[0].geometry.coordinates.map(
+      (coord: [number, number]) => [coord[1], coord[0]]
+    );
+    setRoute(routeCoordinates);
+  } catch (error) {
+    console.error("Failed to fetch route", error);
+  }
+  };
+
   // actual components being rendered
   return (
     <div>
@@ -273,7 +289,7 @@ const App: React.FC = () => {
           top: "50px",
         }}
       >
-        <Map center={center} zoom={zoom} listings={listings} />
+        <Map center={center} zoom={zoom} listings={listings} route={route}/>
       </div>
       {showSignIn && (
         <SignInForm
@@ -308,6 +324,7 @@ const App: React.FC = () => {
           onClose={handleClosePropertyDetails}
           onBack={handleBackToUniversityDetails}
           onFindRoommates={handleFindRoommates}
+          onRouteToSchoolClick={handleRouteToSchoolClick} 
         />
       )}
       {showRoommateProfiles && (

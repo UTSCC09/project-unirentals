@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 // import L from "leaflet";
 import { Listing } from "../../api/api";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from "react-leaflet";
 import "./Map.css"
 
 
@@ -10,9 +10,10 @@ interface MapProps {
   center: [number, number];
   zoom: number;
   listings: Listing[];
+  route: [number, number][];
 }
 
-const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
+const Map: React.FC<MapProps> = ({ center, zoom, listings = [], route = []}) => {
   //console.log("Map listings: ", listings);
   return (
   
@@ -28,6 +29,7 @@ const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
             </Popup>
           </Marker>
         ))}
+          {route.length > 0 && <Polyline positions={route} color="blue" />}
         <MapUpdater center={center} zoom={zoom} />
       </MapContainer>
   );
@@ -47,6 +49,7 @@ const MapUpdater: React.FC<{ center: [number, number]; zoom: number }> = ({ cent
       </Popup>
     </Marker>
   );
+  //return null;
 };
 
 
