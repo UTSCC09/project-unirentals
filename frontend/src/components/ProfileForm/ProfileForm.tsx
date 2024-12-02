@@ -10,9 +10,10 @@ interface ProfileFormProps {
   onSubmit: () => void;
   onError: () => void;
   email: string;
+  isSignedIn: boolean;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, email }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, email, isSignedIn }) => {
   const [profile, setProfile] = useState({
     id: 0,
     photo: "",
@@ -64,6 +65,27 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
 
     fetchProfile();
   }, [email]);
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      setProfile({
+        id: 0,
+        photo: "",
+        firstname: "",
+        lastname: "",
+        age: "",
+        pronouns: "",
+        school: "",
+        bio: "",
+        preferences: {
+          smokes: false,
+          pets: false,
+          drinks: false,
+        },
+      });
+      setProfilePicFile(null);
+    }
+  }, [isSignedIn]);
 
   // event handlers
   // call this whenever the input fields change

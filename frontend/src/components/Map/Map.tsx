@@ -13,7 +13,7 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center, zoom, listings = []}) => {
-  console.log("Map listings: ", listings);
+  //console.log("Map listings: ", listings);
   return (
   
       <MapContainer center={center} zoom={zoom}>
