@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+
 import "./Navbar.css";
 
+
 interface NavbarProps {
+  className?: string;
   onSignInClick: () => void;
   onSignOutClick: () => void;
   onUniversityClick: (
@@ -42,11 +45,13 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="dropdown-content">
             <button
               className="dropdown-item"
+
               onClick={
                 () =>
                 onUniversityClick(
                   "University of Toronto Scarborough Campus",
                   "UTSC",
+
                   "1265 Military Trail, Scarborough, ON M1C 1A4",
                   [43.7845, -79.1864]
                 )
@@ -59,7 +64,9 @@ const Navbar: React.FC<NavbarProps> = ({
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto St. George Campus",
+
                   "UTSG",
+
                   "21 Sussex Ave, Toronto, ON M5S 1J6",
                   [43.6629, -79.3957]
                 )
@@ -72,7 +79,9 @@ const Navbar: React.FC<NavbarProps> = ({
               onClick={() =>
                 onUniversityClick(
                   "University of Toronto Mississaauga Campus",
+
                   "UTM",
+
                   "3359 Mississauga Rd, Mississauga, ON L5L 1C6",
                   [43.5489, -79.6626]
                 )

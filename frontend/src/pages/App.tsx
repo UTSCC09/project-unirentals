@@ -3,7 +3,8 @@ import UniversityDetailsForm from "../components/UniversityRentalsForm/Universit
 import PropertyDetailsForm from "../components/PropertyDetailsForm/PropertyDetailsForm";
 import RoommateProfilesList from "../components/RoommateProfilesList/RoommateProfilesList";
 import ProfileForm from "../components/ProfileForm/ProfileForm";
-import { signOut, fetchCSRFToken, Listing } from "../api/api";
+import { signOut, fetchCSRFToken, Listing, addListing, getListings } from "../api/api";
+
 import Map from "../components/Map/Map";
 import Navbar from "../components/Navbar/Navbar";
 import SignInForm from "../components/AuthenticationForms/SignInForm";
@@ -21,6 +22,7 @@ const App: React.FC = () => {
     console.log("CSRF token fetched", csrfToken);
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -35,13 +37,15 @@ const App: React.FC = () => {
 
   // Map
   const [center, setCenter] = useState<[number, number]>([43.7845, -79.1864]); // default coords
-  const [zoom, setZoom] = useState(2); // zoom level
+  const [zoom, setZoom] = useState(10); // zoom level
 
   // University and Rentals Form
   const [showUniversityDetails, setShowUniversityDetails] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedUniversityShort, setSelectedUniversityShort] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
+
+  const [listings, setListings] = useState<Listing[]>([]);
 
   // Property Details Form
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
@@ -117,7 +121,7 @@ const App: React.FC = () => {
   };
 
   // University and Rentails Form
-  const handleUniversityClick = (
+  const handleUniversityClick = async (
     university: string,
     universityShort: string,
     address: string,
@@ -128,7 +132,19 @@ const App: React.FC = () => {
     setSelectedAddress(address);
     setShowUniversityDetails(true);
     setCenter(coordinates);
-    setZoom(8);
+    setZoom(17);
+    setLoading(true);
+
+    // get all the listings to be displayed as markers on the map
+    try {
+      const listingsData = await getListings();
+      console.log("Listings fetched", listingsData);
+      setListings(listingsData);
+    } catch (error) {
+      console.error("Failed to fetch listings", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCloseUniversityDetails = () => {
@@ -144,6 +160,8 @@ const App: React.FC = () => {
   const handleRentalClick = (property: Listing) => {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
+    setCenter([property.longitude, property.latitude]);
+    setZoom(17);
   };
 
   const handleClosePropertyDetails = () => {
@@ -186,11 +204,9 @@ const App: React.FC = () => {
     try {
       const response = await signOut();
       if (response.success) {
+        console.log("User signed out successfully");
         setIsSignedIn(false);
         setUserEmail("");
-        setAlertMessage('User signed out successfully!');
-        setAlertType('success'); 
-        setAlertVisible(true);
       } else {
         console.error(response.message);
       }
@@ -237,14 +253,17 @@ const App: React.FC = () => {
   return (
     <div>
       <Navbar
-        onSignInClick={handleSignInClick}
-        onSignOutClick={handleSignOut}
-        onUniversityClick={handleUniversityClick}
-        onHomeClick={onHomeClick}
-        onProfileClick={handleProfileClick}
-        isSignedIn={isSignedIn}
-      />
-      <Map center={center} zoom={zoom} />
+      className="navbar"
+  onSignInClick={handleSignInClick}
+  onSignOutClick={handleSignOut}
+  onUniversityClick={handleUniversityClick}
+  onHomeClick={onHomeClick}
+  onProfileClick={handleProfileClick}
+  isSignedIn={isSignedIn}
+/>
+<div style={{ height: 'calc(100vh - 50px)', width: '100vw', position: 'absolute', top: '50px' }}>
+  <Map center={center} zoom={zoom} listings={listings} />
+</div>
       {showSignIn && (
         <SignInForm
           onClose={handleCloseForm}
@@ -269,6 +288,7 @@ const App: React.FC = () => {
           onPrevious={handlePrevious}
           onNext={handleNext}
           onRentalClick={handleRentalClick}
+          listings={listings}
         />
       )}
       {showPropertyDetails && selectedProperty && (
