@@ -21,7 +21,7 @@ def csrfView(request):
 
 # ------------------------------------------------------------------------------------------ #
 
-
+@csrf_exempt
 def registerView(request):
   form = forms.CustomUserCreationForm()
 
