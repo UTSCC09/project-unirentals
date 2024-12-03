@@ -1,0 +1,97 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - pipeline
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+     # - name: Run tests
+        #run: |
+          #python manage.py test
+
+  cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+         project_id: unirentals  # The GCP project ID
+
+      - name: Authenticate with Service Account
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      # - name: Debug Service Account Key
+      #   run: |
+      #     echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json"
+      #     echo "Contents of gcloud-key.json:"
+      #     cat "${HOME}/gcloud-key.json"
+      #     echo "Validating JSON format:"
+      #     cat "${HOME}/gcloud-key.json" | jq .  # Requires `jq` (JSON processor)
+
+      - name: Authenticate to Google Cloud
+        run: |
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > "${HOME}/gcloud-key.json" 
+          cat ${HOME}/gcloud-key.json
+          gcloud auth activate-service-account --key-file="${HOME}/gcloud-key.json" 
+
+      - name: Set up GCP VM access
+        run: |
+          VM_IP="35.224.56.180" 
+          VM_USER="jjjchen52" 
+          gcloud compute ssh $VM_USER@$VM_IP --zone us-central1-a --project unirentals --tunnel-through-iap
+
+      - name: Verify Connection
+        run: |
+          echo "Successfully connected to the GCP VM!"
+
+      - name: Deploy React app
+        run: |
+          ssh -T gcp-vm << 'EOF'
+            cd /home/jjjchen52/project-unirentals/frontend
+            git pull origin main
+            npm install
+            npm run build 
+            pm2 restart "react-app"
+          EOF
+
+
+      - name: Deploy Application
+        run: |
+          ssh -T gcp-vm << 'EOF'
+            cd /home/jjjchen52/project-unirentals
+            git pull origin main
+            source /venv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            sudo systemctl restart gunicorn
+            sudo systemctl reload nginx
+          EOF
