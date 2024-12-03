@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./ProfileForm.css";
-import { getProfile, updateProfile, getProfilePicture } from "../../api/api";
+import { getProfile, updateProfile, getProfilePicture, getSchoolName } from "../../api/api";
 
 // Replace with actual API base URL later
-const API_BASE_URL = "http://localhost:8000";
 
 interface ProfileFormProps {
   onClose: () => void;
@@ -34,6 +33,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
     const fetchProfile = async () => {
       try {
         const profileData = await getProfile();
+        let schoolName = "";
+        console.log(profileData.school);
+        if(profileData.school === null) {
+          schoolName = "";
+        }else{
+          schoolName = await getSchoolName(profileData.school);
+        }
         
         setProfile({
           id: profileData.id,
@@ -42,7 +48,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onClose, onSubmit, onError, e
           lastname: profileData.last_name || "",
           age: profileData.age?.toString() || "",
           pronouns: profileData.pronouns || "",
-          school: profileData.school || "",
+          school: schoolName || "",
           bio: profileData.bio || "",
           preferences: {
             smokes: profileData.smokes,

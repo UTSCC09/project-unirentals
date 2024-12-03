@@ -238,3 +238,19 @@ export const getListings = async (): Promise<Listing[]> => {
     throw new Error("Failed to fetch listings");
   }
 };
+
+export const getSchoolName = async (schoolId: string): Promise<string> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/schools/${schoolId}/`, {
+      headers: {
+        "X-Csrftoken": csrfToken || "",
+      },
+      withCredentials: true,
+    });
+
+    return response.data.name;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch school name");
+  }
+}
